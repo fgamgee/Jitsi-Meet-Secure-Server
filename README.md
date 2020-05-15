@@ -46,7 +46,7 @@ By running the project on Github, the intent is that the solution will be indepe
 ## Next up and questions##
 
 - Define the Threat Model.
-- Start a project on Jitsi Github on a Secure Jitsi Meet Installation and invite the open-source community to comment/help. (How?  Anyone done open source development?)
+- Start a repository (this one!) on Github on a Secure Jitsi Meet Installation and invite the open-source community to comment/help. 
 - Get a CIS Level 1 Ubuntu 18.04 Jitsi Meet server up and working on AWS, with same capabilities of the totally insecure server instance (have worked on this, and it is not straightforward).
 - Consider moving to a CIS Level 2 (higher security) Ubuntu or Debian setup.
 - Is there something better than CIS Benchmark for development of secure Debian or Ubuntu server?
