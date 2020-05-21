@@ -24,13 +24,13 @@ Threat | Mitigation (WIP)
 -------|----------
 Spoofing | Password Authentication required to start a meeting.  Unique URL and password can be required to join the meeting.  Let's Encrypt certificate for domain name.
 Tampering| CIS Benchmark Level 1 on server.  Firewall. SSH for server management. Scheduled use to automatically turn server off when not in use. Update management.
-Repudiation (denial of the truth or validity of something) | None contemptplated.  Conflicts with privacy goal.
-Information Disclosure | Encryption using WebRTC.  No logs kept on the server.
+Repudiation (denial of the truth or validity of something) | Can conflict with privacy goal in general case.  However, meetings can require passwords which could be sent securely to particpants with assymetric key encryption.
+Information Disclosure | Encryption using WebRTC. Configured to require TLSv1.3 and secure DH. No logs kept on the server.
 Denial of Service | Require Authentication to start a meeting, prevents adversary from starting multiple meetings.  Restrictive firewall rules.  Protection very rudimentary.
 Elevation of Privilege |  CIS Benchmark Level 1 on server which enables AppArmor.
 
 Known issues.
-* Compromised host of one of the participants.  This will result in Information Disclosure.  Outside of scope.
+* Compromised host of one of the participants.  This will result in Information Disclosure.  Outside of scope, but requiring TLSv1.3 does mean various obsolete MS products not supported (WinXP and IE).
 * Root access from server provider gains access to meeting in unencrypted form resulting in Information Disclosure (remediation under development by Jitsi community, see https://jitsi.org/blog/e2ee/).
 * DOS and DDOS attacks.  Outside of scope.
 * Man-in-the-middle-attacks.  This is a difficult attack to perform, needs to be targeted and is typically executed by a strong adversary. Outside of scope.
