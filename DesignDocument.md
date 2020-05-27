@@ -50,4 +50,9 @@ The installation will be idempotent, so that the user will not cause issues if h
 
 Documentation will be provided on which CIS Benchmark Level 1 and 2 recommendations are used and not used.  
 
-Instructions will be referenced for the user to check for misconfigurations and vulnerabilities of the server using automated test tools such as Qualys SSL Labs (https://www.ssllabs.com/ssltest/) and Openscap (https://www.open-scap.org/), and expected results from a successful installation.
+
+## 5 Testing
+Instructions will be provided for the user to check for misconfigurations and vulnerabilities of the server using automated test tools such as Qualys SSL Labs (https://www.ssllabs.com/ssltest/) and Openscap (https://www.open-scap.org/), and also what the expected results are from a successful installation.
+
+## 6 Maintenance
+Process for maintaining the Jitsi-Meet server will be provided.  Automation of maintenance will be preferred, such as automatic updates applying security patches.
