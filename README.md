@@ -42,11 +42,11 @@ By running the project on Github, the intent is that the solution will be indepe
   - Password protect meetings.
   - Host Controls to authenticated user only.
   - Successfully tested three-way computer meeting.
-  - Threat Model (see this repository).
-  - AWS image CIS Level 1 Ubuntu 18.04 Jitsi Meet server up and running with basic firewall, and all capabilities of Insecure Jitsi Meet above.
+- Threat Model (see this repository).
+- AWS image CIS Level 1 Ubuntu 18.04 Jitsi Meet server up and running with basic firewall, and all capabilities of Insecure Jitsi Meet above.
   - Some testing with parts of CIS Benchmark Level 2 done.
-  - Design Document drafted (this repository).
-  - Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
+- Design Document drafted (this repository).
+- Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
 
 ## Next up ##
 
