@@ -28,7 +28,7 @@ iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
 
 #Now save the iptables rules so they stay on reboot.
-apt-get install iptables-persistent
+apt-get install -y iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
 
