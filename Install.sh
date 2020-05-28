@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Need to run these after login...
+#curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Install.sh
+#chmod +x Install.sh
+#sudo ./Install.sh
+
 #Set up for debugging, from https://wiki.bash-hackers.org/scripting/debuggingtips
 set -x
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
@@ -28,7 +33,7 @@ iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
 
 #Now save the iptables rules so they stay on reboot.
-apt-get install -y iptables-persistent
+apt-get install iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
 
