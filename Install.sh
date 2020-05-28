@@ -9,6 +9,7 @@
 set -x
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 echo "Welcome to installation of private and secure Jitsi Meet server for Ubuntu 18.04"
+
 # install firewall
 
 iptables -P INPUT DROP
@@ -32,8 +33,14 @@ iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
 
+#Now get repositories and packages I will need.
+apt -y update
+apt -y install apt-transport-https
+apt-add-repository -y universe
+apt -y update
+
 #Now save the iptables rules so they stay on reboot.
-apt-get install iptables-persistent
+apt-get -y install iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
 
