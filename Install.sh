@@ -51,7 +51,7 @@ apt install -y ansible
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
 sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
 cd /etc/ansible/
-ansible-galaxy install sudo iptables -P roles -r /etc/ansible/requirements.yml
+ansible-galaxy install sudo iptables -p roles -r /etc/ansible/requirements.yml
 # Make role - don't like this method.  Update needed.
 #sudo sh -c "cat > /etc/ansible/harden.yml <<EOF
 #- name: Harden Server
