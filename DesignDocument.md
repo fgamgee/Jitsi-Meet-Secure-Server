@@ -1,6 +1,7 @@
-# Design Document 0.2
+# Design Document 1.0
 ##### Rev 0.1 - First draft May 27, 2020.
 ##### Rev 0.2 - Update Testing and Maintenance. May 28, 2020.
+##### Rev 1.0 - Begin Implementation based on this, update as needed. May 29, 2020
 
 **Author**: Kevin E. Wilson, PhD
 
@@ -37,23 +38,19 @@ A Bash or similar script will be utilized to run the installation process. The f
 
 ![ui component](./diagram/Fig1.png)
 
-## 3 Low-Level Design
 
-### 3.1 TBD
-
-## 4 User Interface Design
+## 3 User Interface Design
 
 Detailed instructions will be provided.
 
-The user interface will be the command line.  Automation will be used to minimize the commands that the user will need to enter to as few as possible.
+The user interface will be the command line.  Automation will be used to minimize the commands and the complexity of those commands that the user will need to enter.
+
+Installation will report on progress and success or failure of each step, with an overall report of number of successful steps, steps skipped, and steps that failed.
 
 The installation will be idempotent, so that the user will not cause issues if he performs the installation multiple times.
 
-Documentation will be provided on which CIS Benchmark Level 1 and 2 recommendations are used and not used.  
-
-
-## 5 Testing
+## 4 Testing
 Instructions will be provided for the user to check for misconfigurations and vulnerabilities of the server using automated test tools such as Qualys SSL Labs (https://www.ssllabs.com/ssltest/) and Openscap (https://www.open-scap.org/), and also what the expected results are from a successful installation.
 
-## 6 Maintenance
+## 5 Maintenance
 Process for maintaining the Jitsi-Meet server will be provided.  Automation of maintenance will be preferred, such as automatic updates applying security patches.
