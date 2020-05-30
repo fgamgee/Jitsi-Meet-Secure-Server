@@ -53,15 +53,15 @@ sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/an
 cd /etc/ansible/
 ansible-galaxy install -p roles -r /etc/ansible/requirements.yml
 # Make role - don't like this method.  Update needed.
-#sudo sh -c "cat > /etc/ansible/harden.yml <<EOF
-#- name: Harden Server
-#  hosts: localhost
-#  connection: local
-#  become: yes
+cat > /etc/ansible/harden.yml <<EOF
+- name: Harden Server
+  hosts: localhost
+  connection: local
+  become: yes
 
-#  roles:
-#    - Ubuntu1804-CIS
+  roles:
+    - Ubuntu1804-CIS
 
-#EOF
-#"
+EOF
+
 #ansible-playbook /etc/ansible/harden.yml
