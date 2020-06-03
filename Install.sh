@@ -21,9 +21,9 @@ iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
-iptables -A INPUT -p udp -m udp --dport 68 -m state --state NEW -j ACCEPT
-iptables -A INPUT -p udp -m udp --dport 123 -m state --state NEW -j ACCEPT
-iptables -A INPUT -p udp -m udp --dport 323 -m state --state NEW -j ACCEPT
+#iptables -A INPUT -p udp -m udp --dport 68 -m state --state NEW -j ACCEPT
+#iptables -A INPUT -p udp -m udp --dport 123 -m state --state NEW -j ACCEPT
+#iptables -A INPUT -p udp -m udp --dport 323 -m state --state NEW -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 4443 -j ACCEPT
@@ -44,6 +44,16 @@ apt-get -y install iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
 
+#Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
+
+echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
+wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
+apt-get update
+apt-get -y install jitsi-meet
+
+
+#Let's Encrypt certificate
+/usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 
 #Install Ansible
 apt install -y ansible
@@ -63,5 +73,29 @@ cat > /etc/ansible/harden.yml <<EOF
     - Ubuntu1804-CIS
 
 EOF
+#TBD to be automated.
+
+#// For ansible, have to modify  https://github.com/florianutz/Ubuntu1804-CIS
+#To run the tasks in this repository, first create this file one level above the repository (i.e. the playbook .yml and the directory Ubuntu1804-CIS should be next to each other), then review the file defaults/main.yml and disable any rule/section you do not wish to execute.
+
+#Set to 'true' if X Windows is needed in your environment - issue with ansible
+# there is no X Windows installed anyway, check with dpkg -l xserver-xorg*
+
+
+#ubuntu1804cis_xwindows_required: no  change to true
+
+
+#Coturn and jitsi-meet-turnserver depend on the telnet package, so that has to be modified too.
+
+# Service configuration booleans set true to keep service
+#ubuntu1804cis_telnet_server: false
+# ubuntu1804cis_telnet_required: true
+
+#Should I change Firewall to iptables?  Yes....maybe?
+
+#ubuntu1804cis_firewall: firewalld
+#ubuntu1804cis_firewall: iptables
+
+#Need to turn off 4.3 logrotate in ansible.
 
 #ansible-playbook /etc/ansible/harden.yml
