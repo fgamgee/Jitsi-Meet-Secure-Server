@@ -5,6 +5,13 @@
 #chmod +x Install_jitsi_ansible.sh
 #sudo ./Install_jitsi_ansible.sh
 #
+
+#Set up for debugging, from https://wiki.bash-hackers.org/scripting/debuggingtips
+set -x
+export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+echo "Welcome to installation of private and secure Jitsi Meet server for Ubuntu 18.04"
+
+
 # First, setup firewall.
 
 iptables -P INPUT DROP
@@ -25,13 +32,21 @@ iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
 
-#Make key for secure DH exchange.
-openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+#Now get repositories and packages I will need.
+apt -y update
+apt -y install apt-transport-https
+apt-add-repository -y universe
+apt -y update
+
+#Now save the iptables rules so they stay on reboot.
+apt-get -y install iptables-persistent
+netfilter-persistent save
+netfilter-persistent reload
 
 #Install ansible
 apt install -y ansible
 
-# Make role - don't like this method.  Update needed.
+# Make roles - don't like this method.  Update needed.
 cat > /etc/ansible/jitsi.yml <<EOF
 - name: Configure jitsi-meet server.
   hosts: localhost
@@ -39,8 +54,19 @@ cat > /etc/ansible/jitsi.yml <<EOF
   vars:
     # Change this to match the DNS entry for your host IP.
     jitsi_meet_server_name: mrsunderhill.net
+    DNS_email_address: kevinwilson@gatech.edu
 
   roles:
+    - role: geerlingguy.certbot
+      become: yes
+      certbot_create_if_missing: true
+      # Change this to variable
+      certbot_admin_email: "{{ DNS_email_address }}"
+      certbot_certs:
+        - domains:
+            - "{{ jitsi_meet_server_name }}"
+      certbot_create_standalone_stop_services: []
+
     - role: udelarinterior.jitsi_meet
       jitsi_meet_ssl_cert_path: "/etc/letsencrypt/live/{{ jitsi_meet_server_name }}/fullchain.pem"
       jitsi_meet_ssl_key_path: "/etc/letsencrypt/live/{{ jitsi_meet_server_name }}/privkey.pem"
@@ -50,3 +76,11 @@ cat > /etc/ansible/jitsi.yml <<EOF
 EOF
 
 ansible-galaxy install udelarinterior.jitsi_meet
+ansible-galaxy install geerlingguy.certbot
+
+cd /etc/ansible/
+
+ansible-playbook /etc/ansible/jitsi.yml
+
+#Make key for secure DH exchange.
+openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
