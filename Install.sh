@@ -21,6 +21,7 @@ iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
+#Below ports not needed
 #iptables -A INPUT -p udp -m udp --dport 68 -m state --state NEW -j ACCEPT
 #iptables -A INPUT -p udp -m udp --dport 123 -m state --state NEW -j ACCEPT
 #iptables -A INPUT -p udp -m udp --dport 323 -m state --state NEW -j ACCEPT
@@ -43,6 +44,11 @@ apt -y update
 apt-get -y install iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
+
+# Make keys needed for secure DH key exchange - 2048 is OK. Can do 4096 - but
+# it takes long time...
+
+openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 
@@ -73,29 +79,24 @@ cat > /etc/ansible/harden.yml <<EOF
     - Ubuntu1804-CIS
 
 EOF
-#TBD to be automated.
+# Change defaults needed for Jitsi Meet - don't like this method.  Update needed.
+# X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
+# but Ansible xwindows task removes x11 which Jitsi does need
+# Needs to have dummy telnet package installed and telnet removed - but Coturn
+# has a dependency of telnet (but it is only used for debugging).
+# I currently use iptables.
+# Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
+# a privacy goal.
+cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<EOF
+---
+# vars file for Ubuntu1804-CIS
+ubuntu1804cis_xwindows_required: true
+ubuntu1804cis_telnet_required: true
+ubuntu1804cis_firewall: iptables
+ubuntu1804cis_rule_4_3: false
 
-#// For ansible, have to modify  https://github.com/florianutz/Ubuntu1804-CIS
-#To run the tasks in this repository, first create this file one level above the repository (i.e. the playbook .yml and the directory Ubuntu1804-CIS should be next to each other), then review the file defaults/main.yml and disable any rule/section you do not wish to execute.
+EOF
 
-#Set to 'true' if X Windows is needed in your environment - issue with ansible
-# there is no X Windows installed anyway, check with dpkg -l xserver-xorg*
+cd /etc/ansible/
 
-
-#ubuntu1804cis_xwindows_required: no  change to true
-
-
-#Coturn and jitsi-meet-turnserver depend on the telnet package, so that has to be modified too.
-
-# Service configuration booleans set true to keep service
-#ubuntu1804cis_telnet_server: false
-# ubuntu1804cis_telnet_required: true
-
-#Should I change Firewall to iptables?  Yes....maybe?
-
-#ubuntu1804cis_firewall: firewalld
-#ubuntu1804cis_firewall: iptables
-
-#Need to turn off 4.3 logrotate in ansible.
-
-#ansible-playbook /etc/ansible/harden.yml
+ansible-playbook /etc/ansible/harden.yml
