@@ -53,14 +53,13 @@ cat > /etc/ansible/jitsi.yml <<EOF
   connection: local
   vars:
     # Change this to match the DNS entry for your host IP.
-    jitsi_meet_server_name: mrsunderhill.net
-    DNS_email_address: kevinwilson@gatech.edu
+    jitsi_meet_server_name: FILLIN
+    DNS_email_address: FILLIN
 
   roles:
     - role: geerlingguy.certbot
       become: yes
       certbot_create_if_missing: true
-      # Change this to variable
       certbot_admin_email: "{{ DNS_email_address }}"
       certbot_certs:
         - domains:
