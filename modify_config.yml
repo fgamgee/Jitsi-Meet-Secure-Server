@@ -1,10 +1,12 @@
 - name: Configure Jitsi Meet config files
   hosts: localhost
   become: yes
-  vars:
-    domain_name: [hostname]
 
   tasks:
+  - name: Grepping hostname from JVB config
+    shell: grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//'
+    register: domain_name
+
   - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver
     lineinfile:
       path: /etc/turnserver.conf
@@ -27,7 +29,7 @@
 
   - name: Secure SSL/TLS and ciphers for prosody
     blockinfile:
-      path: /etc/prosody/conf.avail/{{ domain_name }}.cfg.lua
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout }}.cfg.lua
       marker: "-- {mark} Ansible managed SSL and ciphers"
       insertafter: 'consider_bosh_secure = true;'
       state: present
@@ -39,35 +41,35 @@
 
   - name: Allow only TLS 1.2 and 1.3 in nginx (based on Mozilla recommendations)
     lineinfile:
-      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: '    ssl_protocols'
       line: '    ssl_protocols TLSv1.2 TLSv1.3;'
       state: present
 
   - name: Use Mozilla recommended ciphers for nginx
     lineinfile:
-      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: '    ssl_ciphers '
       line: '    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;'
       state: present
 
   - name: Allow client to choose cipher, to increase performance
     lineinfile:
-      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: '    ssl_prefer_server_ciphers'
       line: '    ssl_prefer_server_ciphers off'
       state: present
 
   - name: nginx Strict-Transport-Security
     lineinfile:
-      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: '    add_header Strict-Transport-Security'
       line: '    add_header Strict-Transport-Security "max-age=63072000" always;'
       state: present
 
   - name: nginx config, session timeout, cache, tickets
     lineinfile:
-      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
       state: present
@@ -79,7 +81,7 @@
 
   - name: nginx make secure DH Keys - must run openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
     lineinfile:
-      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: "{{ item.regexp }}"
       line: "{{ item.line }}"
       state: present
@@ -90,18 +92,18 @@
 
   - name: Make Host Login Prosody
     lineinfile:
-      path: /etc/prosody/conf.avail/{{ domain_name}}.cfg.lua
-      insertafter: 'VirtualHost "{{ domain_name }}"'
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      insertafter: 'VirtualHost "{{ domain_name.stdout }}"'
       regexp: '        authentication = '
       line: '        authentication = "internal_hashed"'
 
   - name: Enable anonymous login method for guests
     blockinfile:
-      path: /etc/prosody/conf.avail/{{ domain_name}}.cfg.lua
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
       marker: "-- {mark} Ansible managed anonymous login"
       state: present
       block: |
-        VirtualHost "guest.{{ domain_name}}"
+        VirtualHost "guest.{{ domain_name.stdout}}"
             authentication = "anonymous"
             modules_enabled = {
               "turncredentials";
@@ -110,7 +112,7 @@
 
   - name: Make Host Login Jitsi-Meet
     lineinfile:
-      path: /etc/jitsi/meet/{{ domain_name }}-config.js
-      insertafter: "^(\ *)domain: '{{ domain_name }}',"
+      path: /etc/jitsi/meet/{{ domain_name.stdout }}-config.js
+      insertafter: "^(\ *)domain: '{{ domain_name.stdout }}',"
       regexp: '^(\ *)anonymousdomain:'
-      line: "        anonymousdomain: 'guest.{{ domain_name }}',"
+      line: "        anonymousdomain: 'guest.{{ domain_name.stdout }}',"
