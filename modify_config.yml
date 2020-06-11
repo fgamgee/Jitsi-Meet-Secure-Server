@@ -59,6 +59,7 @@
       state: present
 
   - name: nginx Strict-Transport-Security
+    lineinfile:
       path: /etc/nginx/sites-available/{{ domain_name }}.conf
       regexp: '    add_header Strict-Transport-Security'
       line: '    add_header Strict-Transport-Security "max-age=63072000" always;'
