@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Need to run these after login...
+# Need to run these after login...  UPDATE to MASTER SOON!
 #curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Install.sh
 #chmod +x Install.sh
 #sudo ./Install.sh
@@ -63,10 +63,15 @@ apt-get -y install jitsi-meet
 
 #Install Ansible
 apt install -y ansible
+cd /etc/ansible/
+# Get configuration of jitsi - update to master branch soon!!!
+curl -o /etc/ansible/modify_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/modify_config.yml
+# Run configuration for Jitsi
+ansible-playbook -v modify_config.yml
 #Get Ansible playbook for CIS hardening -
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
 sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
-cd /etc/ansible/
+
 ansible-galaxy install -p roles -r /etc/ansible/requirements.yml
 # Make role - don't like this method.  Update needed.
 cat > /etc/ansible/harden.yml <<EOF
