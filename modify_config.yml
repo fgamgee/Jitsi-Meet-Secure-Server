@@ -58,34 +58,34 @@
       line: '    ssl_prefer_server_ciphers off'
       state: present
 
-   - name: nginx Strict-Transport-Security
-        path: /etc/nginx/sites-available/{{ domain_name }}.conf
-        regexp: '    add_header Strict-Transport-Security'
-        line: '    add_header Strict-Transport-Security "max-age=63072000" always;'
-        state: present
+  - name: nginx Strict-Transport-Security
+      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      regexp: '    add_header Strict-Transport-Security'
+      line: '    add_header Strict-Transport-Security "max-age=63072000" always;'
+      state: present
 
-   - name: nginx config, session timeout, cache, tickets
-     lineinfile:
-       path: /etc/nginx/sites-available/{{ domain_name }}.conf
-       regexp: "{{ item.regexp }}"
-       line: "{{ item.line }}"
-       state: present
-       insertbefore: '    add_header Strict-Transport-Security'
-     with_items:
-       - { regexp: '    ssl_session_timeout 1d;', line: '    ssl_session_timeout 1d;'}
-       - { regexp: '    ssl_session_cache shared:SSL:10m;', line: '    ssl_session_cache shared:SSL:10m;  \# about 40000 sessions' }
-       - { regexp: '    ssl_session_tickets off;', line: '    ssl_session_tickets off;'}
+  - name: nginx config, session timeout, cache, tickets
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name }}.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+      insertbefore: '    add_header Strict-Transport-Security'
+    with_items:
+      - { regexp: '    ssl_session_timeout 1d;', line: '    ssl_session_timeout 1d;'}
+      - { regexp: '    ssl_session_cache shared:SSL:10m;', line: '    ssl_session_cache shared:SSL:10m;  \# about 40000 sessions' }
+      - { regexp: '    ssl_session_tickets off;', line: '    ssl_session_tickets off;'}
 
-   - name: nginx make secure DH Keys - must run openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-     lineinfile:
-       path: /etc/nginx/sites-available/{{ domain_name }}.conf
-       regexp: "{{ item.regexp }}"
-       line: "{{ item.line }}"
-       state: present
-       insertafter: '    add_header Strict-Transport-Security'
-     with_items:
-       - { regexp: '    ssl_ecdh_curve secp384r1;', line: '    ssl_ecdh_curve secp384r1; \# Requires nginx >= 1.1.0' }
-       - { regexp: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;', line: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;'}
+  - name: nginx make secure DH Keys - must run openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+   lineinfile:
+     path: /etc/nginx/sites-available/{{ domain_name }}.conf
+     regexp: "{{ item.regexp }}"
+     line: "{{ item.line }}"
+     state: present
+     insertafter: '    add_header Strict-Transport-Security'
+   with_items:
+     - { regexp: '    ssl_ecdh_curve secp384r1;', line: '    ssl_ecdh_curve secp384r1; \# Requires nginx >= 1.1.0' }
+     - { regexp: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;', line: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;'}
 
   - name: Make Host Login
     lineinfile:
