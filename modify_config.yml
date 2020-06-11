@@ -88,12 +88,12 @@
       - { regexp: '    ssl_ecdh_curve secp384r1;', line: '    ssl_ecdh_curve secp384r1; \# Requires nginx >= 1.1.0' }
       - { regexp: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;', line: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;'}
 
-  - name: Make Host Login
+  - name: Make Host Login Prosody
     lineinfile:
       path: /etc/prosody/conf.avail/{{ domain_name}}.cfg.lua
       insertafter: 'VirtualHost "{{ domain_name }}"'
-      regexp: 'authentication = '
-      line: 'authentication = "internal_hashed"'
+      regexp: '        authentication = '
+      line: '        authentication = "internal_hashed"'
 
   - name: Enable anonymous login method for guests
     blockinfile:
@@ -108,8 +108,7 @@
             }
             c2s_require_encryption = false
 
-
-  - name: Make Host Login
+  - name: Make Host Login Jitsi-Meet
     lineinfile:
       path: /etc/jitsi/meet/{{ domain_name }}-config.js
       insertafter: "^(\ *)domain: '{{ domain_name }}',"
