@@ -95,7 +95,7 @@
       regexp: 'authentication = '
       line: 'authentication = "internal_hashed"'
 
-  - name: Enable anonymous login method for guests:
+  - name: Enable anonymous login method for guests
     blockinfile:
       path: /etc/prosody/conf.avail/{{ domain_name}}.cfg.lua
       marker: "-- {mark} Ansible managed anonymous login"
