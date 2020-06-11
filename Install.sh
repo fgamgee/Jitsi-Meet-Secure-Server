@@ -45,11 +45,6 @@ apt-get -y install iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
 
-# Make keys needed for secure DH key exchange - 2048 is OK. Can do 4096 - but
-# it takes long time...
-
-openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
@@ -57,9 +52,13 @@ wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
 apt-get update
 apt-get -y install jitsi-meet
 
-
 #Let's Encrypt certificate
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
+
+# Make keys needed for secure DH key exchange - 2048 is OK. Can do 4096 - but
+# it takes long time...
+
+openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 #Install Ansible
 apt install -y ansible
