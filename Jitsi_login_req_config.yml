@@ -1,0 +1,41 @@
+- name: Configure Jitsi Meet config files for host login
+  hosts: localhost
+  become: yes
+
+  tasks:
+  - name: Grepping hostname from JVB config
+    shell: grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//'
+    register: domain_name
+
+  - name: Configure Jicofo
+    lineinfile:
+      path: /etc/jitsi/jicofo/sip-communicator.properties
+      line: org.jitsi.jicofo.auth.URL=XMPP:{{ domain_name.stdout }}
+      state: present
+
+  - name: Make Host Login Prosody
+    lineinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      insertafter: 'VirtualHost "{{ domain_name.stdout }}"'
+      regexp: '        authentication = '
+      line: '        authentication = "internal_hashed"'
+
+  - name: Enable anonymous login method for guests
+    blockinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      marker: "-- {mark} Ansible managed anonymous login"
+      state: present
+      block: |
+        VirtualHost "guest.{{ domain_name.stdout }}"
+            authentication = "anonymous"
+            modules_enabled = {
+              "turncredentials";
+            }
+            c2s_require_encryption = false
+
+  - name: Make Host Login Jitsi-Meet
+    lineinfile:
+      path: /etc/jitsi/meet/{{ domain_name.stdout }}-config.js
+      insertafter: "^(\ *)domain: '{{ domain_name.stdout }}',"
+      regexp: '^(\ *)anonymousdomain:'
+      line: "        anonymousdomain: 'guest.{{ domain_name.stdout }}',"

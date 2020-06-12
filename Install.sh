@@ -57,14 +57,16 @@ apt-get -y install jitsi-meet
 
 # Make keys needed for secure DH key exchange - 2048 is OK. Can do 4096 - but
 # it takes long time...
-
-openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+# Moved to Ansible
+# openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 #Install Ansible
 apt install -y ansible
 cd /etc/ansible/
-# Get configuration of jitsi - update to master branch soon!!!
-curl -o /etc/ansible/modify_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/modify_config.yml
+# Get configurations of jitsi - update to master branch soon!!!
+curl -o /etc/ansible/modify_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_login_config.yml
+curl -o /etc/ansible/modify_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_TLS_DH_config.yml
+
 # Run configuration for Jitsi
 ansible-playbook -v modify_config.yml
 #Get Ansible playbook for CIS hardening -
@@ -104,3 +106,8 @@ EOF
 cd /etc/ansible/
 
 ansible-playbook /etc/ansible/harden.yml
+
+systemctl stop prosody.service
+systemctl stop jicofo.service
+systemctl start prosody.service
+systemctl start jicofo.service
