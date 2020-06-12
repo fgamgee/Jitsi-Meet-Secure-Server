@@ -64,11 +64,12 @@ apt-get -y install jitsi-meet
 apt install -y ansible
 cd /etc/ansible/
 # Get configurations of jitsi - update to master branch soon!!!
-curl -o /etc/ansible/modify_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_login_config.yml
-curl -o /etc/ansible/modify_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_TLS_DH_config.yml
+curl -o /etc/ansible/Jitsi_login_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_login_config.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_TLS_DH_config.yml
 
 # Run configuration for Jitsi
-ansible-playbook -v modify_config.yml
+ansible-playbook -v Jitsi_login_config.yml
+ansible-playbook -v Jitsi_TLS_DH_config.yml
 #Get Ansible playbook for CIS hardening -
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
 sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
