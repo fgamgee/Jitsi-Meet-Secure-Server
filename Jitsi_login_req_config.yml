@@ -36,6 +36,9 @@
   - name: Make Host Login Jitsi-Meet
     lineinfile:
       path: /etc/jitsi/meet/{{ domain_name.stdout }}-config.js
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
       insertafter: "^(\ *)domain: '{{ domain_name.stdout }}',"
-      regexp: '^(\ *)anonymousdomain:'
-      line: "        anonymousdomain: 'guest.{{ domain_name.stdout }}',"
+    with_items
+      - { regexp: '^(\ *)authdomain:', line: '        authdomain: \'{{ domain_name.stdout }}\','}
+      - { regexp: '^(\ *)anonymousdomain:', line: '        anonymousdomain: \'guest.{{ domain_name.stdout }}\','}
