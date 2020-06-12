@@ -33,12 +33,16 @@
             }
             c2s_require_encryption = false
 
-  - name: Make Host Login Jitsi-Meet
+  - name: Make Host Login Jitsi-Meet - anonymousdomain
     lineinfile:
       path: /etc/jitsi/meet/{{ domain_name.stdout }}-config.js
-      regexp: "{{ item.regexp }}"
-      line: "{{ item.line }}"
       insertafter: "^(\ *)domain: '{{ domain_name.stdout }}',"
-    with_items
-      - { regexp: '^(\ *)authdomain:', line: '        authdomain: \'{{ domain_name.stdout }}\','}
-      - { regexp: '^(\ *)anonymousdomain:', line: '        anonymousdomain: \'guest.{{ domain_name.stdout }}\','}
+      regexp: '^(\ *)anonymousdomain:'
+      line: "        anonymousdomain: 'guest.{{ domain_name.stdout }}',"
+
+  - name: Make Host Login Jitsi-Meet - authdomain
+    lineinfile:
+      path: /etc/jitsi/meet/{{ domain_name.stdout }}-config.js
+      insertafter: "        anonymousdomain: 'guest.{{ domain_name.stdout }}',"
+      regexp: '^(\ *)authdomain:'
+      line: "        authdomain: '{{ domain_name.stdout }}',"
