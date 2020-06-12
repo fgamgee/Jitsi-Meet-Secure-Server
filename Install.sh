@@ -108,8 +108,15 @@ cd /etc/ansible/
 
 ansible-playbook /etc/ansible/harden.yml
 
+#Stop services and restart them, avoids a reboot.
+systemctl stop coturn.service
+systemctl stop jitsi-videobridge2.service
+systemctl stop nginx.service
 systemctl stop prosody.service
 systemctl stop jicofo.service
+systemctl start coturn.service
+systemctl start jitsi-videobridge2.service
+systemctl start nginx.service
 systemctl start prosody.service
 systemctl start jicofo.service
 
