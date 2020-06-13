@@ -236,9 +236,15 @@ sudo prosodyctl register <username> <domain name> <password>
 ```
 You can add as many users as you want.  These are the users that are allowed to host meetings. Other people can join a meeting, but only hosts can start meetings.
 
-You can logout of the instance by typing exit.
+You should reboot your instance (to apply security patches) by going to the AWS EC2 dashboard and stopping your instance (Use the **Actions** drop down and under **Instance State** choose stop.  After the instance reports it has stopped, go back to the **Actions** drop down and choose start).
 
 **14. Use your Jitsi Server to host video-conferences!**
 
-To use your Jitsi-Meet Server, type your domain name in browser URL bar.  At the Start a Meeting prompt, type in a long (at least four word) meeting name.
-The host will need to login with a username and password (set above).  Then, he can set a password for this meeting, or not.  Other participants can join by going typing domainname/meetingname in the URL bar of their browser.  If a password for the meeting has been set by the host, they will be prompted for a password.  Enjoy!
+To use your Jitsi-Meet Server, after your instance is started and reports *2/2* in the status checks bar, type your domain name in browser URL bar.  At the Start a Meeting prompt, type in a long (at least four word) meeting name so that it cannot be guessed by adversaries.
+The host will need to login with a username and password (set above).  Then, he has the option of setting a password to join the this meeting.  Other participants can join by going typing domainname/meetingname in the URL bar of their browser.  If a password for the meeting has been set by the host, they will be prompted for a password.  Enjoy!
+
+Once you have tested Jitsi-Meet, you will likely want to set up a larger instance for use with more participants.  Go back to step 5 and select a more powerful instance.   Pricing is here - https://aws.amazon.com/ec2/pricing/on-demand/.  What is important for Jitsi is network bandwidth and to a lessor extent memory.  CPU is not very important and disk storage needed is minimal (4 GB) if you do not set up to record meetings (which is not provided for in these instructions).  A good choice might be T3.large at about $0.10 an hour which should be fine for a dozen or so participants.  You can see how much of the instance memory, CPU, etc.. is being used by selecting the instance on the **EC2 Instance** screen and selecting the **Monitor** tab at the bottom of the page.
+
+When launching a new instance, you can use the security group and key pair you have already set up, reallocate your Elastic IP and skip setting the domain name (step 9) as you are using the same Elastic IP for your new instance.  There is no additional cost for launching an instance, but you will need to pay for more disk space if you use more than 30 GB a month, so terminate instances (they are deleted) you will never use and if you create more than about six instances, you will start incurring disk usage cost.
+
+Leaving your instance running can get expensive, but if you turn them on when you need it, and off when you are done, the cost is very modest.   Amazon AWS does have a scheduler ($5.00 a month) which you may want to look into if you want to automate turning the instance on and off.
