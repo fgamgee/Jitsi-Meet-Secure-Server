@@ -1,11 +1,30 @@
-- name: Configure Jitsi Meet config files
+- name: Configure files for services, turnserver, prosody, nginx, OpenSSH, generate SSL key
   hosts: localhost
   become: yes
 
   tasks:
-  - name: Grepping hostname from JVB config
+  - name: Grepping hostname from JVB config - Always run.
     shell: grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//'
     register: domain_name
+
+  - name: OpenSSH update Key exchange algorithms to Mozilla recommendations.
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: 'KexAlgorithms'
+      line: 'KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256'
+      state: present
+
+  - name: OpenSSH Supported HostKey algorithms by order of preference.
+    blockinfile:
+      path: /etc/ssh/sshd_config
+      marker: "-- {mark} Ansible managed HostKey and AuthenticationMethods"
+      insertafter: '#HostKey /etc/ssh/ssh_host_ed25519_key'
+      state: present
+      block: |
+        HostKey /etc/ssh/ssh_host_ed25519_key
+        HostKey /etc/ssh/ssh_host_rsa_key
+        HostKey /etc/ssh/ssh_host_ecdsa_key
+        AuthenticationMethods publickey
 
   - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver
     lineinfile:
@@ -90,7 +109,7 @@
       - { regexp: '    ssl_ecdh_curve secp384r1;', line: '    ssl_ecdh_curve secp384r1; # Requires nginx >= 1.1.0' }
       - { regexp: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;', line: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;'}
 
-  - name: Checking if SSL key exists
+  - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
     shell: ls /etc/ssl/certs/dhparam.pem
     register: SSLfile_exists
     ignore_errors: True
