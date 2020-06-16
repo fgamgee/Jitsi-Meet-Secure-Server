@@ -1,5 +1,5 @@
 # Jitsi-Meet-Secure-Server
-Work in Progress - Development of Guideline on how to create a private and secure Jitsi-Meet server
+WIP - Development of Guideline on how to create a private and secure Jitsi-Meet server
 
 ## Introduction
 Covid-19 has disrupted society profoundly.  To prevent the spread of the disease, individuals have been subject to mandatory or "voluntary" requirements to avoid contact with other people.  This has caused a huge surge in the use of video conferencing services for work, education, medical visits, and social interaction.  Many of the interactions now taking place via videoconferencing are of a confidential nature.  The use of video conferencing in place of in-person interactions brings with it numerous security and privacy issues that must be considered when choosing a videoconferencing solution.
@@ -34,22 +34,19 @@ By running the project on Github, the intent is that the solution will be indepe
 
 ## Progress so far ##
 - Problem Statement done.
-- Established communication channel with 8x8 developers, who are willing to answer “easy” questions about Jitsi Meet, etc…
-- Insecure Jitsi Meet server working on AWS, Ubuntu 18.04 with:
-  - DNS domain registered.
-  - Let’s Encrypt certificate obtained.
-  - Restrict meeting creation to authenticated user.
-  - Password protect meetings.
-  - Host Controls to authenticated user only.
-  - Successfully tested three-way computer meeting.
-- Threat Model (see this repository).
-- AWS image CIS Level 1 Ubuntu 18.04 Jitsi Meet server up and running with basic firewall, and all capabilities of Insecure Jitsi Meet above.
-  - Some testing with parts of CIS Benchmark Level 2 done.
-- Design Document drafted (this repository).
+- Threat Model drafted.
+- Install Instructions and code for secure cloud (AWS) Jitsi Meet Instance with some hardening done using Ansible to modify configuration files idempotently and CIS Level 1 and 2 benchmarks applied with https://github.com/florianutz/Ubuntu1804-CIS (Thanks Florian Utz! NB License MIT)
+- Evaluated cloud instance with Mozilla Observatory and updated security headers, SSH ciphers, DH key exchange to match recommendations.
+- Design Document drafted.
 - Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
+- Much help has been provided by 8x8 developers, especially sahgul *et al.*
 
 ## Next up ##
 
-- Continue refining Design Document.
-- Begin implementation.
+- Continue hardening cloud Jitsi Meet Instance using Ansible. Evaluate with other automated testing.
 - Assemble and configure stand-alone server.
+- Update documents.
+- User testing and refine of Installation.
+
+License:
+Apache 2.0
