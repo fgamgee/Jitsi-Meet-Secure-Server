@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Need to run these after login...  UPDATE to MASTER SOON!
-#curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Install.sh
+#curl -o https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 #chmod +x Install.sh
 #sudo ./Install.sh
 
@@ -63,9 +63,9 @@ apt-get -y install jitsi-meet
 #Install Ansible
 apt install -y ansible
 cd /etc/ansible/
-# Get configurations of jitsi - update to master branch soon!!!
-curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_login_req_config.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Jitsi_TLS_DH_config.yml
+# Get configurations of jitsi
+curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_req_config.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_config.yml
 
 # Run configuration for Jitsi
 ansible-playbook -v Jitsi_login_req_config.yml

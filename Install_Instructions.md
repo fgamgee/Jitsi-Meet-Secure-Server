@@ -34,20 +34,20 @@ account, use the following procedure to create one.
 To create an AWS account
 1. Open https://portal.aws.amazon.com/billing/signup.
 2. Follow the online instructions.
-*(Note - you should register for a personal account, unless you are doing this for a business - and I have no experience with how that changes these instructions.)*
+*(Note - you should register for a personal account, basic plan, unless you are doing this for a business - and I have no experience with how that changes these instructions.)*
 
 Part of the sign-up procedure involves receiving a phone call and entering a verification code.
 
 ##### Access the console
 
-To access the AWS Management Console (https://aws.amazon.com/console/) for the first time, you provide an email address and a password.
+To access the AWS Management Console (https://aws.amazon.com/console/) for the first time, you provide an email address and a password.  Login as Root.
 This combination of your email address and password is called your root identity or root account credentials.  From the console, you can access the services, Route 53 (the AWS domain name registrar) and EC2 (the instance (*aka* the server site) where you launch instances).
 
 #### 2. Register a domain name (with Amazon Route 53).
 
 **Estimated cost**
 
-- *There's an annual fee to register a domain, ranging from $9 to several hundred dollars, depending on the top-level domain, such as .com. For more information, see Route 53 Pricing for Domain Registration. This fee is not refundable.* (I recommend domain names ending in .net, they only cost $11 for the first year, are generally recognizable, and register quickly.)
+- *There's an annual fee to register a domain, ranging from $9 to several hundred dollars, depending on the top-level domain, such as .com. For more information, see [Route 53 Pricing](https://d32ze2gidvkk54.cloudfront.net/Amazon_Route_53_Domain_Registration_Pricing_20140731.pdf) for Domain Registration. This fee is not refundable.* (I recommend domain names ending in .net, they only cost $11 for the first year, are generally recognizable, and register quickly.)
 
 - *When you register a domain, we automatically create a hosted zone that has the same name as the domain. You use the hosted zone to specify where you want Route 53 to route traffic for your domain. The fee for a hosted zone is $0.50 per month.*"
 
@@ -75,7 +75,7 @@ First you must create a running Linux instance on which to run your Jitsi server
 
 **4. Make a SSH private/public keypair**
 
-Create a key pair that you will use to SSH into your Jitsi server. From the EC2 console, on the left-hand side, click on Key Pairs.
+Create a key pair that you will use to SSH into your Jitsi server. From the EC2 console, on the left-hand side, click on Create Key Pairs (Right corner).
 On the screen that pops up, you must select the file type.
 Note: If you are using Windows, and likely using Putty, use the ppk key format.  If using MAC use the pem key format.
 Key pairs are regional. You need to select a region close to your users, for best performance.  The region can be changed in the upper right corner – see red circle.
@@ -84,7 +84,7 @@ Key pairs are regional. You need to select a region close to your users, for bes
 
 After selecting the most appropriate region and the correct File format, enter a name for the key pair and click on the **Create Key Pair** button. Save the key that pops up on your machine to a folder (Documents, Desktop, etc..). Keep this safe. You will need to change the permissions of this key (file).
 
-- **MAC instructions** to change the permission of the key.
+- **MAC/Linux instructions** to change the permission of the key.
 Open a terminal window.  You can find this under Launch Pad, in the Other folder.   
 At the prompt, type
 ```
@@ -111,7 +111,7 @@ Now, on the far left in front of the key name you should see -r----------@.   If
 **5. Begin to Launch Instance.**
 
 Click on EC2 Dashboard on the left column.  Midway down, you will see “Launch instance” as an orange button.
-In the search box type **Ubuntu** and hit return. Select the Ubuntu 18.04 LTS (leave the radio button at 64-bit (x86), as Jitsi does not work with Arm.
+In the search box type **Ubuntu** and hit return. Select the Ubuntu 18.04 LTS (make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm).
 
 *Choose Instance Type.*
 
@@ -120,7 +120,7 @@ In the search box type **Ubuntu** and hit return. Select the Ubuntu 18.04 LTS (l
 -	Click **Next: Configure Instance Details.**
 - Accept defaults on the next page and click on **Next: Add Storage.**
 - Accept defaults on the next page and click on **Next: Add Tags.**
-- Accept defaults on the next page and click on **Next: Add Security Groups.**
+z- Accept defaults on the next page and click on **Next: Configure Security Groups.**
 
 **6. Set up the Amazon firewall (*aka* Security Group).**
 
@@ -129,7 +129,7 @@ In the search box type **Ubuntu** and hit return. Select the Ubuntu 18.04 LTS (l
 
 ![SSH image](./diagrams/SSH_image.png)
 
-- Click Add rule and change the type to HTTP and the source to **Anywhere**.
+- Click Add rule and change the type to HTTP and the source to **Anywhere**. (note, HTTP requests will be redirected to HTTPS)
 - Click Add rule and change the type to HTTPS and the source to **Anywhere**.
 - Click Add rule and change the type to “Custom TCP”, and put 4443 in the Port Range box, and set the source to **Anywhere.** (Ignore the warning, you want users from Anywhere to connect to you meeting, you will password protect your meetings in the Jitsi setup).
 - Click Add rule and change the type to “Custom UDP”, and put 10000 in the Port Range box and set the source to **Anywhere.**
@@ -179,11 +179,11 @@ You will need to configure a DNS entry for the new host you have provisioned, so
 
 Changes generally propagate to all Route 53 servers within 60 seconds. When propagation is done, you will be able to route traffic to your EC2 instance by using the name of the record that you created.
 
-- **On MAC or Windows:**  Go back to your terminal window, and type ```nslookup domainname```  where domainname is the DNS name you have registered.   When it returns the IP address you entered for **Value**, you are ready to proceed.  ***Do not proceed until this is the case.***
+- **On MAC/Linux or Windows:**  Go back to your terminal window, and type ```nslookup domainname```  where domainname is the DNS name you have registered.   When it returns the IP address you entered for **Value**, you are ready to proceed.  ***Do not proceed until this is the case.***
 
 **10. Log into your instance.**
 
-- **Using a MAC**
+- **Using a MAC/Linux**
 At your terminal window type:
 ```
 ssh -i {ssh-key} ubuntu@{ip address}
@@ -203,7 +203,7 @@ Where the {ssh-key} is the key you created, the {ip-address} is the IP address o
 
 Type (enter at the end of each line)
 ```
-curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/Install_script/Install.sh
+curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 chmod +x Install.sh
 sudo ./Install.sh
 ```
