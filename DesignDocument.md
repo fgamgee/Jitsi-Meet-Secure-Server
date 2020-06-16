@@ -36,7 +36,7 @@ A Bash or similar script will be utilized to run the installation process. The f
 
 ### 2.2 Component Diagram
 
-![ui component](./diagram/Fig1.png)
+![ui component](./diagrams/Fig1.png)
 
 
 ## 3 User Interface Design
