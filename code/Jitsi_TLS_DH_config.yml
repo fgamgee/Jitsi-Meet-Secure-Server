@@ -1,0 +1,139 @@
+- name: Configure files for services, turnserver, prosody, nginx, OpenSSH, generate SSL key
+  hosts: localhost
+  become: yes
+
+  tasks:
+  - name: Grepping hostname from JVB config - Always run.
+    shell: grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//'
+    register: domain_name
+
+  - name: OpenSSH update Key exchange algorithms to Mozilla recommendations.
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: 'KexAlgorithms'
+      line: 'KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256'
+      state: present
+
+  - name: OpenSSH Supported HostKey algorithms by order of preference.
+    blockinfile:
+      path: /etc/ssh/sshd_config
+      marker: "# {mark} Ansible managed HostKey and AuthenticationMethods"
+      insertafter: '#HostKey /etc/ssh/ssh_host_ed25519_key'
+      state: present
+      block: |
+        HostKey /etc/ssh/ssh_host_ed25519_key
+        HostKey /etc/ssh/ssh_host_rsa_key
+        HostKey /etc/ssh/ssh_host_ecdsa_key
+        AuthenticationMethods publickey
+
+  - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver
+    lineinfile:
+      path: /etc/turnserver.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      insertbefore: 'syslog'
+      state: present
+    with_items:
+      - { regexp: 'no-tlsv1\n', line: 'no-tlsv1'}
+      - { regexp: 'no-tlsv1_1\n', line: 'no-tlsv1_1'}
+      - { regexp: 'cipher-list', line: 'cipher-list=ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384'}
+
+  - name: Add long Diffie-Hellman key capability to turnserver.conf
+    lineinfile:
+      path: /etc/turnserver.conf
+      regexp: 'dh2066'
+      insertbefore: 'syslog'
+      line: dh2066
+      state: present
+
+  - name: Secure SSL/TLS and ciphers for prosody
+    blockinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout }}.cfg.lua
+      marker: "-- {mark} Ansible managed SSL and ciphers"
+      insertafter: 'consider_bosh_secure = true;'
+      state: present
+      block: |
+        ssl = {
+          protocol = "tlsv1_2+";
+          ciphers = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+        }
+
+  - name: Allow only TLS 1.2 and 1.3 in nginx (based on Mozilla recommendations)
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      regexp: '    ssl_protocols'
+      line: '    ssl_protocols TLSv1.2 TLSv1.3;'
+      state: present
+
+  - name: Use Mozilla recommended ciphers for nginx
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      regexp: '    ssl_ciphers '
+      line: '    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;'
+      state: present
+
+  - name: Allow client to choose cipher, to increase performance
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      regexp: '    ssl_prefer_server_ciphers'
+      line: '    ssl_prefer_server_ciphers off;'
+      state: present
+
+  - name: nginx Strict-Transport-Security
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      regexp: '    add_header Strict-Transport-Security'
+      line: '    add_header Strict-Transport-Security "max-age=63072000; includeSubdomains" always;'
+      state: present
+
+  - name: nginx config, session timeout, cache, tickets
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+      insertbefore: '    add_header Strict-Transport-Security'
+    with_items:
+      - { regexp: '    ssl_session_timeout', line: '    ssl_session_timeout 1d;'}
+      - { regexp: '    ssl_session_cache', line: '    ssl_session_cache shared:SSL:10m;  # about 40000 sessions' }
+      - { regexp: '    ssl_session_tickets', line: '    ssl_session_tickets off;'}
+
+  - name: nginx make secure DH Keys - must run openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+    lineinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+      insertafter: '    add_header Strict-Transport-Security'
+    with_items:
+      - { regexp: '    ssl_ecdh_curve secp384r1;', line: '    ssl_ecdh_curve secp384r1; # Requires nginx >= 1.1.0' }
+      - { regexp: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;', line: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;'}
+
+  - name: nginx add security headers CSP, Block iFraming, MIME sniffing etc...
+    blockinfile:
+      path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
+      marker: "    # {mark} Ansible managed security headers"
+      insertafter: 'root /usr/share/jitsi-meet;'
+      state: present
+      block: |2
+            # Add Content Security policy, allow things only from myself.  Need unsafe-inline js
+            # this mitigates XXS attacks
+            # https://scotthelme.co.uk/hardening-your-http-response-headers/#x-frame-options
+            add_header Content-Security-Policy "default-src 'self' data: 'unsafe-inline' " always;
+            # If too restictive, change DENY to SAMEORIGIN - this mitigates clickjacking risk
+            add_header X-Frame-Options "DENY" always;
+            # Not necessary with CSP above, except for older browsers where it mildly reduces risk of reflective XXS
+            add_header X-Xss-Protection "1; mode=block" always;
+            # used to try and mitigate against MIME sniffing vulnerabilities.
+            add_header X-Content-Type-Options "nosniff" always;
+            # This prevents the browser from telling the next site where you came from, privacy issue.
+            add_header Referrer-Policy "strict-origin" always;
+
+  - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
+    shell: ls /etc/ssl/certs/dhparam.pem
+    register: SSLfile_exists
+    ignore_errors: True
+
+  - name: Make SSL key for secure DH Key exchange... If needed, this will take a LONG time... (2 minutes?)
+    shell: openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+    when: SSLfile_exists is failed
