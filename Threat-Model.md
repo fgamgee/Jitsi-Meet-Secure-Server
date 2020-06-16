@@ -50,3 +50,4 @@ Known issues:
    phoneme-level resolution.  In scenarios where this is a concern,
    additional mechanisms MUST be used to protect the confidentiality of
    the header extension.
+* Phone dial-in to meetings is supported by jigasi, which does not support TLSv1.2, but TLSv1 which has known security issues.  Default Jitsi-Meet therefore will not support phone dial-in and limit WebRTC to TLSv1.2.
