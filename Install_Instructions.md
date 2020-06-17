@@ -120,14 +120,11 @@ Now, on the far left in front of the key name you should see -r----------@. If s
 Click on EC2 Dashboard on the left column. Midway down, you will see "Launch instance" as an orange button.
 In the search box type **Ubuntu** and hit return. Select the Ubuntu 18.04 LTS and make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm.
 
-*Choose Instance Type.*
+For your instance type choose t2.micro – if you are doing this for the first time, which is free for 750 hours of use. This will allow conferences of a few people to test. For use with more people, you will need to pay for a larger instance (eg. T3.large), but you can easily do this later. Guidance on the size of instance you will need and cost is at the end of the document.
 
-- Choose t2.micro – if you are doing this for the first time, which is free for 750 hours of use. This will allow conferences of a few people to test. For use with more people, you will need to pay for a larger instance (eg. T3.large), but you can do this later. Guidance on the size of instance you will need and cost is at the end of the document.
+Now skip forward to step 6 of the wizard to set up the firewall. Amazon's default selections for steps 3-5 are fine, but you can review them if you want.
 
--	Click **Next: Configure Instance Details.**
-- Accept defaults on the next page and click on **Next: Add Storage.**
-- Accept defaults on the next page and click on **Next: Add Tags.**
-- Accept defaults on the next page and click on **Next: Configure Security Groups.**
+![Skip steps 3-5](./diagrams/setup_skip_forward.png)
 
 ### 6. Set up the Amazon firewall (*aka* Security Group).
 
@@ -202,11 +199,11 @@ Where the {ssh-key} is the key you created and {your-domain-name} is the domain 
 
 If you get a hang during this operation, you should check both that you typed the domain name correctly and that you set up the security group in step 6 properly.
 
- You should get a prompt that looks like (the IP shown will not the Elastic IP you configured in step 8):
- ```
- [ubuntu@ip-somenumbers:~$
- ```
- Optional: Use your mouse to drag the sides and make a bigger screen, so it will be easier to see for your work below.
+You should get a prompt that looks like (the IP shown will not the Elastic IP you configured in step 8):
+```
+[ubuntu@ip-somenumbers:~$
+```
+Optional: Use your mouse to drag the sides and make a bigger screen, so it will be easier to see for your work below.
 
 
 ### 11. Run three commands on the command line.
@@ -218,7 +215,7 @@ chmod +x Install.sh
 sudo ./Install.sh
 ```
 ### 12. Answer a few prompts.
-_If you make a mistake anywhere, it's very easy to start over. See below for how to do this._
+_If you make a mistake anywhere, it's very quick and easy to start over. See below for how to set up a new instance._
 
 Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **\<Yes\>** - press enter – **TWICE**.
 
@@ -251,13 +248,13 @@ You can add as many users as you want. These are the users that are allowed to h
 
 ### 14. Reboot to apply patches
 
-You should reboot your instance to apply the security patches we installed in step 12. Head to the AWS EC2 Console, looking down the left sidebar under the **Instances** dropdown, and click on _Instances_. Shut down your instance via the **Actions** drop down and under **Instance State** choose stop. After the instance reports it has stopped, go back to the **Actions** drop down and choose start.
+You should reboot your instance to apply the security patches we installed in step 12. Head to the AWS EC2 Console, looking down the left sidebar under the **Instances** dropdown, and click on _Instances_. Shut down your instance by selecting **Actions** -> **Instance State** -> **Stop**. After the instance reports it has stopped, go back to the **Actions** drop down and choose start.
 
 ![Rebooting screenshot](./diagrams/where_to_start_stop_instance.png)
 
 ### 15. Use your Jitsi Server to host video-conferences!
 
-You don't need to connect via SSH in order to use Jitsi. Just start up your instance from the AWS EC2 Console.
+You don't need to connect via SSH in order to use Jitsi. Just start up your instance from the AWS EC2 Console. When you are done with your call stop (not terminate) it.
 
 After your instance is started and reports *2/2* in the status checks bar, type your domain name in browser URL bar. At the Start a Meeting prompt, type in a long (at least four word) meeting name so that it cannot be guessed by adversaries.
 
@@ -266,18 +263,12 @@ The host will need to login with a username and password (set above). Then, he h
 ### 16. Expanding to more users
 Once you have tested Jitsi-Meet, you will likely want to set up a larger instance for use with more participants. Go back to step 5 and select a more powerful instance. Pricing is here - https://aws.amazon.com/ec2/pricing/on-demand/. What is important for Jitsi is network bandwidth and to a lessor extent memory. CPU is not very important and disk storage needed is minimal (4 GB) if you do not set up to record meetings (which is not provided for in these instructions). A good choice might be T3.large at about $0.10 an hour which should be fine for a dozen or so participants. You can see how much of the instance memory, CPU, etc.. is being used by selecting the instance on the **EC2 Instance** screen and selecting the **Monitor** tab at the bottom of the page.
 
-When launching a new instance, you can use the security group and key pair you have already set up, reallocate your Elastic IP and skip setting the domain name (step 9) as you are using the same Elastic IP for your new instance. There is no additional cost for launching an instance, but you will need to pay for more disk space if you use more than 30 GB a month, so terminate instances (they are deleted) you will never use and if you create more than about six instances, you will start incurring disk usage cost.
-
 Leaving your instance running can get expensive, but if you turn them on when you need it, and off when you are done, the cost is very modest. Amazon AWS does have a scheduler ($5.00 a month) which you may want to look into if you want to automate turning the instance on and off.
-
-## Troubleshooting server configurations
-
-If something went wrong after you started setting up your server the easiest thing to do is to delete this instance and start up a new one. You won't have to re-register a domain name or pay extra fees - EC2 instances are designed to be easily disposable.
 
 ### Setting up a new instance
 
 Start back at step 5 and follow the guide again with these modifications:
-- For step 6, choose "Select an existing security group" and select the one you already set up:
+- For step 6, choose "Select an existing security group" and select the one you already set up (_If you couldn't connect to your instance via SSH, create a new security group instead. You may have messed the first one up!_):
 ![Selecting existing security group](./diagrams/select_existing_security_group.png)
 
 - If you already did step 8 and allocated an Elastic IP, skip the steps to allocate an Elastic IP. You still need to associate it with your new instance.
@@ -287,5 +278,9 @@ Start back at step 5 and follow the guide again with these modifications:
 
 ### Deleting old instances
 
-You don't have to delete old instances - I often have several hanging around. They don't cost you any money if they are off. But if you do want to, open the AWS EC2 Console, click on the **Actions** menu, and hit **Terminate**:
+You don't have to delete old instances - I often have several hanging around. They only cost you money if you take up more than 30 GB of space total. But if you do want to, open the AWS EC2 Console, click on the **Actions** menu, and hit **Terminate**:
 ![Deleting instance](./diagrams/terminate_instance.png)
+
+## Troubleshooting server configurations
+
+If something went wrong after you started setting up your server the easiest thing to do is to delete this instance and start up a new one (see step 16). You won't have to re-register a domain name or pay extra fees - EC2 instances are designed to be easily disposable.
