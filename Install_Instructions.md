@@ -1,14 +1,14 @@
 
 # Hosting a Private/Secure Jitsi-Meet Server in the cloud (AWS)
 
-This is step by step instructions of how to host a security hardened instance of Jitsi-Meet in the cloud. It is specific to AWS, but should be modifiable to other cloud providers. Expect to pay a modest amount, less than $15 for testing for two to three participants. To run your own instance for a dozen or so participants will cost an additional about $0.10 an hour. You should expect to spend about an hour each, in two separate sittings.
+This is step by step instructions of how to host a security hardened instance of Jitsi-Meet in the cloud. It is specific to AWS, but should be modifiable to other cloud providers. Expect to pay a modest amount, less than $15 for testing for two to three participants. To run your own instance for a dozen or so participants will cost an additional about $0.10 an hour. You should expect to spend about an hour each, in two separate sittings to follow these instructions.
 
 ## High level overview of the process
 
 ### First Sitting
 
 1. Make an AWS account for yourself.
-2. Register a domain name for your site. (Note, the domain can take up to three days for the registration to go through, but my experience has been less than 30 minutes. You get an e-mail when the domain is registered.) You have to wait for this to be successful, before proceeding in the process.
+2. Register a domain name for your site. (Note, the domain can take up to three days for the registration to go through, but my experience has been less than 30 minutes for a .net domain. You get an e-mail when the domain is registered.) You have to wait for this to be successful, before proceeding in the process.
 
 ### Second Sitting
 3. Log onto AWS (if you logged out while waiting for the domain registration).
@@ -70,11 +70,11 @@ After completing, you will see the screen below:
 
 ![DNS Finished](./diagrams/After_Domain_reg.png)
 
-After you get an e-mail that your domain was successfully registered, you can proceed. This usually takes 20 minutes with .net domain names but can take much longer.
+After you get an e-mail that your domain was successfully registered, you can proceed. This usually takes 20 minutes with .net domain names but can take much longer (3 days).  If instead of getting a "successfully registered e-mail", you get an e-mail stating there are issues with your domain registration, follow the instructions in the e-mail to clear up the issues.  You might need to verify your e-mail, etc.  There is no point in proceeding until your domain is successfully registered.
 
 ## Second sitting - Set up your Amazon EC2 instance as a Jitsi server
 
-_Taken from https://aws.amazon.com/de/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/_
+_Adapted from https://aws.amazon.com/de/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/_
 
 ### 3. Log onto AWS (if you logged out while waiting for the domain registration).
 
@@ -84,7 +84,7 @@ Logon to the AWS Console (https://aws.amazon.com/console/)). Under services, cli
 
 Create a key pair that you will use to SSH into your Jitsi server. From the EC2 console, on the left-hand side, click on Create Key Pairs (Right corner).
 On the screen that pops up, you must select the file type. Select the **.pem** format (even if you use Windows).
-Key pairs are regional. You need to select a region close to your users, for best performance. The region can be changed in the upper right corner – see red circle.
+Key pairs are regional. You need to select a region close to your users, for best performance. The region can be changed in the upper right corner, between the search box and the support button.
 
 ![SSH keypair](./diagrams/keypair.png)
 
@@ -94,7 +94,8 @@ After selecting the most appropriate region and the correct File format, enter a
 
 On MAC/Linux systems you will need to change the file permissions of the key before SSH will allow you to use it. Windows users can skip this step.
 
-Open a terminal window. On a Mac, you can find this under Launch Pad, in the Other folder. 
+
+Open a terminal window. On a Mac, you can find this under Launch Pad in the Other folder.
 At the prompt, type
 ```
 cd foldername
@@ -190,6 +191,10 @@ Changes generally propagate to all Route 53 servers within 60 seconds. When prop
 Now go back to your terminal window (PowerShell on Windows) and type ```nslookup domainname``` where domainname is the DNS name you have registered (ex. ```nslookup example.net```). When it returns the IP address you entered for **Value**, you are ready to proceed. ***Do not proceed until this is the case.***
 
 ### 10. Log into your instance.
+
+Go to your terminal window and you need to be in the same directory as your key.
+
+*On Windows, get a terminal window by typing powershell in the search bar and opening the PowerShell app.  To see which directory (aka folder) you are in, type ```pwd```   To see what files and directories are in your directory, type ```ls```  To change your directory, type ```cd .\[directoryname]\```*
 
 At your terminal window (PowerShell on Windows) type:
 ```
