@@ -100,8 +100,8 @@ At the prompt, type
 ```
 cd foldername
 ```
-where ```foldername``` is the name of the folder you saved the key to – e.g. Documents. 
-By typing 
+where ```foldername``` is the name of the folder you saved the key to – e.g. Documents.
+By typing
 ```
 ls -l
 ```
@@ -112,7 +112,7 @@ chmod 400 keyname
 Note, you can use Tab key to autocomplete the name once you have typed enough letters for there to be only one choice left.
 Check that you made the change by typing
 ```
-ls -l 
+ls -l
 ```
 Now, on the far left in front of the key name you should see -r----------@. If so, you were successful and can move on. Leave the terminal open though, you will need it later.
 
@@ -204,7 +204,7 @@ Where the {ssh-key} is the key you created and {your-domain-name} is the domain 
 
 If you get a hang during this operation, you should check both that you typed the domain name correctly and that you set up the security group in step 6 properly.
 
-You should get a prompt that looks like (the IP shown will not the Elastic IP you configured in step 8):
+You should get a prompt that looks like (the IP shown will not be the Elastic IP you configured in step 8):
 ```
 [ubuntu@ip-somenumbers:~$
 ```
@@ -220,7 +220,7 @@ chmod +x Install.sh
 sudo ./Install.sh
 ```
 ### 12. Answer a few prompts.
-_If you make a mistake anywhere, it's very quick and easy to start over. See below for how to set up a new instance._
+_If you make a mistake anywhere, it's very quick and easy to start over by setting up a new instance. See below for how to set up a new instance._
 
 Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **\<Yes\>** - press enter – **TWICE**.
 
@@ -265,7 +265,7 @@ After your instance is started and reports *2/2* in the status checks bar, type 
 
 The host will need to login with a username and password (set above). Then, he has the option of setting a different password to join the this meeting. Other participants can join by going typing domainname/meetingname in the URL bar of their browser. If a password for the meeting has been set by the host, they will be prompted for a password. Enjoy!
 
-### 16. Expanding to more users
+### 16. Expanding to more meeting participants
 Once you have tested Jitsi-Meet, you will likely want to set up a larger instance for use with more participants. Go back to step 5 and select a more powerful instance. Pricing is here - https://aws.amazon.com/ec2/pricing/on-demand/. What is important for Jitsi is network bandwidth and to a lessor extent memory. CPU is not very important and disk storage needed is minimal (4 GB) if you do not set up to record meetings (which is not provided for in these instructions). A good choice might be T3.large at about $0.10 an hour which should be fine for a dozen or so participants. You can see how much of the instance memory, CPU, etc.. is being used by selecting the instance on the **EC2 Instance** screen and selecting the **Monitor** tab at the bottom of the page.
 
 Leaving your instance running can get expensive, but if you turn them on when you need it, and off when you are done, the cost is very modest. Amazon AWS does have a scheduler ($5.00 a month) which you may want to look into if you want to automate turning the instance on and off.
@@ -273,17 +273,23 @@ Leaving your instance running can get expensive, but if you turn them on when yo
 ### Setting up a new instance
 
 Start back at step 5 and follow the guide again with these modifications:
-- For step 6, choose "Select an existing security group" and select the one you already set up (_If you couldn't connect to your instance via SSH, create a new security group instead. You may have messed the first one up!_):
+- For step 6, choose "Select an existing security group" and select the one you already set up (_If you couldn't connect to your instance via SSH, create a new security group instead with a new name. You may have messed the first one up!_):
 ![Selecting existing security group](./diagrams/select_existing_security_group.png)
 
 - If you already did step 8 and allocated an Elastic IP, skip the steps to allocate an Elastic IP. You still need to associate it with your new instance.
 - If you already set up DNS in step 9, skip all of step 9.
-- At step 10, you will get a scary **WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED** message when you try to SSH in. As a security feature, SSH keeps track of all of the instances you connect via SSH to in the ```known_hosts``` file. It can't distinguish between a new instance because we created a new one and a new instance because somebody is trying to spy on you. So we need to make SSH forget about the old instance so it will connect to the new one. If you have never used SSH before, the easiest thing to do is just delete ```known_hosts```, which lives at ```{your_home_directory}/.ssh/known_hosts``` (ex. ```C:\Users\John\.ssh\known_hosts``` on Windows). SSH will recreate it automatically.
-    - If you have used SSH before and you have other entries in ```known_hosts``` you want to save, open up the file in your favorite text editor and delete the line starting with your host name (it's probably the last one).
+- At step 10, you will get a scary **WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED** message when you try to SSH in. As a security feature, SSH keeps track of all of the instances you connect via SSH to in the ```known_hosts``` file. It can't distinguish between a new instance because we created a new one and a new instance because somebody is trying to spy on you. So we need to make SSH forget about the old instance so it will connect to the new one. Type or paste:
+
+```
+ssh-keygen -R {your-domain-name}
+ssh -i {ssh-key} ubuntu@{your-domain-name}
+```
+The first command makes it forget about the old instance so it will connect to the new one.
+After the second command, you will need to type ```yes``` to the prompt question.
 
 ### Deleting old instances
 
-You don't have to delete old instances - I often have several hanging around. They only cost you money if you take up more than 30 GB of space total. But if you do want to, open the AWS EC2 Console, click on the **Actions** menu, and hit **Terminate**:
+You don't have to delete old instances - I often have several hanging around. They only cost you money if you take up more than 30 GB of space total, and these instances are pretty small (< 5GB). But if you do want to get rid of an instance, open the AWS EC2 Console, click on the **Actions** menu, and hit **Terminate**:
 ![Deleting instance](./diagrams/terminate_instance.png)
 
 ## Troubleshooting server configurations
