@@ -102,7 +102,7 @@ However, there is no convincing evidence that one videoconference solution is mo
 
 **Search term "WebRTC and Priva"**
 
-![Search](./images/dblp_WebRTCpriva.png)
+![Search](./images/dblp_WebRTCPriva.png)
 **Search term "videoconferenc"**
 
 ![Search](./images/dblp1.png)
