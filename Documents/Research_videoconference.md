@@ -98,14 +98,14 @@ However, there is no convincing evidence that one videoconference solution is mo
 ## Appendix A, dlbp search
 **Search term "WebRTC and Secur"**
 
-![Search](./images/dblp_WebRTC_secur.png)
+![Search](./images/dblp_WebRTCsecur.png)
 
 **Search term "WebRTC and Priva"**
 
-![Search](./images/dblp_WebRTC_priva.png)
+![Search](./images/dblp_WebRTCpriva.png)
 **Search term "videoconferenc"**
 
-![Search](./images/dblp_1.png)
-![Search](./images/dblp_2.png)
-![Search](./images/dblp_3.png)
-![Search](.images/dblp_4.png)
+![Search](./images/dblp1.png)
+![Search](./images/dblp2.png)
+![Search](./images/dblp3.png)
+![Search](.images/dblp4.png)
