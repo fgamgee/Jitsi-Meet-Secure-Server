@@ -106,7 +106,6 @@ However, there is no convincing evidence that one videoconference solution is mo
 **Search term "videoconferenc"**
 
 ![Search](./images/dblp_1.png)
-![Search](./images/dblp_1.png)
 ![Search](./images/dblp_2.png)
 ![Search](./images/dblp_3.png)
 ![Search](.images/dblp_4.png)
