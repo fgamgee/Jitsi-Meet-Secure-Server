@@ -65,6 +65,14 @@
       line: '    ssl_protocols TLSv1.2 TLSv1.3;'
       state: present
 
+  - name: Remove Version number of nginx in http headers
+    lineinfile:
+      path: /etc/nginx/nginx.conf
+      regexp: 'server_tokens'
+      line: "\tservertokens off;"
+      state: present
+
+
   - name: Use Mozilla recommended ciphers for nginx
     lineinfile:
       path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
