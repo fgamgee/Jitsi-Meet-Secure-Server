@@ -140,7 +140,7 @@ Now skip forward to step 6 of the wizard to set up the firewall. Amazon's defaul
 - Click Add rule and change the type to "Custom UDP", and put 10000 in the Port Range box and set the source to **Anywhere.**
 
 Your screen should look like below:
-![Security Group](./diagrams/Security_settings.png)
+![Security Group](./diagrams/Security_Settings.png)
 
 ### 7. Finish launching your instance.
 
