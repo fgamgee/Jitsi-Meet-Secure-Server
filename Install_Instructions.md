@@ -51,9 +51,9 @@ This combination of your email address and password is called your root identity
 
 #### Estimated cost
 
-- *There's an annual fee to register a domain, ranging from $9 to several hundred dollars, depending on the top-level domain, such as .com. For more information, see [Route 53 Pricing](https://d32ze2gidvkk54.cloudfront.net/Amazon_Route_53_Domain_Registration_Pricing_20140731.pdf) for Domain Registration. This fee is not refundable.* (I recommend domain names ending in .net, they only cost $11 for the first year, are generally recognizable, and register quickly. .be names are cheaper, but can take much longer to process.)
+- *There's an annual fee to register a domain, ranging from $9 to several hundred dollars, depending on the top-level domain, such as .com. For more information, see [Route 53 Pricing](https://d32ze2gidvkk54.cloudfront.net/Amazon_Route_53_Domain_Registration_Pricing_20140731.pdf) for Domain Registration. This fee is not refundable.* (I recommend domain names ending in .net, they only cost $11 for the first year, are generally recognizable, and register quickly. Donaim names ending in unusual prefixes, _e.g._  ".be" names are sometimes cheaper, but can take much longer to process.)
 
-- *When you register a domain, we automatically create a hosted zone that has the same name as the domain. You use the hosted zone to specify where you want Route 53 to route traffic for your domain. The fee for a hosted zone is $0.50 per month.*"
+- *When you register a domain, AWS automatically creates a hosted zone that has the same name as the domain. You use the hosted zone to specify where you want Route 53 to route traffic for your domain using an IP address (which you will get later). The fee for a hosted zone is $0.50 per month.*"
 
 #### Steps
 Go to [https://console.aws.amazon.com/route53/home](https://console.aws.amazon.com/route53/home) and follow the steps below:
@@ -78,17 +78,24 @@ _Adapted from https://aws.amazon.com/de/blogs/opensource/getting-started-with-ji
 
 ### 3. Log onto AWS (if you logged out while waiting for the domain registration).
 
-Logon to the AWS Console (https://aws.amazon.com/console/)). Under services, click on EC2. On the left hand side, scroll down until you see "Key Pairs" – then follow below.
+Logon to the AWS Console (https://aws.amazon.com/console/)). Under services, click on EC2. _(If you have a hard time finding EC2, you can find it by clicking on the Services drop down button, top left of page and look under "Compute")_. After clicking on EC2, on the left hand side, scroll down until you see "Key Pairs" – click on it, and then follow below.
 
 ### 4. Make a SSH private/public keypair
 
-Create a key pair that you will use to SSH into your Jitsi server. From the EC2 console, on the left-hand side, click on Create Key Pairs (Right corner).
-On the screen that pops up, you must select the file type. Select the **.pem** format (even if you use Windows).
-Key pairs are regional. You need to select a region close to your users, for best performance. The region can be changed in the upper right corner, between the search box and the support button.
+Create a key pair that you will use to SSH into your Jitsi server. A "key" is just a special file.  You will be creating a public/private key pair, and saving the private part of your key to your computer and putting the public part of the key into the Jitsi Server you create in a much later step.
+
+Click on Create Key Pairs (Right corner, see orange box below). *(Note, if you have trouble with this step or below, it is OK to Create another key pair, the first few are free, with a different name, e.g. JitsiKey2 instead of JitsiKey.  Then just use JitsiKey2 everywhere below.)*
+
+![creat key](./diagrams/create_key.png)
+
+On the screen that pops up (see below), you must select the file type. Select the **.pem** format (even if you use Windows).
+Key pairs are regional. You need to select a region close to your users, for best performance of Jitsi. The region can be changed in the upper right corner, between the search box and the support button (see red ellipse in diagram).
 
 ![SSH keypair](./diagrams/keypair.png)
 
-After selecting the most appropriate region and the correct File format, enter a name for the key pair and click on the **Create Key Pair** button. Save the key that pops up on your machine to a folder (Documents, Desktop, etc..). Keep this safe.
+After selecting the most appropriate region and the correct File format (pem), enter "JitsiKey" in the box where it says "enter key pair name" and click on the **Create Key Pair** button. Save the file (*aka JitsiKey.pem*) that pops up on your machine to your Documents folder. If you are not asked where to save the file (key), your browser probably put it in your downloads folder.  Click on the download icon ![](./diagrams/download_icon.png) and the magnifying glass which appears next to the name of the file, and move the file to the Documents folder.
+
+You will need this file (JitsiKey.pem) to log in to the instance you are going to create.  (If you are familiar with key pairs and SSH, you can deviate from these instructions and give the key pair a different name, folder, etc..  If you have never done this, follow the instructions _**exactly**_).
 
 #### MAC/Linux only - instructions to change the permission of the key.
 
@@ -98,39 +105,47 @@ On MAC/Linux systems you will need to change the file permissions of the key bef
 Open a terminal window. On a Mac, you can find this under Launch Pad in the Other folder.
 At the prompt, type
 ```
-cd foldername
+cd Documents
 ```
-where ```foldername``` is the name of the folder you saved the key to – e.g. Documents.
-By typing
+to go to the folder where you saved your key (JitsiKey.pem).  You can check that you are in the correct folder, and your key is there by typing _(Note, you can use Tab key to autocomplete the name "JitsiKey.pem" once you have typed enough letters for there to be only one choice left.)_
+
 ```
-ls -l
+ls -l JitsiKey.pem
 ```
-you will list the files in the folder. Make sure you see your key. Then type
+Make sure you see your file. Then type
 ```
-chmod 400 keyname
+chmod 400 JitsiKey.pem
 ```
-Note, you can use Tab key to autocomplete the name once you have typed enough letters for there to be only one choice left.
+
 Check that you made the change by typing
 ```
-ls -l
+ls -l JitsiKey.pem
 ```
 Now, on the far left in front of the key name you should see -r----------@. If so, you were successful and can move on. Leave the terminal open though, you will need it later.
 
 ### 5. Begin to launch instance.
 
-Click on EC2 Dashboard on the left column. Midway down, you will see "Launch instance" as an orange button.
-In the search box type **Ubuntu** and hit return. Select the Ubuntu 18.04 LTS and make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm.
+Click on Instances (the one in smaller print, directly above Instance Types) on the left column. You will see "Launch Instance" as a big blue button.  After clicking on the big blue "Launch Instance", in the search box type **Ubuntu** and hit return. Click **Select** on the Ubuntu 18.04 LTS row and make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm (see below for example).
 
-For your instance type choose t2.micro – if you are doing this for the first time, which is free for 750 hours of use. This will allow conferences of a few people to test. For use with more people, you will need to pay for a larger instance (eg. T3.large), but you can easily do this later. Guidance on the size of instance you will need and cost is at the end of the document.
+![ChooseInstance](./diagrams/Ubuntu18.png)
 
-Now skip forward to step 6 of the wizard to set up the firewall. Amazon's default selections for steps 3-5 are fine, but you can review them if you want.
-
+On the next screen, shown below,
 ![Skip steps 3-5](./diagrams/setup_skip_forward.png)
+
+Choose t2.micro – if you are doing this for the first time, which is free for 750 hours of use. This will allow conferences of a few people to test. For use with more people, you will need to pay for a larger instance (eg. T3.large), but you can easily do this later. Guidance on the size of instance you will need and cost is at the end of the document.
+
+Now skip forward to step 6 of the wizard by clicking on step 6, marked by the red arrow in the figure, to set up the firewall. (Amazon's default selections for steps 3-5 are fine, but you can review them if you want.)
+
 
 ### 6. Set up the Amazon firewall (*aka* Security Group).
 
+- Leave the "Create a new Security group radio button selected".
+
 - Change the security group name to **Jitsi-Security-Group** or another name you will remember.
-- **VERY IMPORTANT:** Change the SSH Source to your IP address, by clicking the selection custom and choosing "My IP". (This will not work properly if you are behind a VPN – you will have to set up a bastion host- *No instructions here for that..., **NB:** you can use your VPN when you use Jitsi, just not for the installation, unless you set up a bastion*).
+
+- **VERY IMPORTANT:** Change the SSH Source to your IP address, by clicking the selection custom and choosing "My IP". (This likely will not work properly if you are behind a VPN (Virtual Private Network).  Drop your VPN for this step only, and steps 10-12 below.  You can use your VPN for all other steps, as well as when you use Jitsi, just not when you log into your instance and when you set up your firewall.).
+
+*If you want to stay behind your VPN– you will have to set up a bastion host- No instructions here for that..., **NB:** you can use your VPN when you use Jitsi, just not for the installation, unless you set up a bastion.  If you do not know what a VPN is, you are likely not using a VPN.  If you want to test it, go to https://whatismyipaddress.com/  If that repositories reports your address, you are not behind a VPN.  If it reports you are somewhere else (like a different town or state), you are behind a VPN).*
 
 ![SSH image](./diagrams/SSH_image.png)
 
@@ -146,10 +161,10 @@ Your screen should look like below:
 
 - Click on **Next: Review and Launch.**
 - Click on **Launch.**
-- On the pop-up list, select the ssh key you created and tick the acknowledge.
+- On the pop-up list, select the ssh key you created (JitsiKey) and tick the acknowledge.
 - Click on **Launch Instance** to kick off the creation, and on the following screen click on **View Instances** (bottom right corner).
 
-For this to provision and set up will take a few minutes. On the console, once your instance changes to status checks RUNNING and 2/2 checks passed, you have completed the launch of your instance. While waiting, click in the Name box, and give your Instance a name (anything is OK, but it is easier to remember than an ID. Don't forget to hit the check mark to save!).
+For this to provision and set up will take a few minutes. On the console, once your instance changes to status checks RUNNING and 2/2 checks passed, you have completed the launch of your instance. While waiting, click the pencil that appears when you hover on the right side of the empty Name box, and give your Instance a name (anything is OK, but it is easier to remember than an ID. Don't forget to hit the check mark to save!).
 
 Your screen should look like this:
 
@@ -194,13 +209,13 @@ Now go back to your terminal window (PowerShell on Windows) and type ```nslookup
 
 Go to your terminal window and you need to be in the same directory as your key.
 
-*On Windows, get a terminal window by typing powershell in the search bar and opening the PowerShell app.  To see which directory (aka folder) you are in, type ```pwd```   To see what files and directories are in your directory, type ```ls```  To change your directory, type ```cd .\[directoryname]\```*
+*On Windows, get a terminal window by typing powershell in the search bar and opening the PowerShell app.  To see which directory (aka folder) you are in, type ```pwd```   To see what files and directories are in your directory, type ```ls```  To change your directory, type ```cd .\Documents```*
 
 At your terminal window (PowerShell on Windows) type:
 ```
-ssh -i {ssh-key} ubuntu@{your-domain-name}
+ssh -i JitsiKey.pem Ubuntu@{your-domain-name}
 ```
-Where the {ssh-key} is the key you created and {your-domain-name} is the domain name you registered (ex. ```ssh -i aws_key.pem ubuntu@example.net```). Type **yes** to the question about whether you are sure you want to continue connecting.
+Where the JitsiKey.pem is the key you created and {your-domain-name} is the domain name you registered (ex. ```ssh -i aws_key.pem ubuntu@example.net```). Type **yes** to the question about whether you are sure you want to continue connecting.
 
 If you get a hang during this operation, you should check both that you typed the domain name correctly and that you set up the security group in step 6 properly.
 
