@@ -144,5 +144,6 @@ systemctl start nginx.service
 systemctl start prosody.service
 systemctl start jicofo.service
 
-printf "Installation is complete!  However, to apply security patches you need to stop, and then start your instance.\n"
+printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
+printf "However, to apply security patches you need to stop, and then start your instance.\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
