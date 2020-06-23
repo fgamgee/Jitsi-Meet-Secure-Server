@@ -21,7 +21,7 @@ This is step by step instructions of how to host a security hardened instance of
 10. Log into your instance.
 11. Run three commands on the command line.
 12. Answer a few prompts.
-13. Set the users and their passwords. Only these users can host meetings on your server, using the username and password you set.
+13. Add additional meeting hosts and their passwords. Only these users can host meetings on your server, using the username and password you set.
 14. Restart your server
 15. Use your Jitsi Server to host video-conferences!
 16. Expand to more users if necessary
@@ -252,19 +252,24 @@ Enter the email address associated with your domain name and press enter. This i
 Then lots more text. You may see a couple of  ```[WARNING]``` messages but that is normal. The Init AIDE task will also take several minutes, so be patient if it appears to hang.
 Eventually you will see the message:
 ```
-Do not forget to run sudo prosodyctl register <username> jitsi-meet.example.com <password>
+Username for host of meeting:
 ```
+You need to enter a username for someone to host a meeting.  Type the username and press ENTER.  Then you will see:
+
+```
+Password:
+```
+Type in a password for the host to use when starting meetings and press ENTER.  *Note, the password will *NOT* appear on the screen as you type.*
 
 Installation is complete!
 
-### 13. Set the users and their passwords.
+### 13. Add more meeting hosts and their passwords (optional).
 _These users are the only people who can host meetings on your server, using the username and password you set._
-
-Copy/paste or type the following command, but replace the <> with your information:
+In the installation, you added one host username and password.  To add more meeting hosts, copy/paste or type the following command:
 ```
-sudo prosodyctl register <username> <domain name> <password>
+sudo ./add_host.sh
 ```
-You can add as many users as you want. These are the users that are allowed to host meetings. Other people can join a meeting, but only hosts can start meetings.
+You can add as many meeting hosts as you want. These are the users that are allowed to host meetings. Other people can join a meeting, but only hosts can start meetings.  To change the password of a meeting host, you can use this same command. Use the same username for the host but give it a different password.
 
 ### 14. Reboot to apply patches
 
