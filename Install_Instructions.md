@@ -225,7 +225,7 @@ Go to your terminal window and you need to be in the same folder (*aka* director
 
 At your terminal window (PowerShell on Windows) type:
 ```
-ssh -i JitsiKey.pem Ubuntu@{your-domain-name}
+ssh -i JitsiKey.pem ubuntu@{your-domain-name}
 ```
 Where the JitsiKey.pem is the key you created and {your-domain-name} is the domain name you registered (ex. ```ssh -i aws_key.pem ubuntu@example.net```). Type **yes** to the question about whether you are sure you want to continue connecting.
 
