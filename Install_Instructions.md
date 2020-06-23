@@ -26,6 +26,8 @@ This is step by step instructions of how to host a security hardened instance of
 15. Use your Jitsi Server to host video-conferences!
 16. Expand to more users if necessary
 
+ **Troubleshooting at the end, if you get really stuck**
+
 ## First sitting - account and domain name
 
 ### 1. Make an AWS account for yourself.
@@ -326,4 +328,4 @@ You don't have to delete old instances - I often have several hanging around. Th
 
 ## Troubleshooting server configurations
 
-If something went wrong after you started setting up your server the easiest thing to do is to delete this instance and start up a new one (see step 16). You won't have to re-register a domain name or pay extra fees - EC2 instances are designed to be easily disposable.
+If something went wrong after you started setting up your server the easiest thing to do is to delete this instance and start up a new one (see step 16 for information on how to delete and instance). You won't have to re-register a domain name if you made it past that step, or pay extra fees - EC2 instances are designed to be easily disposable.
