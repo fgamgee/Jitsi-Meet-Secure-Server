@@ -109,6 +109,9 @@ cd /etc/ansible/
 ansible-playbook /etc/ansible/harden.yml
 
 set +x
+printf "\n"
+printf "Let's set up a host and password for meetings.\n"
+printf "\n"
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 #  below not POSIX compliant, depends on bash, but convenient...
 read -p "Username for host of meeting: " username
