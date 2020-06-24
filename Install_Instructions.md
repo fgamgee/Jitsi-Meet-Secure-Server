@@ -132,6 +132,7 @@ Click on Instances (the one in smaller print, directly above Instance Types) on 
 ![ChooseInstance](./diagrams/Ubuntu18.png)
 
 On the next screen, shown below,
+
 ![Skip steps 3-5](./diagrams/setup_skip_forward.png)
 
 Choose t2.micro – if you are doing this for the first time, which is free for 750 hours of use. This will allow conferences of a few people to test. For use with more people, you will need to pay for a larger instance (eg. T3.large), but you can easily do this later. Guidance on the size of instance you will need and cost is at the end of the document.
