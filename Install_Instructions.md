@@ -346,10 +346,17 @@ Type in a password for the host to use when starting meetings and press ENTER.  
 
 Installation is complete!
 
-You can test it out by typing in your browser URL your https://domainname  (e.g. https://example.com).  You should see this screen:
+You can test it out by typing in your browser URL your https://domainname  (e.g. https://example.com).  Your browser URL bar is at the top, and looks something like:
+
+![browser](./diagrams/URLbar.png)
 
 
+You should see this screen after typing in your URL bar your domain name and hitting *Enter*:
 
+![jitsi](./diagrams/jitsiscreen.png)
+
+
+Type a long meeting name (*eg.* thisoneislonger), click GO, and then start the meeting using the host user name and password you just created.  Other people can join the meeting by typing in there browser URL space https://domainname/meetingname (*eg.* https://example.com/thisoneislonger)
 
 ### 13. Add more meeting hosts and their passwords (optional).
 _These users are the only people who can host meetings on your server, using the username and password you set._
