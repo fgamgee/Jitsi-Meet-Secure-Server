@@ -126,7 +126,7 @@ thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 echo \$thehost
 #  below not POSIX compliant, depends on bash, but convenient...
 read -p "Username for host of meeting: " username
-read -s -p "Password: " password
+read -s -p "Create a Password: " password
 echo
 prosodyctl register \$username \$thehost \$password
 

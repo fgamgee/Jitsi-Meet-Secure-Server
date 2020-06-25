@@ -12,19 +12,20 @@ This is step by step instructions of how to host a security hardened instance of
 
 ### Second Sitting
 3. Log onto AWS (if you logged out while waiting for the domain registration).
-4. Make a private/public key pair which you will need to log onto your instance.
-5. Begin the launch the of an instance (your server in the cloud).
-6. Set up the Amazon firewall (*aka* Security Group).
-7. Finish launching your instance.
-8. Allocate an Elastic IP for your instance.
-9. Set the domain name service (DNS) to associate your domain name with this IP.
-10. Log into your instance.
-11. Run three commands on the command line.
-12. Answer a few prompts.
-13. Add additional meeting hosts and their passwords. Only these users can host meetings on your server, using the username and password you set.
-14. Restart your server to apply security patches.
-15. Use your Jitsi Server to host video-conferences!
-16. Expand to more users if necessary
+4. Begin the launch the of an instance (your server in the cloud).
+5. Set up the Amazon firewall (*aka* Security Group).
+6. Finish launching your instance.
+7. Allocate an Elastic IP for your instance.
+8. Set the domain name service (DNS) to associate your domain name with this IP.
+9. Open a PowerShell (Windows) or Command window (MAC/Linux)
+10. Make sure you can see your key you created in step 6.
+11. Log into your instance.
+12. Run three commands on the command line.
+13. Answer a few prompts.
+14. Add additional meeting hosts and their passwords. Only these users can host meetings on your server, using the username and password you set.
+15. Restart your server to apply security patches.
+16. Use your Jitsi Server to host video-conferences!
+17. Expand to more users if necessary
 
  **Troubleshooting at the end, if you get really stuck**
 
@@ -39,6 +40,7 @@ If you don't have an AWS
 account, use the following procedure to create one.
 To create an AWS account
 1. Open https://portal.aws.amazon.com/billing/signup.
+![Signup](./diagrams/AWS_Signup.png)
 2. Follow the online instructions.
 *(Note - you should register for a personal account, basic plan, unless you are doing this for a business - and I have no experience with how that changes these instructions.)*
 
@@ -46,7 +48,10 @@ Part of the sign-up procedure involves receiving a phone call and entering a ver
 
 #### Access the console
 
-To access the AWS Management Console go to (https://aws.amazon.com/console/).  You probably want to bookmark this link, so you can get back to it.  When you go for the first time, you will need to provide an email address and a password. Login as Root.
+To access the AWS Management Console go to (https://aws.amazon.com/console/).  You probably want to bookmark this link, so you can get back to it.  
+![AWS_Console](./diagrams/AmazonConsole.png)
+
+When you go for the first time, you will need to provide an email address and a password. Login as Root.
 This combination of your email address and password is called your root identity or root account credentials. From the console, you can access the services, Route 53 (the AWS domain name registrar) and EC2 (where you launch instances).
 
 ### 2. Register a domain name (with Amazon Route 53).
@@ -58,7 +63,14 @@ This combination of your email address and password is called your root identity
 - *When you register a domain, AWS automatically creates a hosted zone that has the same name as the domain. You use the hosted zone to specify where you want Route 53 to route traffic for your domain using an IP address (which you will get later). The fee for a hosted zone is $0.50 per month.*"
 
 #### Steps
-Go to [https://console.aws.amazon.com/route53/home](https://console.aws.amazon.com/route53/home) and follow the steps below:
+Click on this link [https://console.aws.amazon.com/route53/home](https://console.aws.amazon.com/route53/home)
+
+![RegDomainScreen](./diagrams/RegDomain_screen.png)
+_(Screen shot of what you will see as you follow steps below.  I recommend using the arrow 1. to choose .net instead of .com)_
+
+and follow the steps below:
+
+
 ![DNS Registration](./diagrams/RegisterDomain_1.png)
 
 It is best to leave privacy enabled.
@@ -80,58 +92,29 @@ _Adapted from https://aws.amazon.com/de/blogs/opensource/getting-started-with-ji
 
 ### 3. Log onto AWS (if you logged out while waiting for the domain registration).
 
-Logon to the AWS Console (https://aws.amazon.com/console/)). Under services, click on EC2. _(If you have a hard time finding EC2, you can find it by clicking on the Services drop down button, top left of page and look under "Compute")_. After clicking on EC2, on the left hand side, scroll down until you see "Key Pairs" – click on it, and then follow below.
-
-### 4. Make a SSH private/public keypair
-
-Create a key pair that you will use to SSH into your Jitsi server. A "key" is just a special file.  You will be creating a public/private key pair, and saving the private part of your key to your computer and putting the public part of the key into the Jitsi Server you create in a much later step.
-
-Click on Create Key Pairs (Right corner, see orange box below). *(Note, if you have trouble with this step or below, it is OK to Create another key pair, the first few are free, with a different name, e.g. JitsiKey2 instead of JitsiKey.  Then just use JitsiKey2 everywhere below.)*
-
-![creat key](./diagrams/create_key.png)
-
-On the screen that pops up (see below), you must select the file type. Select the **.pem** format (even if you use Windows).
-Key pairs are regional. You need to select a region close to your users, for best performance of Jitsi. The region can be changed in the upper right corner, between the search box and the support button (see red ellipse in diagram, I chose Ohio, but you should choose the region close to you). ***NB: Whenever you go to EC2, for keypairs, elastic IPs, or instances, you must be in the region you choose here.  If you do not see your instance, etc... make sure you are in the correct region, you will always find the region displayed in the top right as shown.***
-
-![SSH keypair](./diagrams/keypair.png)
-
-After selecting the most appropriate region and the correct File format (pem), enter "JitsiKey" in the box where it says "enter key pair name" and click on the **Create Key Pair** button. Save the file (*aka JitsiKey.pem*) that pops up on your machine to your Documents folder. If you are not asked where to save the file (key), your browser probably put it in your downloads folder.  Click on the download icon ![](./diagrams/download_icon.png) and the magnifying glass which appears next to the name of the file, and move the file to the Documents folder.
-
-You will need this file (JitsiKey.pem) to log in to the instance you are going to create.  (If you are familiar with key pairs and SSH, you can deviate from these instructions and give the key pair a different name, folder, etc..  If you have never done this, follow the instructions _**exactly**_).
-
-#### MAC/Linux only - instructions to change the permission of the key.
-
-On MAC/Linux systems you will need to change the file permissions of the key before SSH will allow you to use it. Windows users can skip this step.
+Logon to the AWS Console (https://aws.amazon.com/console/)). Under services, click on EC2. _(If you have a hard time finding EC2, you can find it by clicking on the Services drop down button, top left of page and look under "Compute")_.
+![Services](./diagrams/Services.png)
 
 
-Open a terminal window. On a Mac, you can find this under Launch Pad in the Other folder.
-At the prompt, type
-```
-cd Documents
-```
-to go to the folder where you saved your key (JitsiKey.pem).  You can check that you are in the correct folder, and your key is there by typing _(Note, you can use Tab key to autocomplete the name "JitsiKey.pem" once you have typed enough letters for there to be only one choice left.)_
+### 4. Begin to launch instance.
 
-```
-ls -l JitsiKey.pem
-```
-Make sure you see your file. Then type
-```
-chmod 400 JitsiKey.pem
-```
+Make sure you are in a region close to your users by making a selection in the red ellipse below.  In the future when you login, you should check that you are in this same region, otherwise you will not see the instance you create below.
 
-Check that you made the change by typing
-```
-ls -l JitsiKey.pem
-```
-Now, on the far left in front of the key name you should see ```-r----------```. If so, you were successful and can move on. Leave the terminal open though, you will need it later.
+![EC2](./diagrams/EC2.png)
 
-### 5. Begin to launch instance.
+Click on Instances (the one in smaller print one, pointed at by the red arrow) on the left column.  You will see "Launch Instance" as a big blue button.  
+![Launch](./diagrams/Launch.png)
 
-Click on Instances (the one in smaller print, directly above Instance Types) on the left column. You will see "Launch Instance" as a big blue button.  After clicking on the big blue "Launch Instance", in the search box type **Ubuntu** and hit return. Click **Select** on the Ubuntu 18.04 LTS row and make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm (see below for example).
+After clicking on the big blue "Launch Instance", you will see:
+
+![LaunchSearch](./diagrams/LaunchSearch.png)
+
+
+In the search box (see red arrow) type **Ubuntu Server** and hit return. Scroll down until you see the Ubuntu Server 18.04 instance (see red ellipse).  Click **Select** on the Ubuntu 18.04 LTS row and make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm (see below for example).
 
 ![ChooseInstance](./diagrams/Ubuntu18.png)
 
-On the next screen, shown below,
+On the next screen, shown below:
 
 ![Skip steps 3-5](./diagrams/setup_skip_forward.png)
 
@@ -140,7 +123,7 @@ Choose t2.micro – if you are doing this for the first time, which is free for 
 Now skip forward to step 6 of the wizard by clicking on step 6, marked by the red arrow in the figure, to set up the firewall. (Amazon's default selections for steps 3-5 are fine, but you can review them if you want.)
 
 
-### 6. Set up the Amazon firewall (*aka* Security Group).
+### 5. Set up the Amazon firewall (*aka* Security Group).
 
 - Leave the "Create a new Security group radio button selected".
 
@@ -160,53 +143,79 @@ Now skip forward to step 6 of the wizard by clicking on step 6, marked by the re
 Your screen should look like below:
 ![Security Group](./diagrams/Security_Settings.png)
 
-### 7. Finish launching your instance.
+### 6. Finish launching your instance.
 
-- Click on **Next: Review and Launch.**
-- Click on **Launch.**
-- On the pop-up list, select the ssh key you created (JitsiKey) and tick the acknowledge.
-- Click on **Launch Instance** to kick off the creation, and on the following screen click on **View Instances** (bottom right corner).
+- Click on **Next: Review and Launch.**  (may need to scroll down, it is bottom right corner)
+- Click on **Launch.** (may need to scroll down, it is bottom right corner)
+- On the pop-up select "Create a new key pair" (red arrow) and type in the key pair name (this can be any name, but in these instructions, I will assume you used jitsi.  Use jitsi if you are unfamiliar with keypairs, ssh, etc.. and then you can follow these instructions ***exactly***).
 
-For this to provision and set up will take a few minutes. On the console, once your instance changes to status checks RUNNING and 2/2 checks passed, you have completed the launch of your instance. While waiting, click the pencil that appears when you hover on the right side of the empty Name box,
-![pencil](./diagrams/pencil.png)
-and give your Instance a name (anything is OK, but it is easier to remember than an ID. Don't forget to hit the check mark to save!).
+![keypair](./diagrams/jitsikey.png)
 
-Your screen should look like this when you are ready to proceed.
+Now, click Download Key Pair (red ellipse).
 
+Depending on your browser setup, it may automatically save it to your Download folder, or you may be asked if you want to Open the file or Save it.  **Do Not Open the File** as that can corrupt it.  Save the file, to your Download folder.
+
+When you return to the pop up window, now the "Launch Instances" button will be enabled, so click it.
+
+Now you will see:
+
+![successful launch](./diagrams/Instance_Launching.png)
+
+At the far bottom right (you may need to scroll down), click on View Instances (red ellipse).
+
+Now you will see:
 ![Instance started](./diagrams/instance_launch_location.png)
 
-### 8. Allocate an Elastic IP for your instance.
+For this to provision and set up will take a few minutes. On the console, once your instance changes to status checks RUNNING and 2/2 checks passed (instead of "Initializing"), you have completed the launch of your instance. While waiting, click the pencil that appears when you hover on the right side of the empty Name box,
+![pencil](./diagrams/pencil.png)
+and give your Instance a name (anything is OK, but it is easier to remember than an ID. Don't forget to hit the check mark to save!).  You can also do the next steps, allocating an Elastic IP and assigning the IP to your Domain name while it is starting up.
+
+### 7. Allocate an Elastic IP for your instance.
 
 To ensure that your instance keeps its IP during restarts, configure an Elastic IP. From the EC2 console:
-- Select **ELASTIC IPs** (on the left, scroll down it is under NETWORK & SECURITY).
-- Click on the **ALLOCATE ELASTIC IP ADDRESS.**
-- Select the default (Amazon pool of IPv4 addresses) and click on **ALLOCATE.**
-- From the **ACTIONS** pull down, select **ASSOCIATE ELASTIC IP ADDRESS.**
-- In the box that comes up, *note down* the **Elastic IP Address**, which will be needed when you configure your DNS.
-- In the search box under **INSTANCE**, click and find your instance NAME (or INSTANCE ID if you did not give it a name) and select it.
-- In the **Private IP address**, click in the box and select the default. You must fill in the Instance box before this is available.
+- Select **ELASTIC IPs** (on the left, scroll down on the left column it is under NETWORK & SECURITY see red arrow below).
+![elastic](./diagrams/Elastic.png)
+
+
+
+- On the screen that appear, click on the **ALLOCATE ELASTIC IP ADDRESS.** (orange button on top right, red ellipse 1)
+
+![allocateIP](./diagrams/Allocate_IP.png)
+
+- Select the default (Amazon pool of IPv4 addresses) and click on **ALLOCATE.**, which will return you to the screen above but now you should have a row with an IP address.
+- *Note down* the **IP Address** (should be where IP address is in red in the above figure), which will be needed when you configure your DNS.
+- Make sure the radio button (red arrow labeled 2) is checked.
+- From the **ACTIONS** pull down (red ellipse labeled 3), select **ASSOCIATE ELASTIC IP ADDRESS.**
+
+You will see:
+
+![associateIP](./diagrams/Associate_IP.png)
+
+- In the search box under **INSTANCE**, click the magnifying glass and find your instance NAME (or INSTANCE ID if you did not give it a name) and select it.
+- In the **Private IP address**, click the magnifying glass in the box and select the default. You must fill in the Instance box before this is available.
 - Click the "Allow this Elastic IP address to be reassociated" checkbox.
 - Then click **ASSOCIATE**.
 
 Your instance now has an elastic IP associated with it. Holding onto this elastic IP when your instance is not running costs (currently $0.005/hour, or $0.12/day). Typically, holding onto the elastic IP is cheaper than keeping your instance running. You can release your elastic IP, but then you will need to reset up your DNS….
 
-### 9. Set the domain name service (DNS) to associate your domain name with this IP.
+### 8. Set the domain name service (DNS) to associate your domain name with this IP.
 
 You will need to configure a DNS entry for the new host you have provisioned, so that it can be used to generate the SSL certificates as part of the installation process.
-- Click on Services at the top of the page, and in the search bar type ```Route 53``` and in the bar that appears choose Route 53 (see the red arrow).
+- Click on Services at the right top of the page next to AWS, and in the search bar type ```Route 53``` and in the bar that appears choose Route 53 (see the red arrow).
 
 ![Services](./diagrams/service.png)
 
-- Under DNS management, click on the blue **Hosted zones**.
+- Under DNS management, click on the blue **Hosted zones** (see red arrow).
 
 ![Hosted Zone](./diagrams/hostedzone.png)
 - Click the radio button next to the name of the hosted zone that matches the name of the domain that you want to route traffic for.
 
 ![Record set](./diagrams/Gotorecordset.png)
 
-- Choose **Go to Record Sets** (see red ellipse above).
+- Click **Go to Record Sets** (see red ellipse above).
 
 ![AssignIP](./diagrams/ip_value.png)
+
 - Choose **Create Record Set** (see red ellipse above)
  - Specify the following values:
  - **Name** – leave the box blank. The default value is the name of the hosted zone.
@@ -216,21 +225,80 @@ You will need to configure a DNS entry for the new host you have provisioned, so
  - **Routing Policy** – Accept the default, **Simple**.
  - Click **Create** button at the bottom.
 
-Changes generally propagate to all Route 53 servers within 60 seconds. When propagation is done, you will be able to route traffic to your EC2 instance by using the name of the record that you created.  So, wait a minute - get up and stretch!
+Changes generally propagate to all Route 53 servers within 60 seconds. When propagation is done, you will be able to route traffic to your EC2 instance by using the name of the record that you created.  Will check if it has propagated during the next step.
 
-Now go back to your terminal window (PowerShell on Windows) and type ```nslookup domainname``` where domainname is the DNS name you have registered (ex. ```nslookup example.net```). When it returns the IP address you entered for **Value**, you are ready to proceed. ***Do not proceed until this is the case.***   (Note, if you are doing this behind a VPN that takes you to another country than your AWS instance is in, it may take considerably longer for nslookup to report the correct IP address).
+
+### 9. Open a PowerShell (Windows) or Command window (MAC/Linux)
+
+##### Mac/Linux users skip to your section below.
+
+#### Windows Users
+
+Get a terminal window by typing PowerShell in the Windows search bar and opening the PowerShell app.  
+
+![powershell](./diagrams/powershell.png)
+
+You will get a PowerShell window like below, and you will be pasting commands into it.
+
+![powershell](./diagrams/Winterm.png)
+
+
+To paste commands into this window, right click on the task bar (tip of red arrow) and choose paste.
+
+![Win paste](./diagrams/powershell_copy.png)
+
+Copy the command below into your Powershell window by highlighting it with your mouse, then right clicking and choosing copy.  Then paste it into Powershell.
+
+```ls .\Downloads\*.pem```
+
+You should see your key "jistsi.pem" listed on the right of the text string.  If not, you saved your key in step 6. above to a different folder.  Find where it is and move it to the Downloads folder before proceeding.
+
+Copy and paste this command in, which moves your key to your home folder.
+
+```mv .\Downloads\*.pem .```
+
+Do not miss the period at the end of the command, it is necessary.
+
+
+##### Windows users skip to step 10.
+
+#### MAC/Linux *only*
+
+To get a Terminal window on MAC go to Launchpad Other, as shown below and click on Terminal.
+![Terminal](./diagrams/terminal.png)
+
+A Terminal window will open, shown below and you will be pasting commands into it at the %:
+
+![Terminal](./diagrams/Macterm.png)
+
+Copy and paste the command below into your terminal window to check that the key is in the Downloads folder.
+
+```ls -l ./Downloads/*.pem```
+
+You should see your key, "jitsi.pem" listed on the right of the text string.  If not, you saved it to a different folder.  Find it and put it in your Downloads folder.  Then, copy and paste this command in:
+
+ ```mv ./Downloads/*.pem .```
+
+Do not miss the period at the end of the command, it is necessary.
+Now, copy and paste the next command:
+
+```chmod 400 *.pem```
+
+
 
 ### 10. Log into your instance.
 
-Go to your terminal window and you need to be in the same folder (*aka* directory) as your key.
+Before we log in, we need to see if the IP you gave the domain name has propogated to the DNS nameservers.  In your PowerShell Window (Terminal MAC/Linux) type:
 
-*On Windows, get a terminal window by typing powershell in the search bar and opening the PowerShell app.  To see which directory (aka folder) you are in, type ```pwd```   To see what files and directories are in your directory, type ```ls```  To change your directory, type ```cd .\Documents```*
+```nslookup domainname```
+
+where domainname is the DNS name you have registered (*eg.* ```nslookup example.net```). When it returns the IP address you entered for **Value**, you are ready to proceed. ***Do not proceed until this is the case.***   (Note, if you are doing this behind a VPN that takes you to another country than your AWS instance is in, it may take considerably longer for nslookup to report the correct IP address, even 24 hours.  Otherwise, it only takes a minute typically).  If it is not the case, you can check again later by again typing ```nslookup domainname```.
 
 At your terminal window (PowerShell on Windows) type:
 ```
-ssh -i JitsiKey.pem ubuntu@{your-domain-name}
+ssh -i JitsiKey.pem ubuntu@domainname
 ```
-Where the JitsiKey.pem is the key you created and {your-domain-name} is the domain name you registered (ex. ```ssh -i aws_key.pem ubuntu@example.net```). Type **yes** to the question about whether you are sure you want to continue connecting.
+Where the jitsi.pem is the key you created and is the domain name you registered (*eg.* ```ssh -i jitsi.pem ubuntu@example.net```). Type **yes** to the question about whether you are sure you want to continue connecting.
 
 If you get a hang during this operation, you should check both that you typed the domain name correctly, that you set up the security group in step 6 properly, that your instance is running (you can check that at AWS) and that you are not behind a VPN.
 
@@ -243,26 +311,26 @@ Optional: Use your mouse to drag the sides of this window with ```ubuntu@ip-some
 
 ### 11. Run three commands on the command line.
 
-Copy/paste or type out the following commands one at a time (hit Enter and wait for each one to finish before running the next one)
+Copy and paste the following commands one at a time (hit Enter and wait for each one to finish before running the next one)
 ```
 curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 chmod +x Install.sh
 sudo ./Install.sh
 ```
-### 12. Answer a few prompts.
-_If you make a mistake anywhere, it's very quick and easy to start over by setting up a new instance. See below for how to set up a new instance._
+### 12. ***Carefully*** Answer a few prompts.
+_If you make a mistake anywhere, you will need to start over by setting up a new instance. See at the bottom, step 16, for how to set up a new instance._
 
-Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **<Yes\>** - press enter – **TWICE**.
+Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **<Yes\>** - press **Enter** – **Twice**.
 
-More text will scroll – occasionally it will stop scrolling for a minute – be patient. If everything is going well you will get another bright pink or blue screen. **Type in your domain name and press enter.**
+More text will scroll – occasionally it will stop scrolling for a minute – be patient. If everything is going well you will get another bright pink or blue screen. **Type in your domainname and press enter.** (*eg.* example.com)
 
-Almost immediately, another pink or blue screen will say **"Generate a new self-signed certificate …."** Press enter. We will change this to a real certificate very soon.
+Almost immediately, another pink or blue screen will say **"Generate a new self-signed certificate …."** Press **Enter**. We will change this to a real certificate very soon.
 
 More text…. Be patient. Next you will get a prompt:
 ```
 Enter your email and press [ENTER]:
 ```
-Enter the email address associated with your domain name and press enter. This is sent to Let's Encrypt to obtain a security certificate.
+Enter the email address associated with your domain name (*eg.* user@gmail.com) and press **Enter**. This is sent to Let's Encrypt to obtain a security certificate.
 
 Then lots more text. You may see a couple of  ```[WARNING]``` messages but that is normal. The Init AIDE task will also take several minutes, so be patient if it appears to hang.
 Eventually you will see the message:
@@ -272,11 +340,16 @@ Username for host of meeting:
 You need to create a username for someone to host a meeting.  Type the username and press ENTER.  Then you will see:
 
 ```
-Password:
+Create a Password:
 ```
 Type in a password for the host to use when starting meetings and press ENTER.  *Note, the password will NOT appear on the screen as you type.*
 
 Installation is complete!
+
+You can test it out by typing in your browser URL your https://domainname  (e.g. https://example.com).  You should see this screen:
+
+
+
 
 ### 13. Add more meeting hosts and their passwords (optional).
 _These users are the only people who can host meetings on your server, using the username and password you set._
