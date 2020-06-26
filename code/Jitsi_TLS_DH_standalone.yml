@@ -69,7 +69,7 @@
     lineinfile:
       path: /etc/nginx/nginx.conf
       regexp: 'server_tokens'
-      line: "\tservertokens off;"
+      line: "\tserver_tokens off;"
       state: present
 
 
