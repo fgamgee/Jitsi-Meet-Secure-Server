@@ -16,7 +16,7 @@
 
   - name: OpenSSH Supported HostKey algorithms by order of preference.
     blockinfile:
-      path: /etc/ssh/sshd_config
+      path: /etc/ssh/ssh_config
       marker: "# {mark} Ansible managed HostKey and AuthenticationMethods"
       insertafter: '#HostKey /etc/ssh/ssh_host_ed25519_key'
       state: present
