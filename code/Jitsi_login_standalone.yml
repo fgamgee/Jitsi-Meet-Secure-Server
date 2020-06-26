@@ -64,7 +64,7 @@
     lineinfile:
       path: /etc/jitsi/videobridge/sip-communicator.properties
       regexp: '^org.ice4j.ice.harvest.NAT_HARVESTER_LOCAL_ADDRESS='
-      line: "org.ice4j.ice.harvest.NAT_HARVESTER_LOCAL_ADDRESS='{{ ansible_default_ipv4.address }}'"
+      line: "org.ice4j.ice.harvest.NAT_HARVESTER_LOCAL_ADDRESS={{ ansible_default_ipv4.address }}"
 
   - name: Get the ip address of the domain.
     shell: 'dig \+short "{{ domain_name.stdout }}"; echo'
@@ -74,4 +74,4 @@
     lineinfile:
       path: /etc/jitsi/videobridge/sip-communicator.properties
       regexp: '^org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS='
-      line: "org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS='{{ host_ip.stdout }}'"
+      line: "org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS={{ host_ip.stdout }}"
