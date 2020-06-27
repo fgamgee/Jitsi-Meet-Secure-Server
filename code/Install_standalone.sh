@@ -64,13 +64,13 @@ apt-get -y install jitsi-meet
 #Install Ansible
 apt install -y ansible
 cd /etc/ansible/
-# Get configurations of jitsi
+# Get configurations of jitsi - Need UPDATE to MASTER when merged!
 curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_login_standalone.yml
 curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_TLS_DH_standalone.yml
 
 # Run configuration for Jitsi
-ansible-playbook -v Jitsi_login_req_config.yml
-ansible-playbook -v Jitsi_TLS_DH_config.yml
+ansible-playbook -v Jitsi_login_standalone.yml
+ansible-playbook -v Jitsi_TLS_DH_standalone.yml
 #Get Ansible playbook for CIS hardening -
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
 sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
@@ -95,6 +95,8 @@ EOF
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
 # a privacy goal.
+# Section 5_2_* is all SSH configuration
+
 cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<EOF
 ---
 # vars file for Ubuntu1804-CIS
@@ -102,6 +104,29 @@ ubuntu1804cis_xwindows_required: true
 ubuntu1804cis_telnet_required: true
 ubuntu1804cis_firewall: iptables
 ubuntu1804cis_rule_4_3: false
+ubuntu1804cis_rule_5_2_1: false
+ubuntu1804cis_rule_5_2_2: false
+ubuntu1804cis_rule_5_2_3: false
+ubuntu1804cis_rule_5_2_4: false
+ubuntu1804cis_rule_5_2_5: false
+ubuntu1804cis_rule_5_2_6: false
+ubuntu1804cis_rule_5_2_7: false
+ubuntu1804cis_rule_5_2_8: false
+ubuntu1804cis_rule_5_2_9: false
+ubuntu1804cis_rule_5_2_10: false
+ubuntu1804cis_rule_5_2_11: false
+ubuntu1804cis_rule_5_2_12: false
+ubuntu1804cis_rule_5_2_13: false
+ubuntu1804cis_rule_5_2_14: false
+ubuntu1804cis_rule_5_2_15: false
+ubuntu1804cis_rule_5_2_16: false
+ubuntu1804cis_rule_5_2_17: false
+ubuntu1804cis_rule_5_2_18: false
+ubuntu1804cis_rule_5_2_19: false
+ubuntu1804cis_rule_5_2_20: false
+ubuntu1804cis_rule_5_2_21: false
+ubuntu1804cis_rule_5_2_22: false
+ubuntu1804cis_rule_5_2_23: false
 
 EOF
 
