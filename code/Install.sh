@@ -108,7 +108,34 @@ cd /etc/ansible/
 
 ansible-playbook /etc/ansible/harden.yml
 
+set +x
+printf "\n"
+printf "Let's set up a host and password for meetings.\n"
+printf "\n"
+thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
+#  below not POSIX compliant, depends on bash, but convenient...
+read -p "Username for host of meeting: " username
+read -s -p "Password: " password
+echo
+prosodyctl register $username $thehost $password
+
+# Make add_user.sh- don't like this method.  Update needed.  But it was quick...
+cat > ./add_host.sh <<EOF
+#!/bin/bash
+thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
+echo \$thehost
+#  below not POSIX compliant, depends on bash, but convenient...
+read -p "Username for host of meeting: " username
+read -s -p "Create a Password: " password
+echo
+prosodyctl register \$username \$thehost \$password
+
+EOF
+
+chmod +x ./add_host.sh
+
 #Stop services and restart them, avoids a reboot.
+printf "Restarting Services\n"
 systemctl stop coturn.service
 systemctl stop jitsi-videobridge2.service
 systemctl stop nginx.service
@@ -120,5 +147,6 @@ systemctl start nginx.service
 systemctl start prosody.service
 systemctl start jicofo.service
 
-# Don't forget to run sudo prosodyctl register <username> jitsi-meet.example.com <password>
-printf "Do not forget to run sudo prosodyctl register <username> jitsi-meet.example.com <password>\n"
+printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
+printf "However, to apply security patches you need to stop, and then start your instance.\n"
+printf "To add more meeting hosts, type 'sudo ./add_host'\n"

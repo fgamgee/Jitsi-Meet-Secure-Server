@@ -29,7 +29,7 @@ The Threat model follows the STRIDE Methodology (https://en.wikipedia.org/wiki/S
 Threat | Mitigation (WIP)
 -------|----------
 Spoofing | Password Authentication required to start a meeting.  Unique URL and password can be required to join the meeting.  Let's Encrypt certificate for domain name.
-Tampering| CIS Benchmark Level 1 on server.  Firewall. SSH for server management. Scheduled use to automatically turn server off when not in use. Update management.
+Tampering| CIS Benchmark Level 1 and 2 on server, with a few required exceptions.  Firewall. SSH for server management. Security updates automatically configured.
 Repudiation (denial of the truth or validity of something) | Can conflict with privacy goal in general case.  However, meetings can require passwords which could be sent securely to participants with asymmetric key encryption.
 Information Disclosure | Encryption using WebRTC. Configured to require TLSv1.2 or 1.3 with secure ciphers and use secure DH key exchange. No logs kept on the server.
 Denial of Service | Require Authentication to start a meeting, prevents adversary from starting multiple meetings.  Restrictive firewall rules.  Protection very rudimentary.
