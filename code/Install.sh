@@ -10,6 +10,13 @@ set -x
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 echo "Welcome to installation of private and secure Jitsi Meet server for Ubuntu 18.04"
 
+#Update the nginx packages
+cat > /etc/apt/sources.list.d/nginx.list  <<EOF
+## Replace $release with your corresponding Ubuntu release.
+deb https://nginx.org/packages/ubuntu/ bionic nginx
+deb-src https://nginx.org/packages/ubuntu/ bionic nginx
+EOF
+
 # install firewall
 
 iptables -P INPUT DROP
