@@ -50,19 +50,22 @@ netfilter-persistent reload
 
 
 #Update the nginx packages
-cat > /etc/apt/sources.list.d/nginx.list  <<EOF
+#cat > /etc/apt/sources.list.d/nginx.list  <<EOF
 ## Replace $release with your corresponding Ubuntu release.
-deb https://nginx.org/packages/ubuntu/ bionic nginx
-deb-src https://nginx.org/packages/ubuntu/ bionic nginx
-EOF
+#deb https://nginx.org/packages/ubuntu/ bionic nginx
+#deb-src https://nginx.org/packages/ubuntu/ bionic nginx
+#EOF
 
+
+add-apt-repository ppa:nginx/stable
+apt-get update
 
 # Need to add the nginx key too.  See https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
 # If this fails, see what the key is, and replace ABF5BD827BD9BF62
 # Err:6 https://nginx.org/packages/ubuntu bionic InRelease
 #  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY ABF5BD827BD9BF62
 #
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
