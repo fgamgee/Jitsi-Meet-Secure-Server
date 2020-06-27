@@ -75,3 +75,9 @@
       path: /etc/jitsi/videobridge/sip-communicator.properties
       regexp: '^org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS='
       line: "org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS={{ host_ip.stdout }}"
+
+  - name: Comment out
+    lineinfile:
+      path: /etc/jitsi/videobridge/sip-communicator.properties
+      regexp: 'org.ice4j.ice.harvest.STUN_MAPPING_HARVESTER_ADDRESSES'
+      line: "#org.ice4j.ice.harvest.STUN_MAPPING_HARVESTER_ADDRESSES"
