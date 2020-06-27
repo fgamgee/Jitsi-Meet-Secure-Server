@@ -50,6 +50,12 @@ netfilter-persistent reload
 
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
 wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
+# Need to add the nginx key too.  See https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
+# If this fails, see what the key is, and replace ABF5BD827BD9BF62
+# Err:6 https://nginx.org/packages/ubuntu bionic InRelease
+#  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY ABF5BD827BD9BF62
+#
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 apt-get update
 apt-get -y install jitsi-meet
 
