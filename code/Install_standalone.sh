@@ -55,7 +55,7 @@ wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
 # Err:6 https://nginx.org/packages/ubuntu bionic InRelease
 #  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY ABF5BD827BD9BF62
 #
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 apt-get update
 apt-get -y install jitsi-meet
 
