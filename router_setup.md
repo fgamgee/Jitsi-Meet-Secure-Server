@@ -1,16 +1,18 @@
-## Router Setup
+# Router Setup
+_This is only needed if you are setting up your own physical server instead of a cloud server hosted by Amazon._
+
 When somebody attempts to connect to your Jitsi server, the data packets they send will first arrive at your router. By default, modern routers drop (throw away) packets they are unfamiliar with. In this section, we will configure your router to forward those packets on to your server instead.
 
 We can't cover every router model here, so these instructions are for the Ubiquiti EdgeRouter series. You will need to adapt the router commands for your specific router model.
 
-### 1. Create a separate network to isolate your server
+## 1. Create a separate network to isolate your server
 _This is not strictly necessary for your server to work, but by doing so we can isolate your server to protect the rest of your network in case the server is compromised._
 
 The idea is to create a separate network for a specific port on your router (which we will plug only the server into) and use the router's firewall to prevent that network from sending any data packets to your primary network (with the rest of your devices) or changing the router's settings.
 
 Follow the video walkthrough here: https://www.youtube.com/watch?v=baj3747yfos Make sure to enable the DNS Server on the router, as described in the video - we will use it in step 2.b.
 
-### 2. Setting up a static local IP for your server.
+## 2. Setting up a static local IP for your server.
 _This is not the same as the Elastic IP address you obtained from Amazon earlier if you set up a cloud Jitsi server._ This is an IP address valid ONLY on your local network.
 
 ### 2.a. Find your server's MAC address
@@ -52,7 +54,7 @@ to make the server request a new IP address from the router. Then run:
 
 You should see the IP address you chose in step 2.b. (192.168.70.100 for me).
 
-### 3. Create port forwarding rules
+## 3. Create port forwarding rules
 Port forwarding rules send traffic arriving at your router to the server.
 
 Head to **Firewall/NAT** > **Port Forwarding** and look at the **Port forwarding rules** section (red box on picture). Hit **+ Add Rule** until you have space for 4 rules.
@@ -63,7 +65,7 @@ Then hit apply:
 
 ![Port forwarding](./diagrams/port_forwarding.png)
 
-### 4. Configuring hairpin NAT/NAT loopback
+## 4. Configuring hairpin NAT/NAT loopback
 _Optional. You can install the server without performing this step and come back to do this later if you need to. See step 4.c. for a test_
 
 _This step only applies if you have other computers connected to the same router (i.e. behind the same NAT) that your server is connected to. Without this step, your server will work fine for everyone BUT those computers._
