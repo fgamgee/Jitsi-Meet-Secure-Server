@@ -10,12 +10,7 @@ set -x
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
 echo "Welcome to installation of private and secure Jitsi Meet server for Ubuntu 18.04"
 
-#Update the nginx packages
-cat > /etc/apt/sources.list.d/nginx.list  <<EOF
-## Replace $release with your corresponding Ubuntu release.
-deb https://nginx.org/packages/ubuntu/ bionic nginx
-deb-src https://nginx.org/packages/ubuntu/ bionic nginx
-EOF
+
 
 # install firewall
 
@@ -41,12 +36,6 @@ iptables -A OUTPUT -p tcp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p udp -m state --state NEW,ESTABLISHED -j ACCEPT
 iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
 
-# Need to add the nginx key too.  See https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
-# If this fails, see what the key is, and replace ABF5BD827BD9BF62
-# Err:6 https://nginx.org/packages/ubuntu bionic InRelease
-#  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY ABF5BD827BD9BF62
-#
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 
 #Now get repositories and packages I will need.
 apt -y update
@@ -59,8 +48,23 @@ apt-get -y install iptables-persistent
 netfilter-persistent save
 netfilter-persistent reload
 
-#Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 
+#Update the nginx packages
+cat > /etc/apt/sources.list.d/nginx.list  <<EOF
+## Replace $release with your corresponding Ubuntu release.
+deb https://nginx.org/packages/ubuntu/ bionic nginx
+deb-src https://nginx.org/packages/ubuntu/ bionic nginx
+EOF
+
+
+# Need to add the nginx key too.  See https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
+# If this fails, see what the key is, and replace ABF5BD827BD9BF62
+# Err:6 https://nginx.org/packages/ubuntu bionic InRelease
+#  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY ABF5BD827BD9BF62
+#
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+
+#Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
 wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
 apt-get update
