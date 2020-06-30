@@ -66,7 +66,7 @@ This combination of your email address and password is called your root identity
 Click on this link [https://console.aws.amazon.com/route53/home](https://console.aws.amazon.com/route53/home)
 
 ![RegDomainScreen](./diagrams/RegDomain_screen.png)
-_(Screen shot of what you will see as you follow steps below.  I recommend using the arrow 1. to choose .net instead of .com)_
+_(Screen shot of what you will see in item 4 of "Step 1: Register a domain" below.  I recommend using the arrow 1. to choose .net instead of .com, arrow 2 is where you type in a domain name and arrow 3 shows the button you use to check if the domain name is available.)_
 
 and follow the steps below:
 
@@ -191,10 +191,10 @@ You will see:
 
 ![associateIP](./diagrams/Associate_IP.png)
 
-- In the search box under **INSTANCE**, click the magnifying glass and find your instance NAME (or INSTANCE ID if you did not give it a name) and select it.
-- In the **Private IP address**, click the magnifying glass in the box and select the default. You must fill in the Instance box before this is available.
-- Click the "Allow this Elastic IP address to be reassociated" checkbox.
-- Then click **ASSOCIATE**.
+- In the search box under **INSTANCE**, click the magnifying glass (see red arrow 1) and find your instance NAME (or INSTANCE ID if you did not give it a name) and select it.
+- In the **Private IP address**, click the magnifying glass (see red arrow 2) in the box and select the default. You must fill in the Instance box before this is available.
+- Click the "Allow this Elastic IP address to be reassociated" checkbox (see red arrow 3).
+- Then click **ASSOCIATE** (ellipse 4).
 
 Your instance now has an elastic IP associated with it. Holding onto this elastic IP when your instance is not running costs (currently $0.005/hour, or $0.12/day). Typically, holding onto the elastic IP is cheaper than keeping your instance running. You can release your elastic IP, but then you will need to reset up your DNS….
 
@@ -221,7 +221,7 @@ You will need to configure a DNS entry for the new host you have provisioned, so
  - **Name** – leave the box blank. The default value is the name of the hosted zone.
  - **Type** - Choose **A – IPv4 address**.
  - **TTL (Seconds)** (TTL stands for "Time To Live") - Accept the default value of **300**.
- - **Value** - Enter the IP address that you wrote down in step 5 under Allocate Elastic ID. (If you lost the value, go back to the EC2 dashboard, and click on Running Instances and scroll to the right until you see Public IPv4 address).
+ - **Value** - (see red arrow above) Enter the IP address that you wrote down in step 5 under Allocate Elastic ID. (If you lost the value, go back to the EC2 dashboard, and click on Running Instances and scroll to the right until you see Public IPv4 address).
  - **Routing Policy** – Accept the default, **Simple**.
  - Click **Create** button at the bottom.
 
@@ -296,11 +296,11 @@ where domainname is the DNS name you have registered (*eg.* ```nslookup example.
 
 At your terminal window (PowerShell on Windows) type:
 ```
-ssh -i JitsiKey.pem ubuntu@domainname
+ssh -i jitsi.pem ubuntu@domainname
 ```
 Where the jitsi.pem is the key you created and is the domain name you registered (*eg.* ```ssh -i jitsi.pem ubuntu@example.net```). Type **yes** to the question about whether you are sure you want to continue connecting.
 
-If you get a hang during this operation, you should check both that you typed the domain name correctly, that you set up the security group in step 6 properly, that your instance is running (you can check that at AWS) and that you are not behind a VPN.
+_If you get a hang during this operation, you should check both that you typed the domain name correctly, that you set up the security group in step 6 properly, that your instance is running (you can check that at AWS) and that you are not behind a VPN.  If you get a permission denied, see if your ```jitsi.pem``` file is in the directory you are in.  ```pwd``` will tell you the directory you are located in.   On Windows PowerShell, use ```ls -R jitsi.pem``` to find your file, on Mac/Linux use ```find . -name "jitsi.pem" 2>/dev/null```.  After finding the file ```jitsi.pem```, move it to your current directory with the ```mv``` command or File explorer (Windows) or Finder (MAC), whatever you prefer._
 
 You should get a prompt that looks like (the IP shown will not be the Elastic IP you configured in step 8):
 ```
@@ -379,6 +379,9 @@ You don't need to connect via SSH in order to use Jitsi. Just start up your inst
 After your instance is started and reports **2/2** in the status checks bar, type your domain name in browser URL bar. At the Start a Meeting prompt, type in a long (at least four word) meeting name so that it cannot be guessed by adversaries.
 
 The host will need to login with a username and password (set above). Then, he has the option of setting a different password to join the this meeting. Other participants can join by going typing domainname/meetingname in the URL bar of their browser. If a password for the meeting has been set by the host, they will be prompted for a password. Enjoy!
+
+More information on using Jitsi is here: https://blogs.systweak.com/how-to-use-jitsi-meet/
+just substitute your domainname instead of meet.jit.si in that blog.
 
 ### 16. Expanding to more meeting participants
 Once you have tested Jitsi-Meet, you will likely want to set up a larger instance for use with more participants. Go back to step 5 and select a more powerful instance. Pricing is here - https://aws.amazon.com/ec2/pricing/on-demand/. What is important for Jitsi is network bandwidth and to a lessor extent memory. CPU is not very important and disk storage needed is minimal (4 GB) if you do not set up to record meetings (which is not provided for in these instructions). A good choice might be T3.large at about $0.10 an hour which should be fine for a dozen or so participants. You can see how much of the instance memory, CPU, etc.. is being used by selecting the instance on the **EC2 Instance** screen and selecting the **Monitor** tab at the bottom of the page.
