@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Need to run these after login...  UPDATE to MASTER SOON!
-#curl -o https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
+#curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 #chmod +x Install.sh
 #sudo ./Install.sh
 
