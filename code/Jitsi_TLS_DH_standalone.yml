@@ -118,7 +118,7 @@
       - { regexp: '    ssl_ecdh_curve secp384r1;', line: '    ssl_ecdh_curve secp384r1; # Requires nginx >= 1.1.0' }
       - { regexp: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;', line: '    ssl_dhparam /etc/ssl/certs/dhparam.pem;'}
 
-  - name: nginx add security headers CSP, Block iFraming, MIME sniffing etc...
+  - name: nginx add security headers CSP, Block iFraming, MIME sniffing, remove unwanted HTTP methods
     blockinfile:
       path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       marker: "    # {mark} Ansible managed security headers"
@@ -137,6 +137,10 @@
             add_header X-Content-Type-Options "nosniff" always;
             # This prevents the browser from telling the next site where you came from, privacy issue.
             add_header Referrer-Policy "strict-origin" always;
+            # https://www.acunetix.com/blog/web-security-zone/hardening-nginx/ but need OPTIONS
+            if ($request_method !~ ^(GET|HEAD|POST|OPTIONS)$) {
+              return 444;
+            }
 
   - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
     shell: ls /etc/ssl/certs/dhparam.pem
@@ -145,6 +149,6 @@
 
     # 2048 is probably enough for now, but future?
 
-  - name: Make SSL key for secure DH Key exchange... If needed, this will take a LONG time... using 4096 (2 minutes?)
+  - name: Make SSL key for secure DH Key exchange... If needed, this will take a LONG time... using 4096 (5 minutes?)
     shell: openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096
     when: SSLfile_exists is failed

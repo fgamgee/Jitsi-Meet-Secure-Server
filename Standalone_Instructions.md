@@ -22,8 +22,11 @@ One issue with using older hardware, is all of the hardware vulnerabilities that
 2. Acquire a Domain Name and assign it an IP.
 3. Download recent Ubuntu 18.04 Server and put the ISO on the USB stick.
 4. Install Ubuntu with specified Disk Partitions.
+5. Install and automatically harden Jitsi Meet
+6. Answer a few prompts.
 
-### 1. Set up Router.
+### 1. Set up Router (Assume Ubuiquity Edge 10x Router)
+
 
 ### 2. Acquire a Domain Name and assign it your IP.
 
@@ -112,7 +115,7 @@ After you get an e-mail that your domain was successfully registered, you can ``
 
 ### 4. Install Ubuntu with specified Disk Partitions.
 
-Do a standard Ubuntu install, but when you get to the "Guided storage configuration" step, choose "Custom storage layout".
+Do a standard Ubuntu Server install, but when you get to the "Guided storage configuration" step, choose "Custom storage layout".
 
 
 1. Partition 1 size 20 G (or larger) Format ext4 Mount /
@@ -125,7 +128,7 @@ Do a standard Ubuntu install, but when you get to the "Guided storage configurat
 8. Partition 8 size 2 G (or larger) Format ext4 Mount /var/log/audit
 9. Partition 9 size 64 G (or larger) Format SWAP
 
-Do not install OpenSSH, do not install additional options.
+Do not install OpenSSH, do not install additional options, go ahead and apply security updates.
 
 After the install, take your USB stick out and reboot.  On reboot, it will say no authorized SSH keys....  hit return, and enter your username and passwords.
 
@@ -138,20 +141,29 @@ chmod +x Install.sh
 script out.txt
 sudo ./Install.sh
 ```
-### 12. Answer a few prompts.
-_If you make a mistake anywhere, it's very quick and easy to start over by setting up a new instance. See below for how to set up a new instance._
+### 6. Answer a few prompts.
 
 Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **\<Yes\>** - press enter – **TWICE**.
 
+
+Some more text, then you will get the message:
+```
+**Development releases of Ubuntu are not officially supported by this PPA, and uploads for those will not be available until Beta releases for those versions**
+ More info: https://launchpad.net/~nginx/+archive/ubuntu/stable
+Press [ENTER] to continue or Ctrl-c to cancel adding it.
+```
+Press **Enter**
+
+
 More text will scroll – occasionally it will stop scrolling for a minute – be patient. If everything is going well you will get another bright pink or blue screen. **Type in your domain name and press enter.**
 
-Almost immediately, another pink or blue screen will say **"Generate a new self-signed certificate …."** Press enter. We will change this to a real certificate very soon.
+Almost immediately, another pink or blue screen will say **"Generate a new self-signed certificate …."** Press **Enter**. We will change this to a real certificate very soon.
 
 More text…. Be patient. Next you will get a prompt:
 ```
 Enter your email and press [ENTER]:
 ```
-Enter the email address associated with your domain name and press enter. This is sent to Let's Encrypt to obtain a security certificate.
+Enter the email address associated with your domain name and press **Enter**. This is sent to Let's Encrypt to obtain a security certificate.
 
 Then lots more text. You may see a couple of  ```[WARNING]``` messages but that is normal. The Init AIDE task will also take several minutes, so be patient if it appears to hang.
 Eventually you will see the message:
@@ -163,7 +175,7 @@ You need to enter a username for someone to host a meeting.  Type the username a
 ```
 Password:
 ```
-Type in a password for the host to use when starting meetings and press ENTER.  *Note, the password will *NOT* appear on the screen as you type.*
+Type in a password for the host to use when starting meetings and press **Enter**.  *Note, the password will *NOT* appear on the screen as you type.*
 
 Installation is complete!
 

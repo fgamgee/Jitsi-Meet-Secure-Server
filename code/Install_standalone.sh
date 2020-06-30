@@ -2,7 +2,7 @@
 
 # Standalone Installation
 # Need to run these after login... (Either standalone or master in curl line, depending on stable or unstable)
-#curl -o https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Install_standalone.sh
+#curl -o Install_standalone.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install_standalone.sh
 #chmod +x Install_standalone.sh
 #sudo ./Install_standalone.sh
 
@@ -44,7 +44,29 @@ netfilter-persistent save
 netfilter-persistent reload
 
 #Ubuntu 18.04 uses nginx 1.14.0 as of June 26, 2020.  It has some CVE's.  update
-# to nginx 1.18.0~1 bionic BEFORE installing Jitsi-Meet.  TBD
+#I just cannot get this way to work....
+# I think, because of this: https://stackoverflow.com/questions/17413526/nginx-missing-sites-available-directory#17415606
+# As the issue is sites-available directory is not there...  LOVE for someone else to fix it,
+# as this would be preferred.  For now, will stick to the ppa repository below.
+#Update the nginx packages
+#cat > /etc/apt/sources.list.d/nginx.list  <<EOF
+#deb https://nginx.org/packages/ubuntu/ bionic nginx
+#deb-src https://nginx.org/packages/ubuntu/ bionic nginx
+#EOF
+
+# Need to add the nginx key too.  See https://www.nginx.com/resources/wiki/start/topics/tutorials/install/
+# If this fails, see what the key is, and replace ABF5BD827BD9BF62
+# Err:6 https://nginx.org/packages/ubuntu bionic InRelease
+#  The following signatures couldn't be verified because the public key is not available: NO_PUBKEY ABF5BD827BD9BF62
+#
+#sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
+# Try installing nginx before Jitsi
+#sudo apt-get update
+#sudo apt-get install nginx
+
+# This works, but ppa is untrusted and only gets you to 1.16.1 nginx
+add-apt-repository ppa:nginx/stable
+apt-get update
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 
@@ -71,8 +93,8 @@ apt-get -y install jitsi-meet
 apt install -y ansible
 cd /etc/ansible/
 # Get configurations of jitsi - Need UPDATE to MASTER when merged!
-curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_login_standalone.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_TLS_DH_standalone.yml
+curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_standalone.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_standalone.yml
 
 # Run configuration for Jitsi
 ansible-playbook -v Jitsi_login_standalone.yml
