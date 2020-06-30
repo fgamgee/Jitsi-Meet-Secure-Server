@@ -322,6 +322,14 @@ _If you make a mistake anywhere, you will need to start over by setting up a new
 
 Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **<Yes\>** - press **Enter** – **Twice**.
 
+Some more text, then you will get the message:
+```
+**Development releases of Ubuntu are not officially supported by this PPA, and uploads for those will not be available until Beta releases for those versions**
+ More info: https://launchpad.net/~nginx/+archive/ubuntu/stable
+Press [ENTER] to continue or Ctrl-c to cancel adding it.
+```
+Press **Enter**
+
 More text will scroll – occasionally it will stop scrolling for a minute – be patient. If everything is going well you will get another bright pink or blue screen. **Type in your domainname and press enter.** (*eg.* example.com)
 
 Almost immediately, another pink or blue screen will say **"Generate a new self-signed certificate …."** Press **Enter**. We will change this to a real certificate very soon.
