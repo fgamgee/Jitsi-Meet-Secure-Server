@@ -25,8 +25,9 @@ One issue with using older hardware, is all of the hardware vulnerabilities that
 5. Install and automatically harden Jitsi Meet
 6. Answer a few prompts.
 
-### 1. Set up Router (Assume Ubuiquity Edge 10x Router)
+### 1. Set up Router
 
+Follow this linke for instructions for [Ubuiquity Edge Router](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/standalone/ubiquity_edge_setup.md).
 
 ### 2. Acquire a Domain Name and assign it your IP.
 
