@@ -3,6 +3,7 @@
 # Standalone Installation
 # Need to run these after login... (Either standalone or master in curl line, depending on stable or unstable)
 #curl -o Install_standalone.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install_standalone.sh
+#curl -o Install_standalone.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Install_standalone.sh
 #chmod +x Install_standalone.sh
 #sudo ./Install_standalone.sh
 
@@ -92,9 +93,9 @@ apt-get -y install jitsi-meet
 #Install Ansible
 apt install -y ansible
 cd /etc/ansible/
-# Get configurations of jitsi - Need UPDATE to MASTER when merged!
-curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_standalone.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_standalone.yml
+# Get configurations of jitsi - Need UPDATE from standalone to MASTER when merged!
+curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_login_standalone.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_TLS_DH_standalone.yml
 
 # Run configuration for Jitsi
 ansible-playbook -v Jitsi_login_standalone.yml

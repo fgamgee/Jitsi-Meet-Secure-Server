@@ -134,7 +134,7 @@ After the install, take your USB stick out and reboot.  On reboot, it will say n
 
 ### 5. Install and automatically harden Jitsi Meet
 
-Type out the following commands one at a time (hit Enter and wait for each one to finish before running the next one)
+Type out the following commands one at a time (hit Enter and wait for each one to finish before running the next one) **change _master_ to _standalone_ if using development branch**
 ```
 curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install_standalone.sh
 chmod +x Install.sh
