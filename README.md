@@ -35,18 +35,19 @@ By running the project on Github, the intent is that the solution will be indepe
 ## Progress so far ##
 - Problem Statement done.
 - Threat Model drafted.
-- Install Instructions and code for secure cloud (AWS) Jitsi Meet Instance with some hardening done using Ansible to modify configuration files idempotently and CIS Level 1 and 2 benchmarks applied with https://github.com/florianutz/Ubuntu1804-CIS (Thanks Florian Utz! NB License MIT)
-- Evaluated cloud instance with Mozilla Observatory and updated security headers, SSH ciphers, DH key exchange to match recommendations.
+- Install Instructions and code for secure cloud (AWS) Jitsi Meet Instance with some hardening done using Ansible to modify configuration files and CIS Level 1 and 2 benchmarks applied with https://github.com/florianutz/Ubuntu1804-CIS (Thanks Florian Utz! NB License MIT)
+- Install Instructions tested (six independent testers so far) and updated based on their issues and comments.
+- Evaluated cloud instance with Mozilla Observatory and updated security headers, SSH ciphers,  SSL ciphers, DH key exchange to match recommendations.
+- Evaluated with OpenVAS (now Greenbone) Community edition.  Updated nginx to 1.16.2 to remove some CVE's. Hide nginx version in header. Disabled HTTP except for GET,HEAD,POST and OPTIONS.
 - Design Document drafted.
 - Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
-- Much help has been provided by 8x8 developers, especially sahgul *et al.*
+- Much help has been provided by 8x8 developers, especially Saulo, Borris and Aaron *et al.*
+- Standalone Server prototyped and tested.
 
 ## Next up ##
 
-- Continue hardening cloud Jitsi Meet Instance using Ansible. Evaluate with other automated testing.
-- Assemble and configure stand-alone server.
-- Update documents.
-- User testing and refine of Installation.
+- Security Evaluation.
+- Further testing and refinement.
 
 License:
 Apache 2.0
