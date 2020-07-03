@@ -177,6 +177,7 @@ echo
 prosodyctl register $username $thehost $password
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
+cd ~
 cat > ./add_host.sh <<EOF
 #!/bin/bash
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
@@ -186,9 +187,8 @@ read -p "Username for host of meeting: " username
 read -s -p "Create a Password: " password
 echo
 prosodyctl register \$username \$thehost \$password
-
 EOF
-
+chown ubuntu ./add_host.sh
 chmod +x ./add_host.sh
 
 #Stop services and restart them, avoids a reboot.
