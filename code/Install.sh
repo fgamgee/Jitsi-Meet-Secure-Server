@@ -74,6 +74,10 @@ netfilter-persistent reload
 add-apt-repository ppa:nginx/stable
 apt-get update
 
+#add prosody repository and key.
+echo 'deb https://packages.prosody.im/debian bionic main' >> /etc/apt/sources.list.d/prosody.list
+wget -qO - https://prosody.im/files/prosody-debian-packages.key | apt-key add -
+apt update
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
