@@ -165,7 +165,7 @@ echo
 prosodyctl register \$username \$thehost \$password
 
 EOF
-
+chown ubuntu ./add_host.sh
 chmod +x ./add_host.sh
 
 #Stop services and restart them, avoids a reboot.
