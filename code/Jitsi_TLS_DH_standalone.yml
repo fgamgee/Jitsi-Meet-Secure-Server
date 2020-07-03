@@ -27,7 +27,7 @@
 #        HostKey /etc/ssh/ssh_host_ecdsa_key
 #        AuthenticationMethods publickey
 
-  - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver
+  - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver, no-cli, no-loopback
     lineinfile:
       path: /etc/turnserver.conf
       regexp: "{{ item.regexp }}"
