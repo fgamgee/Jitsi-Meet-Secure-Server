@@ -30,11 +30,11 @@ One issue with using older hardware, is all of the hardware vulnerabilities that
 
 ### 1. Set up Router
 <!--- change master to branchname, or vis-a-versus when branching/merging -->
-Follow this [link](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/ubiquity_edge_setup.md) for instructions for [Ubuiquity Edge Router](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/ubiquity_edge_setup.md).
+Follow this [link](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/Documents/ubiquity_edge_setup.md) for instructions for [Ubuiquity Edge Router](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/Documents/ubiquity_edge_setup.md).
 
 ### 2. Acquire a Domain Name and assign it your IP.
 <!--- change master to branchname, or vis-a-versus when branching/merging -->
-Follow this [link](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/AWS_Domain_name.md) for instructions for [AWS Registrar and DNS setup](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/AWS_Domain_name.md).
+Follow this [link](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/Documents/AWS_Domain_name.md) for instructions for [AWS Registrar and DNS setup](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/Documents/AWS_Domain_name.md).
 
 ### 3. Download Ubuntu 18.04.
 

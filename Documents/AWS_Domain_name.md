@@ -10,7 +10,7 @@ If you don't have an AWS
 account, use the following procedure to create one.
 To create an AWS account
 1. Open https://portal.aws.amazon.com/billing/signup.
-![Signup](./diagrams/AWS_Signup.png)
+![Signup](../diagrams/AWS_Signup.png)
 2. Follow the online instructions.
 *(Note - you should register for a personal account, basic plan, unless you are doing this for a business - and I have no experience with how that changes these instructions.)*
 
@@ -19,7 +19,7 @@ Part of the sign-up procedure involves receiving a phone call and entering a ver
 #### Access the console
 
 To access the AWS Management Console go to (https://aws.amazon.com/console/).  You probably want to bookmark this link, so you can get back to it.  
-![AWS_Console](./diagrams/AmazonConsole.png)
+![AWS_Console](../diagrams/AmazonConsole.png)
 
 When you go for the first time, you will need to provide an email address and a password. Login as Root.
 This combination of your email address and password is called your root identity or root account credentials. From the console, you can access the services, Route 53 (the AWS domain name registrar) and EC2 (where you launch instances).
@@ -35,24 +35,24 @@ This combination of your email address and password is called your root identity
 #### Steps
 Click on this link [https://console.aws.amazon.com/route53/home](https://console.aws.amazon.com/route53/home)
 
-![RegDomainScreen](./diagrams/RegDomain_screen.png)
+![RegDomainScreen](../diagrams/RegDomain_screen.png)
 _(Screen shot of what you will see as you follow steps below.  I recommend using the arrow 1. to choose .net instead of .com)_
 
 and follow the steps below:
 
 
-![DNS Registration](./diagrams/RegisterDomain_1.png)
+![DNS Registration](../diagrams/RegisterDomain_1.png)
 
 It is best to leave privacy enabled.
 
 Disable "Automatic renewal of your domain" to prevent yearly charges. The option is right above the Terms and conditions. You can always change it to auto renew later.
 
 
-![DNS Registration part 2](./diagrams/RegisterDomain_2.png)
+![DNS Registration part 2](../diagrams/RegisterDomain_2.png)
 
 After completing, you will see the screen below:
 
-![DNS Finished](./diagrams/After_Domain_reg.png)
+![DNS Finished](../diagrams/After_Domain_reg.png)
 
 Before proceeding further, you need to wait until you receive an e-mail saying the registration is complete and a hosted zone has been setup.  Here is a sample:
 
@@ -72,14 +72,14 @@ After that is complete:
 - Click on "Hosted zones" is the left column or at the red arrow.
 
 
-![Hosted Zone](./diagrams/hostedzone.png)
+![Hosted Zone](../diagrams/hostedzone.png)
 - Click the radio button next to the name of the hosted zone that matches the name of the domain that you want to route traffic for.
 
-![Record set](./diagrams/Gotorecordset.png)
+![Record set](../diagrams/Gotorecordset.png)
 
 - Click **Go to Record Sets** (see red ellipse above).
 
-![AssignIP](./diagrams/ip_value.png)
+![AssignIP](../diagrams/ip_value.png)
 
 - Choose **Create Record Set** (see red ellipse above)
  - Specify the following values:
