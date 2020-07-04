@@ -144,10 +144,11 @@
               return 444;
             }
 
-  - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
-    shell: ls /etc/ssl/certs/dhparam.pem
-    register: SSLfile_exists
-    ignore_errors: True
+#Comment this out, this is for a new install, there will not be a key, so no need to check.
+#  - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
+#    shell: ls /etc/ssl/certs/dhparam.pem
+#    register: SSLfile_exists
+#    ignore_errors: True
 
     # 2048 is probably enough for now, but future?
 

@@ -2,10 +2,10 @@
 
 # Standalone Installation
 # Need to run these after login... (Either standalone or master in curl line, depending on stable or unstable)
-#curl -o Install_standalone.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install_standalone.sh
-#curl -o Install_standalone.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Install_standalone.sh
-#chmod +x Install_standalone.sh
-#sudo ./Install_standalone.sh
+#curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install_standalone.sh
+#curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Install_standalone.sh
+#chmod +x Install.sh
+#sudo ./Install.sh
 
 #Set up for debugging, from https://wiki.bash-hackers.org/scripting/debuggingtips
 set -x
@@ -99,8 +99,8 @@ apt-get -y install jitsi-meet
 apt install -y ansible
 cd /etc/ansible/
 # Get configurations of jitsi - Need UPDATE from standalone to MASTER when merged!
-curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_login_standalone.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/standalone/code/Jitsi_TLS_DH_standalone.yml
+curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_standalone.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_standalone.yml
 
 # Run configuration for Jitsi
 ansible-playbook -v Jitsi_login_standalone.yml
@@ -188,7 +188,7 @@ read -s -p "Create a Password: " password
 echo
 prosodyctl register \$username \$thehost \$password
 EOF
-chown ubuntu ./add_host.sh
+
 chmod +x ./add_host.sh
 
 #Stop services and restart them, avoids a reboot.
@@ -205,4 +205,5 @@ systemctl start prosody.service
 systemctl start jicofo.service
 
 printf "Installation is complete!  However, to apply security patches you need to stop, and then start your instance.\n"
-printf "To add more meeting hosts, type 'sudo ./add_host'\n"
+printf "To add more meeting hosts, first change ownership of the add_host.sh file by typing \n"
+printf "'sudo chown username addhost.sh', where username is your username.  Then type 'sudo ./add_host'\n"
