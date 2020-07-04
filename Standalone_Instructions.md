@@ -1,122 +1,53 @@
 # Hosting a Private/Secure Jitsi-Meet Server on your home/small business network.
 
-This is step by step instructions of how to host a security hardened dedicated Jitsi-Meet server at home. It is specific to a Ubiquity Edge x10 router and DNS registrar AWS (Amazon) Route 53.   However, the main contribution (automated Jitsi Meet and server hardening installation is independent of router and DNS registrar).
+This is step by step instructions of how to host a security hardened dedicated Jitsi-Meet server at home or small office (SOHO).  The number of participants is primarily limited by your bandwidth.  With 75 Mbs network bandwidth, you should be able to have 8-12 participants.  There is lots of discussion on the Jitsi Community forum about performance, please go there for information and questions about performance.
 
-Most home networks do not have a static IP, however current practice of network providers seems to be to very infrequently change the IP (months), so it is practical to ignore that limitation and just update your domain name.
+These instructions use the specific example of a Ubiquity Edge x10 router and DNS registrar AWS (Amazon) Route 53.   However, the automated Jitsi Meet and server hardening installation is independent of router and DNS registrar.
+
+Most home networks do not have a static IP, however current practice of network providers seems to be to very infrequently change the IP (months), so it is practical to ignore that limitation and just update your domain name when your IP changes.
 
 You will need a computer to act as a server.  It does not have to be fancy, but should have:
 * Intel or AMD cpu (Jitsi-Meet does not work on ARM)
 * Ethernet port.
-* 8 GB of Memory.
+* Minimum of 8 GB of Memory ()
 * Keyboard and mouse.
 * Monitor.
 * USB memory > 16 GB stick to put Ubuntu ISO on (anything else on the stick will be lost).
+* Minimum upstream/downstream bandwidth of 75 Mbs.
 
 It does not need a graphics card or wifi (best not to have wifi, but good luck finding a computer without it).  I favor Intel NUCs.   
 
-One issue with using older hardware, is all of the hardware vulnerabilities that have been discovered (and exploits implemented) in the older CPUs, and you should keep your firmware up to date - older hardware firmware updates will likely be unsupported.
+One issue with using older hardware, is all of the hardware vulnerabilities that have been discovered (and exploits implemented) in the older CPUs, and you should keep your router and server firmware up to date - for older hardware, firmware updates will likely be unsupported.
 
 ## High level overview of the process
 
 1. Set up your Router to port forward to your server.
-2. Acquire a Domain Name and assign it an IP.
+2. Acquire a Domain Name and assign it the IP of  your router.
 3. Download recent Ubuntu 18.04 Server and put the ISO on the USB stick.
 4. Install Ubuntu with specified Disk Partitions.
-5. Install and automatically harden Jitsi Meet
-6. Answer a few prompts.
+5. Install and automatically harden Jitsi Meet.
+6. Reboot to update with security patches and test your setup.
 
 ### 1. Set up Router
-
-Follow this linke for instructions for [Ubuiquity Edge Router](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/standalone/ubiquity_edge_setup.md).
+<!--- change master to branchname, or vis-a-versus when branching/merging -->
+Follow this [link](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/ubiquity_edge_setup.md) for instructions for [Ubuiquity Edge Router](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/ubiquity_edge_setup.md).
 
 ### 2. Acquire a Domain Name and assign it your IP.
-
-
-
-#### Make an AWS account for yourself.
-(From Amazon AWS API Version 2013-04-01)
-
-"When you sign up for AWS, your AWS account is automatically signed up for all services in AWS,
-including Amazon Route 53. You are charged only for the services that you use.
-If you don't have an AWS
-account, use the following procedure to create one.
-To create an AWS account
-1. Open https://portal.aws.amazon.com/billing/signup.
-![Signup](./diagrams/AWS_Signup.png)
-2. Follow the online instructions.
-*(Note - you should register for a personal account, basic plan, unless you are doing this for a business - and I have no experience with how that changes these instructions.)*
-
-Part of the sign-up procedure involves receiving a phone call and entering a verification code.
-
-#### Access the console
-
-To access the AWS Management Console go to (https://aws.amazon.com/console/).  You probably want to bookmark this link, so you can get back to it.  
-![AWS_Console](./diagrams/AmazonConsole.png)
-
-When you go for the first time, you will need to provide an email address and a password. Login as Root.
-This combination of your email address and password is called your root identity or root account credentials. From the console, you can access the services, Route 53 (the AWS domain name registrar) and EC2 (where you launch instances).
-
-### 2. Register a domain name (with Amazon Route 53).
-
-#### Estimated cost
-
-- *There's an annual fee to register a domain, ranging from $9 to several hundred dollars, depending on the top-level domain, such as .com. For more information, see [Route 53 Pricing](https://d32ze2gidvkk54.cloudfront.net/Amazon_Route_53_Domain_Registration_Pricing_20140731.pdf) for Domain Registration. This fee is not refundable.* (I recommend domain names ending in .net, they only cost $11 for the first year, are generally recognizable, and register quickly. Donaim names ending in unusual prefixes, _e.g._  ".be" names are sometimes cheaper, but can take much longer to process.)
-
-- *When you register a domain, AWS automatically creates a hosted zone that has the same name as the domain. You use the hosted zone to specify where you want Route 53 to route traffic for your domain using an IP address (which you will get later). The fee for a hosted zone is $0.50 per month.*"
-
-#### Steps
-Click on this link [https://console.aws.amazon.com/route53/home](https://console.aws.amazon.com/route53/home)
-
-![RegDomainScreen](./diagrams/RegDomain_screen.png)
-_(Screen shot of what you will see as you follow steps below.  I recommend using the arrow 1. to choose .net instead of .com)_
-
-and follow the steps below:
-
-
-![DNS Registration](./diagrams/RegisterDomain_1.png)
-
-It is best to leave privacy enabled.
-
-Disable "Automatic renewal of your domain" to prevent yearly charges. The option is right above the Terms and conditions. You can always change it to auto renew later.
-
-
-![DNS Registration part 2](./diagrams/RegisterDomain_2.png)
-
-After completing, you will see the screen below:
-
-![DNS Finished](./diagrams/After_Domain_reg.png)
-
-
-- Click on "Hosted zones" is the left column.
-
-
-![Hosted Zone](./diagrams/hostedzone.png)
-- Click the radio button next to the name of the hosted zone that matches the name of the domain that you want to route traffic for.
-
-![Record set](./diagrams/Gotorecordset.png)
-
-- Click **Go to Record Sets** (see red ellipse above).
-
-![AssignIP](./diagrams/ip_value.png)
-
-- Choose **Create Record Set** (see red ellipse above)
- - Specify the following values:
- - **Name** – leave the box blank. The default value is the name of the hosted zone.
- - **Type** - Choose **A – IPv4 address**.
- - **TTL (Seconds)** (TTL stands for "Time To Live") - Accept the default value of **300**.
- - **Value** - Enter the IP address of your router under Allocate Elastic ID.
- - **Routing Policy** – Accept the default, **Simple**.
- - Click **Create** button at the bottom.
-
-
-After you get an e-mail that your domain was successfully registered, you can ```nslookup domainname``` and make sure your IP has propgated to it. Receiving the registration e-mail usually takes 20 minutes with .net domain names but can take much longer (3 days).  If instead of getting a "successfully registered e-mail", you get an e-mail stating there are issues with your domain registration, follow the instructions in the e-mail to clear up the issues.  You might need to verify your e-mail, etc.  There is no point in proceeding until your domain is successfully registered.
-
+<!--- change master to branchname, or vis-a-versus when branching/merging -->
+Follow this [link](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/AWS_Domain_name.md) for instructions for [AWS Registrar and DNS setup](https://github.com/fgamgee/Jitsi-Meet-Secure-Server/blob/master/AWS_Domain_name.md).
 
 ### 3. Download Ubuntu 18.04.
 
+You need to make a USB stick with the software.  Follow the links below, and in step 2, be sure to download [Ubuntu 18.04 LTS Server](https://releases.ubuntu.com/18.04/):
+
+* [Windows instructions](https://ubuntu.com/tutorials/tutorial-create-a-usb-stick-on-windows#1-overview)
+* [Mac instructions](https://ubuntu.com/tutorials/create-a-usb-stick-on-macos#1-overview)
+* [Ubuntu instructions](https://ubuntu.com/tutorials/create-a-usb-stick-on-ubuntu#1-overview)
+
+
 ### 4. Install Ubuntu with specified Disk Partitions.
 
-Do a standard Ubuntu Server install, but when you get to the "Guided storage configuration" step, choose "Custom storage layout".
+Do a standard Ubuntu Server install (see [Instructions](https://ubuntu.com/tutorials/install-ubuntu-server#1-overview)), but when you get to "Guided storage configuration" step 8, choose "Custom storage layout".  This is done for the [CIS Level 1&2 benchmark](https://www.cisecurity.org/benchmark/ubuntu_linux/) (hardening guidelines).  They provide justification in their benchmark for how this makes your server more secure.
 
 
 1. Partition 1 size 20 G (or larger) Format ext4 Mount /
@@ -135,14 +66,14 @@ After the install, take your USB stick out and reboot.  On reboot, it will say n
 
 ### 5. Install and automatically harden Jitsi Meet
 
-Type out the following commands one at a time (hit Enter and wait for each one to finish before running the next one) **change _master_ to _standalone_ if using development branch**
+<!--- change master to branchname if using development branch -->
+Type out the following commands one at a time (hit Enter and wait for each one to finish before running the next one)
 ```
 curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install_standalone.sh
 chmod +x Install.sh
 script out.txt
 sudo ./Install.sh
 ```
-### 6. Answer a few prompts.
 
 Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **\<Yes\>** - press enter – **TWICE**.
 
@@ -182,4 +113,24 @@ Installation is complete!
 
 End Script.
 
-```exit```
+```
+exit
+```
+
+If you want to follow the details of the install (all the text that went by, which may be helpful if for some reason the installation did not work), you can look at it by typing:
+
+```
+cat out.txt | less
+```
+
+### 6. Reboot to update with security patches and test your setup.
+
+```
+sudo reboot
+```
+
+After your server has rebooted, it should be ready to host Jitsi Meet video conferences.
+
+More information on using Jitsi is here: https://blogs.systweak.com/how-to-use-jitsi-meet/ just substitute your domainname instead of meet.jit.si in that blog.  
+
+You can use Jitsi-Meet whenever your server is on.  If you do not it up all the time, it is more secure (and green) to turn your server off when you are not hosting video conferences.  Hardware that is powered off is very secure!
