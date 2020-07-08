@@ -132,7 +132,7 @@
             # add_header Content-Security-Policy "default-src 'self' data: 'unsafe-inline' " always;
             # For E2EE encryption, need worker blobs.  See https://github.com/jitsi/jitsi-meet/issues/6887
             # And https://github.com/jitsi/jitsi-meet-electron/issues/358#issuecomment-636266478
-            add_header Content-Security-Policy "default-src 'none';style-src'self' 'unsafe-inline';font-src 'self';media-src 'self';img-src 'self';script-src 'self' 'unsafe-inline';worker-src blob:;connect-src 'self';";
+            add_header Content-Security-Policy "default-src 'none';style-src 'self' 'unsafe-inline';font-src 'self';media-src 'self';img-src 'self';script-src 'self' 'unsafe-inline';worker-src blob:;connect-src 'self';";
             # If too restictive, change DENY to SAMEORIGIN - this mitigates clickjacking risk - must comment out if you want to use Jitsi Electron App.
             # add_header X-Frame-Options "DENY" always;
             # Not necessary with CSP above, except for older browsers where it mildly reduces risk of reflective XXS
