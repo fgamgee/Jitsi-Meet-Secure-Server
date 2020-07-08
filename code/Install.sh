@@ -74,6 +74,10 @@ netfilter-persistent reload
 add-apt-repository ppa:nginx/stable
 apt-get update
 
+#add prosody repository and key.
+echo 'deb https://packages.prosody.im/debian bionic main' >> /etc/apt/sources.list.d/prosody.list
+wget -qO - https://prosody.im/files/prosody-debian-packages.key | apt-key add -
+apt update
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
@@ -149,6 +153,7 @@ echo
 prosodyctl register $username $thehost $password
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
+cd ~
 cat > ./add_host.sh <<EOF
 #!/bin/bash
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
@@ -160,7 +165,7 @@ echo
 prosodyctl register \$username \$thehost \$password
 
 EOF
-
+chown ubuntu ./add_host.sh
 chmod +x ./add_host.sh
 
 #Stop services and restart them, avoids a reboot.
