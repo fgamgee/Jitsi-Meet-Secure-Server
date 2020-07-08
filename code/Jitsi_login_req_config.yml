@@ -46,3 +46,15 @@
       insertafter: "        anonymousdomain: 'guest.{{ domain_name.stdout }}',"
       regexp: '^(\ *)authdomain:'
       line: "        authdomain: '{{ domain_name.stdout }}',"
+
+
+  - name: Configure System Config.
+    lineinfile:
+      path: /etc/systemd/system.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+    with_items:
+      - { regexp: '^DefaultLimitNOFILE', line: 'DefaultLimitNOFILE=65000'}
+      - { regexp: '^DefaultLimitNPROC', line: 'DefaultLimitNPROC=65000'}
+      - { regexp: '^DefaultTasksMax', line: 'DefaultTasksMax=65000'}

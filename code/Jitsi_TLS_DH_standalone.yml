@@ -27,7 +27,7 @@
 #        HostKey /etc/ssh/ssh_host_ecdsa_key
 #        AuthenticationMethods publickey
 
-  - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver, no-cli, no-loopback
+  - name: Disallow insecure TLS V1.0, 1.1 or ciphers in turnserver, no-cli, no-loopback, allow DHE with 4096 key
     lineinfile:
       path: /etc/turnserver.conf
       regexp: "{{ item.regexp }}"
@@ -49,7 +49,7 @@
       line: dh2066
       state: present
 
-  - name: Secure SSL/TLS and ciphers for prosody
+  - name: Secure SSL/TLS and ciphers for prosody, no DHE
     blockinfile:
       path: /etc/prosody/conf.avail/{{ domain_name.stdout }}.cfg.lua
       marker: "-- {mark} Ansible managed SSL and ciphers"
@@ -58,7 +58,7 @@
       block: |
         ssl = {
           protocol = "tlsv1_2+";
-          ciphers = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384"
+          ciphers = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305"
         }
 
   - name: Allow only TLS 1.2 and 1.3 in nginx (based on Mozilla recommendations)
@@ -76,11 +76,11 @@
       state: present
 
 
-  - name: Use Mozilla recommended ciphers for nginx
+  - name: Use Mozilla recommended ciphers for nginx, no DHE
     lineinfile:
       path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: '    ssl_ciphers '
-      line: '    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;'
+      line: '    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305;'
       state: present
 
   - name: Allow client to choose cipher, to increase performance
@@ -109,7 +109,7 @@
       - { regexp: '    ssl_session_cache', line: '    ssl_session_cache shared:SSL:10m;  # about 40000 sessions' }
       - { regexp: '    ssl_session_tickets', line: '    ssl_session_tickets off;'}
 
-  - name: nginx make secure DH Keys - must run openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
+  - name: nginx make secure DH Keys - must run openssl dhparam -out /etc/ssl/certs/dhparam.pem 4096
     lineinfile:
       path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
       regexp: "{{ item.regexp }}"
@@ -130,9 +130,12 @@
             # Add Content Security policy, allow things only from myself.  Need unsafe-inline js
             # this mitigates XXS attacks
             # https://scotthelme.co.uk/hardening-your-http-response-headers/#x-frame-options
-            add_header Content-Security-Policy "default-src 'self' data: 'unsafe-inline' " always;
-            # If too restictive, change DENY to SAMEORIGIN - this mitigates clickjacking risk
-            add_header X-Frame-Options "DENY" always;
+            # add_header Content-Security-Policy "default-src 'self' data: 'unsafe-inline' " always;
+            # For E2EE encryption, need worker blobs.  See https://github.com/jitsi/jitsi-meet/issues/6887
+            # And https://github.com/jitsi/jitsi-meet-electron/issues/358#issuecomment-636266478
+            add_header Content-Security-Policy "default-src 'none';style-src 'self' 'unsafe-inline';font-src 'self';media-src 'self';img-src 'self';script-src 'self' 'unsafe-inline';worker-src blob:;connect-src 'self';";
+            # If too restictive, change DENY to SAMEORIGIN - this mitigates clickjacking risk - must comment out if you want to use Jitsi Electron App.
+            # add_header X-Frame-Options "DENY" always;
             # Not necessary with CSP above, except for older browsers where it mildly reduces risk of reflective XXS
             add_header X-Xss-Protection "1; mode=block" always;
             # used to try and mitigate against MIME sniffing vulnerabilities.
@@ -144,11 +147,11 @@
               return 444;
             }
 
-#Comment this out, this is for a new install, there will not be a key, so no need to check.
-#  - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
-#    shell: ls /etc/ssl/certs/dhparam.pem
-#    register: SSLfile_exists
-#    ignore_errors: True
+
+  - name: Checking if SSL key exists - OK to fail, if no key, key generated next step.
+    shell: ls /etc/ssl/certs/dhparam.pem
+    register: SSLfile_exists
+    ignore_errors: True
 
     # 2048 is probably enough for now, but future?
 
