@@ -24,14 +24,14 @@ The project will not be appropriate for protection from targeted attacks by nati
 
 All participants of the meeting are assumed to be trusted, as well as by extension the device they use to connect to the meeting or devices that are present with them (e.g. digital assistants or phones) during the meeting.  There is no protection that would keep a participant from surreptitiously recording the meeting using their phone or other device, nor is there significant protection from a participant actively disrupting the meeting - though host controls (allowing the muting of participants and kicking them out of the meeting) can provide modest protection, appropriate for a classroom.
 
-The Threat model follows the STRIDE Methodology (https://en.wikipedia.org/wiki/STRIDE_(security)), is a Work in Progress (WIP) and limited in scope to the hosting of a Jitsi-Meet Server.
+The Threat model follows the STRIDE Methodology (https://en.wikipedia.org/wiki/STRIDE_(security)), and limited in scope to the hosting of a Jitsi-Meet Server.
 
 Threat | Mitigation (WIP)
 -------|----------
 Spoofing | Password Authentication required to start a meeting.  Unique URL and password can be required to join the meeting.  Let's Encrypt certificate for domain name.
-Tampering| CIS Benchmark Level 1 and 2 on server, with a few required exceptions.  Firewall. SSH for server management. Security updates automatically configured.
+Tampering| CIS Benchmark Level 1 and 2 on server, with a few required exceptions.  Firewall. SSH with private key (2048 bit) for server management. Security updates automatically configured.
 Repudiation (denial of the truth or validity of something) | Can conflict with privacy goal in general case.  However, meetings can require passwords which could be sent securely to participants with asymmetric key encryption.
-Information Disclosure | Encryption using WebRTC. Configured to require TLSv1.2 or 1.3 with secure ciphers and use secure DH key exchange. No logs kept on the server.
+Information Disclosure | Encryption using WebRTC. Configured to require TLSv1.2 with forward secure strong ciphers. No logs kept on the server.
 Denial of Service | Require Authentication to start a meeting, prevents adversary from starting multiple meetings.  Restrictive firewall rules.  Protection very rudimentary.
 Elevation of Privilege |  CIS Benchmark Level 1 on server which enables AppArmor.
 
@@ -41,7 +41,7 @@ Known issues:
 * DOS and DDOS attacks.  Outside of scope.
 * Man-in-the-middle-attacks.  This is a difficult attack to perform, needs to be targeted and is typically executed by a strong adversary. Outside of scope.
 * VOIP has vulnerabilities based on natural speech, and users should be aware of attacks such as described by Andrew White *et.al. Phonotactic Reconstruction of Encrypted VoIP conversations: Hookt on fon-iks.* Proceedings of IEEE Symposium on Security and Privacy, May, 2011. (available https://www.cs.unc.edu/~fabian/papers/foniks-oak11.pdf)
-* WebRTC uses an “audio level” header extension (see https://tools.ietf.org/html/rfc6464) in each audio packet, that is unencrypted and provides more information than the packet size alone. This can be disabled, but this will disable the ability of the server to detect the active speaker and automatically switch the to it (from Boris Grozev).
+* WebRTC uses an “audio level” header extension (see https://tools.ietf.org/html/rfc6464) in each audio packet, that is unencrypted and provides more information than the packet size alone. This can be disabled, but this will disable the ability of the server to detect the active speaker and automatically switch the to it (from 8x8 developer Boris Grozev).
   * As pointed out by the link, this audio level header extension can be used by a participant for a DOS attack, however this is outside of scope in that participants in a conference must be trusted.  Some mitigation is provided in that the host can kick someone out of a meeting and then inform the remaining participants of a new meeting link or password and restart the meeting.
   * An additional concern is that audio levels are visible on a
    packet-by-packet basis to an attacker passively observing the audio
@@ -50,4 +50,4 @@ Known issues:
    phoneme-level resolution.  In scenarios where this is a concern,
    additional mechanisms MUST be used to protect the confidentiality of
    the header extension.
-* Phone dial-in to meetings is supported by jigasi, which does not support TLSv1.2, but TLSv1 which has known security issues.  Default Jitsi-Meet therefore will not support phone dial-in and limit WebRTC to TLSv1.2.
+* Phone dial-in to meetings is supported by jigasi, which does not support TLSv1.2, but TLSv1 which has known security issues.  Default Jitsi-Meet therefore will not support phone dial-in.

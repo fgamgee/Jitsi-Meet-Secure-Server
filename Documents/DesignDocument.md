@@ -39,13 +39,9 @@ A Bash script will be utilized to run the installation process. The firewall wil
 
 ## 3 User Interface Design
 
-Detailed instructions will be provided.
+Detailed instructions will be provided for those steps that are not amendable to automation, such as obtaining a domain name, IP address, and similar.
 
-The user interface will be the command line.  Automation will be used to minimize the commands and the complexity of those commands that the user will need to enter.
-
-Installation will report on progress and success or failure of each step, with an overall report of number of successful steps, steps skipped, and steps that failed.
-
-The installation will be idempotent, so that the user will not cause issues if he performs the installation multiple times.
+Once the user is in the server, the user interface will be the command line.  Automation will be used to minimize the commands and the complexity of those commands that the user will need to enter.
 
 ## 4 Testing
 Instructions will be provided for the user to check for misconfigurations and vulnerabilities of the server using automated test tools such as [Mozilla Observatory](https://observatory.mozilla.org/analyze/) Qualys SSL Labs (https://www.ssllabs.com/ssltest/), [SecurityHeaders.com](https://securityheaders.com), [Immuniweb](https://www.immuniweb.com/), [Greenbone Community Edition, formerly OpenVAS](https://www.greenbone.net/en/community-edition/) and also what the expected results are from a successful installation.  CVE's will be examined manually for packages as well (particularly packages that are exposed, such as coturn, prosody, etc.)
