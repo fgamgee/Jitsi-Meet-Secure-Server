@@ -33,13 +33,13 @@ The deliverables for the project will be a complete default server installation 
 By running the project on Github, the intent is that the solution will be independently tested and audited by the open source community and those wanting to run their own Jitsi Meet server and their comments will be considered and incorporated where appropriate.
 
 ## Progress so far ##
-- Problem Statement done.
-- Threat Model drafted.
+- Design Document done.
+- Threat Model done.
+- Background Research done.
 - Install Instructions and code for secure cloud (AWS) Jitsi Meet Instance with some hardening done using Ansible to modify configuration files and CIS Level 1 and 2 benchmarks applied with https://github.com/florianutz/Ubuntu1804-CIS (Thanks Florian Utz! NB License MIT)
 - Install Instructions tested (six independent testers so far) and updated based on their issues and comments.
 - Evaluated cloud instance with Mozilla Observatory and updated security headers, SSH ciphers,  SSL ciphers, DH key exchange to match recommendations.
-- Evaluated with OpenVAS (now Greenbone) Community edition.  Updated nginx to 1.16.2 to remove some CVE's. Hide nginx version in header. Disabled HTTP except for GET,HEAD,POST and OPTIONS.
-- Design Document drafted.
+- Evaluated with OpenVAS (now Greenbone) Community edition.  Updated nginx to 1.16.2 to remove some CVE's. Hide nginx version in header. Disabled HTTP except for GET,HEAD,POST and OPTIONS.  Change configuration of services to remove other CVE's.
 - Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
 - Much help has been provided by 8x8 developers, especially Saulo, Borris and Aaron *et al.*
 - Standalone Server prototyped and tested.
@@ -47,7 +47,7 @@ By running the project on Github, the intent is that the solution will be indepe
 ## Next up ##
 
 - Security Evaluation.
-- Further testing and refinement.
+
 
 License:
 Apache 2.0
