@@ -6,7 +6,7 @@ Covid-19 has disrupted society profoundly.  To prevent the spread of the disease
 
 In numerous interactions, the choice of videoconferencing solution occurs in an asymmetrical power-relationship.  For example, the school or physician chooses a videoconferencing solution and to access the needed services, the student or patient must agree to the terms and conditions of the videoconferencing software provider and typically download software to their personal computer.  These terms and conditions typically require the user to give up personal information to the software provider and relinquish various privacy rights.  Even if the terms and conditions are satisfactory to the user, security breaches at companies are common, and the user may not want to risk their private information being accidentally disclosed.  Additionally, the software required to be downloaded may introduce security vulnerabilities to the user's computer, and the terms and conditions free the software provider of any liability.  The school or physician typically has no interest in requiring the user to relinquish information to the software provider and opening up security vulnerabilities on the users computer, but may have no better alternative for the provision of their service to the student or patient.  Indeed, due to the public health emergency and the lack of secure and private video conferencing solutions, the Office of Civil Rights (OCR) has suspended enforcement of privacy rules (https://www.hhs.gov/hipaa/for-professionals/special-topics/emergency-preparedness/notification-enforcement-discretion-telehealth/index.html) for telehealth services.
 
-## Current Situation and Background ##
+## Current Situation and Background
 
 We will briefly consider one popular commercial video conferencing solution example.  A prime beneficiary of the surge in video conferencing is the publicly traded company Zoom (Nasdaq ZM).  Many people have expressed concern over the security and privacy protections afforded by Zoom, which are well summarized by Bruce Schneier (https://www.schneier.com/blog/archives/2020/04/security_and_pr_1.htm April 3, 2020).  While Zoom has made recent well-publicized improvements to the security of its software, its code is proprietary, not open source, violating a well-established security principle.  
 
@@ -22,17 +22,17 @@ There is an open source video conferencing solution, Jitsi, available under the 
 
 The server software is called Jitsi Meet.  Jitsi Meet has installation instructions and configuration manuals for various features (*e.g.* password protection, restricting some features like muting others to the meeting host, etc.).  However, there is no document for the installation of a private and secure dedicated Jitsi Meet server, including what software should and should not be on the server, firewall rules, management policies, etc. (https://community.jitsi.org/t/security-audit/25401/2).  Since many people and organizations with a need for private and secure video conferencing do not have the expertise to deploy a privacy protecting and secure, public facing server, they are unable to utilize this open source video conferencing solution.
 
-## Problem Statement ##
+## Problem Statement
 No private and secure open source video conferencing solution is available for organizations or individuals who need meeting host controls and/or password protection of the meetings unless they already have or know how to host a secure and private public facing webserver.
 
-## Project Scope ##
+## Project Scope
 This project will address this need by providing instructions on setting up a private and secure dedicated Jitsi Meet server for a video conference for a few people, either in the cloud or stand-alone, appropriate for utilization by a small organization or individual. The project will run in the open source Jitsi community on Github and invite comments and contributions from the open source community, including inviting an independent security audit from the open source community.  Secondarily to privacy and security, ease of use will also be a design goal with the intended audience being a technically savvy individual with some familiarity with linux, but lacking any experience with the required individual components (setting up a server, firewalls, DNS domain registration, etc.)
 
 The deliverables for the project will be a complete default server installation guide for a private and secure dedicated Jitsi Meet server with software and hardware recommendations, firewall rules and deployment, how to obtain a hostname, TLS certificate, typical server configuration for meetings (requiring a password for use of the service and restricting certain privileges, like muting a participant, to the meeting host) and management policy.  Security documents will also include a threat model, security and maintenance policies.  As noted, there will be guides for both a cloud and a stand-alone solution.  While the cloud solution requires some compromise of privacy (you must trust the cloud provider), it may be the most popular option as it has will likely have the lowest fixed cost and can easily scale to larger groups if required.  As the cloud solution is anticipated to be the most popular solution, it will be developed first and the stand-alone solution will be a derivative work.
 
 By running the project on Github, the intent is that the solution will be independently tested and audited by the open source community and those wanting to run their own Jitsi Meet server and their comments will be considered and incorporated where appropriate.
 
-## Progress so far ##
+## Progress so far
 - Design Document done.
 - Threat Model done.
 - Background Research done.
@@ -44,7 +44,18 @@ By running the project on Github, the intent is that the solution will be indepe
 - Much help has been provided by 8x8 developers, especially Saulo, Borris and Aaron *et al.*
 - Standalone Server prototyped and tested.
 
-## Next up ##
+## Invitation to use.
+
+- For a cloud solution, use Install_Instructions
+- To run a server in your SOHO environment, use Standalone_Instructions
+
+Let me know if you have trouble, and I will try to help.
+
+## Pen Testing
+
+- Pen testing is welcome!  See threat model before you begin. Use a set of the instructions (your choice, but the cloud solution is probably easiest).  I am sure there could be significant improvements - so please suggest in Issues or better yet, pull requests with mitigations!  I welcome community involvement.
+
+## Next up
 
 - Security Evaluation.
 
