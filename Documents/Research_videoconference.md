@@ -68,6 +68,12 @@ Zoom had 14, Skype 6, Microsoft Teams 1, WEBex 44, Jitsi had 1, none were found 
 
 My belief is that the number of CVE's is primarily related to the popularity of the product, and secondarily related to the security of the product.   If companies leave CVE's open (which does not seem to be the case in these products), it is a significant security concern.  However, from what is found here, there is no clear indication that one product is more secure than another.
 
+### Proprietary Software
+
+All commercial videoconferencing solutions (except 8x8) are utilizing proprietary software.  This can be a particular issue when the software developers are in countries whose governments can command "backdoors", as is the case with Zoom as reported in the [Economist : Can Zoom be trusted with users’ secrets?](https://www.economist.com/business/2020/06/20/can-zoom-be-trusted-with-users-secrets) on June 20, 2020.
+
+Proprietary software solutions restrict security and privacy evaluation and violate a fundamental principle for secure software design.
+
 ### Privacy policy evaluation.
 
 On March 30, 2020, Consumer Reports evaluated the privacy policy of Zoom. From the [article](https://www.consumerreports.org/video-conferencing-services/zoom-teleconferencing-privacy-concerns/)
