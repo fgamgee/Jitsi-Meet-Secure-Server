@@ -99,12 +99,16 @@ apt-get -y install jitsi-meet
 apt install -y ansible
 cd /etc/ansible/
 # Get configurations of jitsi - Need UPDATE from standalone to MASTER when merged!
-curl -o /etc/ansible/Jitsi_login_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_standalone.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_standalone.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_standalone.yml
+curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_req_config.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_config.yml
+curl -o /etc/ansible/Jitsi_no_logging.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_no_logging.yml
 
 # Run configuration for Jitsi
-ansible-playbook -v Jitsi_login_standalone.yml
-ansible-playbook -v Jitsi_TLS_DH_standalone.yml
+ansible-playbook -v Jitsi_login_req_config.yml
+ansible-playbook -v Jitsi_TLS_DH_config.yml
+# This is used to disable logging, comment out if you want logging.
+ansible-playbook -v Jitsi_no_logging.yml
+
 #Get Ansible playbook for CIS hardening -
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
 sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
@@ -137,7 +141,15 @@ cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<EOF
 ubuntu1804cis_xwindows_required: true
 ubuntu1804cis_telnet_required: true
 ubuntu1804cis_firewall: iptables
+#logrotate seems to break prosody
 ubuntu1804cis_rule_4_3: false
+# Below is to disable Auditing and logging, to maintain privacy -
+# no record on system if compromised - but no record of compromise either....
+# There is a privacy/security tradeoff for the user to consider.  If you want
+# logging and auditiing, delete the line below
+ubuntu1804cis_section4: false
+# Below here, is SSH rules, which are not on the standalone server (requires physical
+# access with keyboard, mouse and monitor, no remote administration.)
 ubuntu1804cis_rule_5_2_1: false
 ubuntu1804cis_rule_5_2_2: false
 ubuntu1804cis_rule_5_2_3: false

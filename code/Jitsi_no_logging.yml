@@ -1,0 +1,21 @@
+- name: Configure files for services, turnserver, prosody, nginx, OpenSSH, generate SSL key
+  hosts: localhost
+  become: yes
+
+  tasks:
+  - name: Disallow logging by coturn
+    lineinfile:
+      path: /etc/turnserver.conf
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+    with_items:
+      - { regexp: 'log-file=/dev/null', line: 'log-file=/dev/null'}
+      - { regexp: 'simple-log', line: 'simple-log'}
+      - { regexp: 'no-stdout-log', line: 'no-stdout-log'}
+
+  - name: Remvove syslog in turnserver.conf
+    lineinfile:
+      path: /etc/turnserver.conf
+      regexp: 'syslog'
+      state: absent

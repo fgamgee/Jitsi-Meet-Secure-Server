@@ -1,6 +1,7 @@
 - name: Configure Jitsi Meet config files for host login
   hosts: localhost
   become: yes
+  gather_facts: yes
 
   tasks:
   - name: Grepping hostname from JVB config
@@ -47,7 +48,6 @@
       regexp: '^(\ *)authdomain:'
       line: "        authdomain: '{{ domain_name.stdout }}',"
 
-
   - name: Configure System Config.
     lineinfile:
       path: /etc/systemd/system.conf
@@ -58,3 +58,28 @@
       - { regexp: '^DefaultLimitNOFILE', line: 'DefaultLimitNOFILE=65000'}
       - { regexp: '^DefaultLimitNPROC', line: 'DefaultLimitNPROC=65000'}
       - { regexp: '^DefaultTasksMax', line: 'DefaultTasksMax=65000'}
+
+# This Configuring behind a NAT should only be uncommented if you are having trouble on a standalone server
+# with three-person or more confernces.  See https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart
+# https://stackoverflow.com/questions/39819378/ansible-get-current-target-hosts-ip-address
+#  - name: Configure behind a NAT.  First set local IP
+#    lineinfile:
+#      path: /etc/jitsi/videobridge/sip-communicator.properties
+#      regexp: '^org.ice4j.ice.harvest.NAT_HARVESTER_LOCAL_ADDRESS='
+#      line: "org.ice4j.ice.harvest.NAT_HARVESTER_LOCAL_ADDRESS={{ ansible_default_ipv4.address }}"
+
+#  - name: Get the ip address of the domain.
+#    shell: 'dig \+short "{{ domain_name.stdout }}"; echo'
+#    register: host_ip
+
+#  - name: Configure behind a NAT.  Now set host domain IP
+#    lineinfile:
+#      path: /etc/jitsi/videobridge/sip-communicator.properties
+#      regexp: '^org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS='
+#      line: "org.ice4j.ice.harvest.NAT_HARVESTER_PUBLIC_ADDRESS={{ host_ip.stdout }}"
+
+#  - name: Comment out
+#    lineinfile:
+#      path: /etc/jitsi/videobridge/sip-communicator.properties
+#      regexp: 'org.ice4j.ice.harvest.STUN_MAPPING_HARVESTER_ADDRESSES'
+#      line: "#org.ice4j.ice.harvest.STUN_MAPPING_HARVESTER_ADDRESSES"
