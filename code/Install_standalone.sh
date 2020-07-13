@@ -180,6 +180,10 @@ cd /etc/ansible/
 
 ansible-playbook /etc/ansible/harden.yml
 
+#fix ownership and permission on localhost.key for prosody
+chown root:prosody /etc/prosody/certs/localhost.key
+chmod g+r /etc/prosody/certs/localhost.key
+
 set +x
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 #  below not POSIX compliant, depends on bash, but convenient...
@@ -215,6 +219,13 @@ systemctl start jitsi-videobridge2.service
 systemctl start nginx.service
 systemctl start prosody.service
 systemctl start jicofo.service
+
+# Stop and disable system logging - Comment out these lines if you want to keep logging.
+#https://stackoverflow.com/questions/17358499/linux-how-to-disable-all-log#32553762
+printf "Stopping and Disabling logging..."
+systemctl stop rsyslog.service
+systemctl disable rsyslog.service
+
 
 printf "Installation is complete!  However, to apply security patches you need to stop, and then start your instance.\n"
 printf "To add more meeting hosts, first change ownership of the add_host.sh file by typing \n"

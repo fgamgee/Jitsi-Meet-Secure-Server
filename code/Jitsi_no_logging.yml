@@ -1,9 +1,11 @@
-- name: Configure files for services, turnserver, prosody, nginx, OpenSSH, generate SSL key
+- name: Turn off logging.
   hosts: localhost
   become: yes
 
+
+# Coturn logs things until config file is read.  To be improved.
   tasks:
-  - name: Disallow logging by coturn
+  - name: Turn off logging by coturn
     lineinfile:
       path: /etc/turnserver.conf
       regexp: "{{ item.regexp }}"
@@ -19,3 +21,33 @@
       path: /etc/turnserver.conf
       regexp: 'syslog'
       state: absent
+
+  - name: Turn off Access logs in nginx (way to do it in 1.14.0+)
+    lineinfile:
+      path: /etc/nginx/nginx.conf
+      regexp: 'access_log'
+      line: "\taccess_log off;"
+      state: present
+
+# Leave on for testing for now.
+#  - name: Send Error logs in nginx to /dev/null
+#    lineinfile:
+#      path: /etc/nginx/nginx.conf
+#      regexp: 'error_log'
+#      line: "\terror_log /dev/null;"
+#      state: present
+
+  - name: Turn off info logs in prosody, send them to /dev/null
+    lineinfile:
+      path: /etc/prosody/prosody.cfg.lua
+      regexp: '\tinfo = '
+      line: '\tinfo = "/dev/null";'
+      state: present
+
+# Leave on for a quick check.
+#  - name: Turn off error logs in prosody, send them to /dev/null
+#    lineinfile:
+#      path: /etc/prosody/prosody.cfg.lua
+#      regexp: '\terror = '
+#      line: '\terror = "/dev/null";'
+#      state: present
