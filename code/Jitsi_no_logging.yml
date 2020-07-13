@@ -2,6 +2,8 @@
   hosts: localhost
   become: yes
 
+
+# Coturn logs things until config file is read.  To be improved.
   tasks:
   - name: Turn off logging by coturn
     lineinfile:
@@ -27,6 +29,7 @@
       line: "\taccess_log off;"
       state: present
 
+# Leave on for testing for now.
 #  - name: Send Error logs in nginx to /dev/null
 #    lineinfile:
 #      path: /etc/nginx/nginx.conf

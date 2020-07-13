@@ -180,6 +180,10 @@ cd /etc/ansible/
 
 ansible-playbook /etc/ansible/harden.yml
 
+#fix ownership and permission on localhost.key for prosody
+chown root:prosody /etc/prosody/certs/localhost.key
+chmod g+r /etc/prosody/certs/localhost.key
+
 set +x
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 #  below not POSIX compliant, depends on bash, but convenient...
