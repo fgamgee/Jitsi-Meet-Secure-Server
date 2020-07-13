@@ -40,8 +40,8 @@
   - name: Turn off info logs in prosody, send them to /dev/null
     lineinfile:
       path: /etc/prosody/prosody.cfg.lua
-      regexp: '\tinfo = '
-      line: '\tinfo = "/dev/null";'
+      regexp: "\tinfo = "
+      line: "\tinfo = \"/dev/null\";"
       state: present
 
 # Leave on for a quick check.
