@@ -50,7 +50,7 @@ By running the project on Github, the intent is that the solution will be indepe
 - For a cloud solution, use Install_Instructions
 - To run a server in your SOHO environment, use Standalone_Instructions
 
-Let me know if you have trouble, and I will try to help.
+Let me know by using "Issues" if you have trouble, and I will try to help.  If you use this guide successfully, please also put something in the Issues so I know other people can actually use it - and you are welcome to include suggestions for improvements.
 
 ## Pen Testing
 
