@@ -50,7 +50,7 @@
     lineinfile:
       path: /etc/jitsi/jicofo/logging.properties
       regexp: '\.level.*?=.*\n'
-      replace: ''\.level=OFF\n'
+      replace: '\.level=OFF\n'
 
 # Turn off jitsi videobridge logging, reasonable options are OFF or SEVERE (log errors)
 # https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html
@@ -58,7 +58,7 @@
     lineinfile:
       path: /etc/jitsi/videobridge/logging.properties
       regexp: '\.level.*?=.*\n'
-      replace: ''\.level=OFF\n'
+      replace: '\.level=OFF\n'
 
 # Leave on for a quick check.
   - name: Turn off error logs in prosody, send them to /dev/null
