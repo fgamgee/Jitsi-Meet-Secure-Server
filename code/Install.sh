@@ -87,7 +87,9 @@ apt-get -y install jitsi-meet
 
 #Let's Encrypt certificate - note, you will see this in the logs (at least nginx), because logging is
 # not yet disabled, but I think that is fine.
+# This method works fine, but installs Python 2.7, which is EOL.
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
+
 
 #Install Ansible
 apt install -y ansible
@@ -184,6 +186,59 @@ EOF
 chown ubuntu ./add_host.sh
 chmod +x ./add_host.sh
 
+
+
+cat > /etc/ansible/autoshutdown.yml <<EOF
+- name: Turn off logging.
+  hosts: localhost
+  become: yes
+
+
+# Coturn logs startup until config file is read, and then is silent.  To be improved.
+  tasks:
+  - name: Turn off logging
+    lineinfile:
+      path: /etc/crontab
+      regexp: "shutdown"
+      line: '{{ minute }} {{ hour }} * * *  root shutdown'
+      state: present
+EOF
+
+
+# Make an autoshutdown script that can run daily, so you don't forget to turn
+#your AWS instance off.
+
+cat > ~/autoshutdown.sh << EOF
+#!/bin/bash
+
+printf "This shell set a job to automatically shutdown daily, so you don't forget and leave \n"
+printf "your instance running.  You will need to run it sudo ./auto_shutdown.sh \n"
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root, use sudo"
+  exit
+fi
+
+printf  "your current date and time maybe in UTC.  Here is the time your system thinks it is: \n"
+date +"%T"
+read -p "Enter the hour (in the same time zone as your system is) you want the shutdown to occur [0-23]: " hour
+read -p "Enter the minute you want shutdown to occur, system will give 1 minute warning [0-59]: " minute
+if [[ hour -lt  0 || hour -gt 59 ||  minute -lt 0 || minute -gt 59 ]]
+  then echo "invalid time given"
+  exit
+fi
+echo "Time shutdown will occur daily \$hour : \$minute"
+
+cd /etc/ansible
+
+ansible-playbook -e "minute=\$minute hour=\$hour" autoshutdown.yml
+echo
+printf "done \n"
+
+EOF
+
+chown ubuntu ./autoshutdown.sh
+chmod +x ./autoshutdown.sh
+
 #Stop services and restart them, avoids a reboot.
 printf "Restarting Services\n"
 systemctl stop coturn.service
@@ -207,3 +262,8 @@ systemctl disable rsyslog.service
 printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
 printf "However, to apply security patches you need to stop, and then start your instance.\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
+printf "/n"
+printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
+printf "at the command line, type: \n"
+printf "sudo ./auto_shutdown.sh \n"
+printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day."
