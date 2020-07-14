@@ -43,6 +43,7 @@ By running the project on Github, the intent is that the solution will be indepe
 - Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
 - Much help has been provided by 8x8 developers, especially Saulo, Borris and Aaron *et al.*
 - Standalone Server prototyped and tested.
+- Most logging is removed for privacy.  Comment out in the Install.sh the line indicated in the comments to keep logging.
 
 ## Invitation to use.
 
@@ -57,7 +58,8 @@ Let me know if you have trouble, and I will try to help.
 
 ## Next up
 
-- Security Evaluation.
+- Security Evaluation.  Done, but not published.
+- Let's Encrypt solution provided with Jitsi Meet installs Python 2.7, which is unsupported EOL.  Need to have a solution that uses Python3 - it is possible according to Let's Encrypt website, but need to automate.
 
 
 License:
