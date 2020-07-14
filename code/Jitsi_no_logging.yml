@@ -49,7 +49,7 @@
   - name: Turn off jicofo logging
     lineinfile:
       path: /etc/jitsi/jicofo/logging.properties
-      regexp: "\.level.*?=.*\n"
+      regexp: '\.level.*?=.*\n'
       replace: ".level=OFF\n"
 
 # Turn off jitsi videobridge logging, reasonable options are OFF or SEVERE (log errors)
@@ -57,7 +57,7 @@
   - name: Turn off jitsi videobridge logging
     lineinfile:
       path: /etc/jitsi/videobridge/logging.properties
-      regexp: "\.level.*?=.*\n"
+      regexp: '\.level.*?=.*\n'
       replace: ".level=OFF\n"
 
 # Leave on for a quick check.
