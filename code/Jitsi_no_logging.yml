@@ -64,6 +64,6 @@
   - name: Turn off error logs in prosody, send them to /dev/null
     lineinfile:
       path: /etc/prosody/prosody.cfg.lua
-      regexp: '\terror = '
-      line: '\terror = "/dev/null";'
+      regexp: "\terror = "
+      line: "\terror = \"/dev/null\";"
       state: present
