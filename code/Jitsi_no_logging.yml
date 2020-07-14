@@ -3,7 +3,7 @@
   become: yes
 
 
-# Coturn logs things until config file is read.  To be improved.
+# Coturn logs startup until config file is read, and then is silent.  To be improved.
   tasks:
   - name: Turn off logging by coturn
     lineinfile:
@@ -29,13 +29,13 @@
       line: "\taccess_log off;"
       state: present
 
-# Leave on for testing for now.
-#  - name: Send Error logs in nginx to /dev/null
-#    lineinfile:
-#      path: /etc/nginx/nginx.conf
-#      regexp: 'error_log'
-#      line: "\terror_log /dev/null;"
-#      state: present
+# Comment this task out to help debug problems.
+  - name: Send Error logs in nginx to /dev/null
+    lineinfile:
+      path: /etc/nginx/nginx.conf
+      regexp: 'error_log'
+      line: "\terror_log /dev/null;"
+      state: present
 
   - name: Turn off info logs in prosody, send them to /dev/null
     lineinfile:
@@ -43,6 +43,22 @@
       regexp: "\tinfo = "
       line: "\tinfo = \"/dev/null\";"
       state: present
+
+# Turn off jicofo logging, reasonable options are OFF or SEVERE (log errors)
+# https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html
+  - name: Turn off jicofo logging
+    lineinfile:
+      path: /etc/jitsi/jicofo/logging.properties
+      regexp: "\.level.*?=.*\n"
+      replace: "\.level=OFF\n"
+
+# Turn off jitsi videobridge logging, reasonable options are OFF or SEVERE (log errors)
+# https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html
+  - name: Turn off jitsi videobridge logging
+    lineinfile:
+      path: /etc/jitsi/videobridge/logging.properties
+      regexp: "\.level.*?=.*\n"
+      replace: "\.level=OFF\n"
 
 # Leave on for a quick check.
 #  - name: Turn off error logs in prosody, send them to /dev/null

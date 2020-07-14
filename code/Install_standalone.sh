@@ -87,13 +87,9 @@ wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
 apt-get update
 apt-get -y install jitsi-meet
 
-#Let's Encrypt certificate
+#Let's Encrypt certificate - note, you will see this in the logs, because logging is
+# not yet disabled, but I think that is fine.
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
-
-# Make keys needed for secure DH key exchange - 2048 is OK. Can do 4096 - but
-# it takes long time...
-# Moved to Ansible
-
 
 #Install Ansible
 apt install -y ansible
@@ -185,6 +181,9 @@ chown root:prosody /etc/prosody/certs/localhost.key
 chmod g+r /etc/prosody/certs/localhost.key
 
 set +x
+printf "\n"
+printf "Let's set up a host and password for meetings.\n"
+printf "\n"
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 #  below not POSIX compliant, depends on bash, but convenient...
 read -p "Username for host of meeting: " username

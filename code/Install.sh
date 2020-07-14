@@ -85,13 +85,9 @@ wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
 apt-get update
 apt-get -y install jitsi-meet
 
-#Let's Encrypt certificate
+#Let's Encrypt certificate - note, you will see this in the logs (at least nginx), because logging is
+# not yet disabled, but I think that is fine.
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
-
-# Make keys needed for secure DH key exchange - 2048 is OK. Can do 4096 - but
-# it takes long time...
-# Moved to Ansible
-# openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
 #Install Ansible
 apt install -y ansible
