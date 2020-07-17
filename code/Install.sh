@@ -159,16 +159,6 @@ chown root:prosody /etc/prosody/certs/localhost.key
 chmod g+r /etc/prosody/certs/localhost.key
 
 
-set +x
-printf "\n"
-printf "Let's set up a host and password for meetings.\n"
-printf "\n"
-thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
-#  below not POSIX compliant, depends on bash, but convenient...
-read -p "Username for host of meeting: " username
-read -s -p "Password: " password
-echo
-prosodyctl register $username $thehost $password
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
 cd ~
@@ -183,9 +173,15 @@ echo
 prosodyctl register \$username \$thehost \$password
 
 EOF
-chown ubuntu ./add_host.sh
+
+user=$(stat -c %U ./Install.sh)
+chown $user ./add_host.sh
 chmod +x ./add_host.sh
 
+printf "\n"
+printf "Let's set up a host and password for meetings.\n"
+printf "\n"
+./add_host.sh
 
 
 cat > /etc/ansible/autoshutdown.yml <<EOF

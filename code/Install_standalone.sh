@@ -204,7 +204,16 @@ echo
 prosodyctl register \$username \$thehost \$password
 EOF
 
+user=$(stat -c %U ./Install.sh)
+chown $user ./add_host.sh
 chmod +x ./add_host.sh
+
+printf "\n"
+printf "Let's set up a host and password for meetings.\n"
+printf "\n"
+./add_host.sh
+
+
 
 #Stop services and restart them, avoids a reboot.
 printf "Restarting Services\n"
@@ -227,5 +236,5 @@ systemctl disable rsyslog.service
 
 
 printf "Installation is complete!  However, to apply security patches you need to stop, and then start your instance.\n"
-printf "To add more meeting hosts, first change ownership of the add_host.sh file by typing \n"
-printf "'sudo chown username addhost.sh', where username is your username.  Then type 'sudo ./add_host'\n"
+printf "To add more meeting hosts, type 'sudo ./add_host'\n"
+printf "/n"
