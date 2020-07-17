@@ -187,14 +187,14 @@ printf "\n"
 
 
 cat > /etc/ansible/autoshutdown.yml <<EOF
-- name: Turn off logging.
+- name: Automatically turn off at specified time.
   hosts: localhost
   become: yes
 
 
-# Coturn logs startup until config file is read, and then is silent.  To be improved.
+# Crontab configuration
   tasks:
-  - name: Turn off logging
+  - name: Update crontab to auto shutdown
     lineinfile:
       path: /etc/crontab
       regexp: "shutdown"
