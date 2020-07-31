@@ -260,7 +260,7 @@ systemctl disable rsyslog.service
 printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
 printf "However, to apply security patches you need to stop, and then start your instance.\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
-printf "/n"
+printf "\n"
 printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
 printf "at the command line, type: \n"
 printf "sudo ./auto_shutdown.sh \n"

@@ -1,56 +1,20 @@
 # Jitsi-Meet-Secure-Server
-WIP - Development of Guideline on how to create a private and secure Jitsi-Meet server
+Project for newbies (NOOBs) so they can have a private and secure Jitsi-Meet server.  It is specifically for those who do not know how to host a secure webserver, but need a private videoconferencing solution.  The Jitsi development team provides a quick install, but the user is responsible for securing the server.  This project automates that process.
 
 ## Introduction
-Covid-19 has disrupted society profoundly.  To prevent the spread of the disease, individuals have been subject to mandatory or "voluntary" requirements to avoid contact with other people.  This has caused a huge surge in the use of video conferencing services for work, education, medical visits, and social interaction.  Many of the interactions now taking place via videoconferencing are of a confidential nature.  The use of video conferencing in place of in-person interactions brings with it numerous security and privacy issues that must be considered when choosing a videoconferencing solution.
+This project provides two complete, open source solutions based on Jitsi-Meet to meet the needs of individuals or small organizations. One is intended for cloud deployment and one intended as a dedicated server running in a SOHO (Small Office/Home Office) environment.
 
-In numerous interactions, the choice of videoconferencing solution occurs in an asymmetrical power-relationship.  For example, the school or physician chooses a videoconferencing solution and to access the needed services, the student or patient must agree to the terms and conditions of the videoconferencing software provider and typically download software to their personal computer.  These terms and conditions typically require the user to give up personal information to the software provider and relinquish various privacy rights.  Even if the terms and conditions are satisfactory to the user, security breaches at companies are common, and the user may not want to risk their private information being accidentally disclosed.  Additionally, the software required to be downloaded may introduce security vulnerabilities to the user's computer, and the terms and conditions free the software provider of any liability.  The school or physician typically has no interest in requiring the user to relinquish information to the software provider and opening up security vulnerabilities on the users computer, but may have no better alternative for the provision of their service to the student or patient.  Indeed, due to the public health emergency and the lack of secure and private video conferencing solutions, the Office of Civil Rights (OCR) has suspended enforcement of privacy rules (https://www.hhs.gov/hipaa/for-professionals/special-topics/emergency-preparedness/notification-enforcement-discretion-telehealth/index.html) for telehealth services.
+For a complete description, see the documents folder, in particular, [Private_Secure_Jitsi_project](/Documents/Private_Secure_Jitsi_project.pdf).
+**Note**, that the Security Evaluation of Jitsi and meet.jit.si in [Private_Secure_Jitsi_project](/Documents/Private_Secure_Jitsi_project.pdf) is dated - I waited until the Jitsi development team updated the Jitsi install before posting the document.  The default Jitsi is improved significantly from what is reported in the [Private_Secure_Jitsi_project](/Documents/Private_Secure_Jitsi_project.pdf).  However, using this repository will get you all the improvements of the new Jitsi stable install and more.
 
-## Current Situation and Background
-
-We will briefly consider one popular commercial video conferencing solution example.  A prime beneficiary of the surge in video conferencing is the publicly traded company Zoom (Nasdaq ZM).  Many people have expressed concern over the security and privacy protections afforded by Zoom, which are well summarized by Bruce Schneier (https://www.schneier.com/blog/archives/2020/04/security_and_pr_1.htm April 3, 2020).  While Zoom has made recent well-publicized improvements to the security of its software, its code is proprietary, not open source, violating a well-established security principle.  
-
-As concerning, are Zoom's privacy policy.  Quoting the above blog from Schneier:
-
-*''Zoom spies on its users for personal profit. It seems to have cleaned this up somewhat since everyone started paying attention, but it still does it.*
-
-*The company collects a laundry list of data about you, including user name, physical address, email address, phone number, job information, Facebook profile information, computer or phone specs, IP address, and any other information you create or upload. And it uses all of this surveillance data for profit, against your interests.''*
-
-There are other commercial alternatives to Zoom, such as Blue Jeans, Google Hangouts, Skype, etc.  However, these solutions also suffer from one or more of the following: not having open source software, requiring all users to download code to their computer (potentially compromising its security), requiring users to provide data about themselves to the company, requiring the user through terms and conditions to relinquish rights to control data about themselves, tracking users who use their product, collecting user data and thus putting it at risk to being disclosed in a security breach and/or using data generated by their product for profit (perhaps at the detriment of the user).
-
-There is an open source video conferencing solution, Jitsi, available under the Apache 2.0 license (https://github.com/jitsi/jitsi-meet).  Jitsi provides for encrypted communication and runs in a user's browser without installing anything on the user's computer.  On the user (client side), the user merely goes to the URL of the meeting - which, depending on server configuration, may be password protected by the meeting host.  The user is not required to accept any terms or conditions, and there is no requirement for any analytic or tracking software (though this is dependent on server configuration).  More information about the security of Jitsi is located here (https://jitsi.org/security/).
-
-The server software is called Jitsi Meet.  Jitsi Meet has installation instructions and configuration manuals for various features (*e.g.* password protection, restricting some features like muting others to the meeting host, etc.).  However, there is no document for the installation of a private and secure dedicated Jitsi Meet server, including what software should and should not be on the server, firewall rules, management policies, etc. (https://community.jitsi.org/t/security-audit/25401/2).  Since many people and organizations with a need for private and secure video conferencing do not have the expertise to deploy a privacy protecting and secure, public facing server, they are unable to utilize this open source video conferencing solution.
-
-## Problem Statement
-No private and secure open source video conferencing solution is available for organizations or individuals who need meeting host controls and/or password protection of the meetings unless they already have or know how to host a secure and private public facing webserver.
-
-## Project Scope
-This project will address this need by providing instructions on setting up a private and secure dedicated Jitsi Meet server for a video conference for a few people, either in the cloud or stand-alone, appropriate for utilization by a small organization or individual. The project will run in the open source Jitsi community on Github and invite comments and contributions from the open source community, including inviting an independent security audit from the open source community.  Secondarily to privacy and security, ease of use will also be a design goal with the intended audience being a technically savvy individual with some familiarity with linux, but lacking any experience with the required individual components (setting up a server, firewalls, DNS domain registration, etc.)
-
-The deliverables for the project will be a complete default server installation guide for a private and secure dedicated Jitsi Meet server with software and hardware recommendations, firewall rules and deployment, how to obtain a hostname, TLS certificate, typical server configuration for meetings (requiring a password for use of the service and restricting certain privileges, like muting a participant, to the meeting host) and management policy.  Security documents will also include a threat model, security and maintenance policies.  As noted, there will be guides for both a cloud and a stand-alone solution.  While the cloud solution requires some compromise of privacy (you must trust the cloud provider), it may be the most popular option as it has will likely have the lowest fixed cost and can easily scale to larger groups if required.  As the cloud solution is anticipated to be the most popular solution, it will be developed first and the stand-alone solution will be a derivative work.
-
-By running the project on Github, the intent is that the solution will be independently tested and audited by the open source community and those wanting to run their own Jitsi Meet server and their comments will be considered and incorporated where appropriate.
-
-## Progress so far
-- Design Document done.
-- Threat Model done.
-- Background Research done.
-- Install Instructions and code for secure cloud (AWS) Jitsi Meet Instance with some hardening done using Ansible to modify configuration files and CIS Level 1 and 2 benchmarks applied with https://github.com/florianutz/Ubuntu1804-CIS (Thanks Florian Utz! NB License MIT)
-- Install Instructions tested (six independent testers so far) and updated based on their issues and comments.
-- Evaluated cloud instance with Mozilla Observatory and updated security headers, SSH ciphers,  SSL ciphers, DH key exchange to match recommendations.
-- Evaluated with OpenVAS (now Greenbone) Community edition.  Updated nginx to 1.16.2 to remove some CVE's. Hide nginx version in header. Disabled HTTP except for GET,HEAD,POST and OPTIONS.  Change configuration of services to remove other CVE's.
-- Estimated required network bandwidth and hardware requirements for stand-alone Jitsi-Meet server (run independent of the "cloud").
-- Much help has been provided by 8x8 developers, especially Saulo, Borris and Aaron *et al.*
-- Standalone Server prototyped and tested.
-- Most logging is removed for privacy.  Comment out in the Install.sh the line indicated in the comments to keep logging.
-
-## Invitation to use.
+## Invitation to use and help.
 
 - For a cloud solution, use Install_Instructions
 - To run a server in your SOHO environment, use Standalone_Instructions
 
 Let me know by using "Issues" if you have trouble, and I will try to help.  If you use this guide successfully, please also put something in the Issues so I know other people can actually use it - and you are welcome to include suggestions for improvements.
+
+Contributors are welcome.  There are lots of things that could be added or cleaned up.  I will try to keep the Next up section for improvements I know are needed.
 
 ## Pen Testing
 
@@ -58,9 +22,9 @@ Let me know by using "Issues" if you have trouble, and I will try to help.  If y
 
 ## Next up
 
-- Security Evaluation.  Done, but not published.
 - Let's Encrypt solution provided with Jitsi Meet installs Python 2.7, which is unsupported EOL.  Need to have a solution that uses Python3 - it is possible according to Let's Encrypt website, but need to automate.
-
+- Combine the two installs into one install with command line options for easier maintenance.
+- Give option of generation of 4096 bit DH key (instead of 2048 bit) on command line of installs.
 
 License:
 Apache 2.0

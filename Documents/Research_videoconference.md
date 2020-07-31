@@ -1,6 +1,6 @@
 # Research Summary- CS6727
 Version 1.0 - June 17, 2020  
-**Author**: Kevin Wilson, PhD  
+**See also [Private_Secure_Jitsi_project](./Private_Secure_Jitsi_project.pdf)
 ## Methodology
 
 1. Perform search for relevant articles on [dblp computer science bibliography](https://dblp.uni-trier.de/) within the last 10 years. "*The dblp computer science bibliography provides open bibliographic information on major computer science journals and proceedings.*"

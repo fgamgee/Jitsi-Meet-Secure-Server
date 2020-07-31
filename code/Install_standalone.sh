@@ -239,4 +239,4 @@ systemctl disable rsyslog.service
 
 printf "Installation is complete!  However, to apply security patches you need to stop, and then start your instance.\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
-printf "/n"
+printf "\n"
