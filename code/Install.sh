@@ -41,7 +41,7 @@ iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
 # For standalone, disable SSH port, login with a keyboard
-if [ "$STANDALONE" = false]; then
+if [ "$STANDALONE" = false ]; then
   iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
 fi
 iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
@@ -88,7 +88,7 @@ netfilter-persistent reload
 
 
 # This works, but ppa is untrusted and only gets you to 1.16.1 nginx
-add-apt-repository ppa:nginx/stable
+add-apt-repository -y ppa:nginx/stable
 apt-get -y update
 
 #add prosody repository and key.
@@ -119,7 +119,7 @@ curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/f
 curl -o /etc/ansible/Jitsi_no_logging.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_no_logging.yml
 
 # For standalone, no SSH
-if [ "$STANDALONE" = false]; then
+if [ "$STANDALONE" = false ]; then
   curl -o /etc/ansible/Jitsi_SSH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_SSH_config.yml
   ansible-playbook -v Jitsi_SSH_config.yml
 fi
@@ -175,7 +175,7 @@ ubuntu1804cis_section4: false
 EOF
 
 # For standalone, no SSH
-if [ "$STANDALONE" = true]; then
+if [ "$STANDALONE" = true ]; then
   cat >> /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<-EOF
   # Below here, is SSH rules, which are not on the standalone server (requires physical
   # access with keyboard, mouse and monitor, no remote administration.)
