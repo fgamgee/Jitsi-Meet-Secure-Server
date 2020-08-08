@@ -105,6 +105,8 @@ apt-get -y install jitsi-meet
 #Let's Encrypt certificate - note, you will see this in the logs (at least nginx), because logging is
 # not yet disabled, but I think that is fine.
 # This method works fine, but installs Python 2.7, which is EOL.
+curl -o /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh https://raw.githubusercontent.com/jitsi/jitsi-meet/master/resources/install-letsencrypt-cert.sh
+chmod +x /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 
 
