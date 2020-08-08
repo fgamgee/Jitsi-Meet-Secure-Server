@@ -157,7 +157,7 @@ EOF
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
 # a privacy goal of logrotate is not relevant.
-cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<EOF
+cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml <<EOF
 ---
 # vars file for Ubuntu1804-CIS
 ubuntu1804cis_xwindows_required: true
@@ -175,37 +175,37 @@ ubuntu1804cis_section4: false
 EOF
 
 # For standalone, no SSH
+# note, not as readable, as <<- did not seem to work for me, not sure why...
+# https://stackoverflow.com/questions/2500436/how-does-cat-eof-work-in-bash
 if [ "$STANDALONE" = true ]; then
-  cat >> /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<-EOF
-  # Below here, is SSH rules, which are not on the standalone server (requires physical
-  # access with keyboard, mouse and monitor, no remote administration.)
-  ubuntu1804cis_rule_5_2_1: false
-  ubuntu1804cis_rule_5_2_2: false
-  ubuntu1804cis_rule_5_2_3: false
-  ubuntu1804cis_rule_5_2_4: false
-  ubuntu1804cis_rule_5_2_5: false
-  ubuntu1804cis_rule_5_2_6: false
-  ubuntu1804cis_rule_5_2_7: false
-  ubuntu1804cis_rule_5_2_8: false
-  ubuntu1804cis_rule_5_2_9: false
-  ubuntu1804cis_rule_5_2_10: false
-  ubuntu1804cis_rule_5_2_11: false
-  ubuntu1804cis_rule_5_2_12: false
-  ubuntu1804cis_rule_5_2_13: false
-  ubuntu1804cis_rule_5_2_14: false
-  ubuntu1804cis_rule_5_2_15: false
-  ubuntu1804cis_rule_5_2_16: false
-  ubuntu1804cis_rule_5_2_17: false
-  ubuntu1804cis_rule_5_2_18: false
-  ubuntu1804cis_rule_5_2_19: false
-  ubuntu1804cis_rule_5_2_20: false
-  ubuntu1804cis_rule_5_2_21: false
-  ubuntu1804cis_rule_5_2_22: false
-  ubuntu1804cis_rule_5_2_23: false
-
-  EOF
+cat >> /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml << EOF
+# Below here, is SSH rules, which are not on the standalone server (requires physical
+# access with keyboard, mouse and monitor, no remote administration.)
+ubuntu1804cis_rule_5_2_1: false
+ubuntu1804cis_rule_5_2_2: false
+ubuntu1804cis_rule_5_2_3: false
+ubuntu1804cis_rule_5_2_4: false
+ubuntu1804cis_rule_5_2_5: false
+ubuntu1804cis_rule_5_2_6: false
+ubuntu1804cis_rule_5_2_7: false
+ubuntu1804cis_rule_5_2_8: false
+ubuntu1804cis_rule_5_2_9: false
+ubuntu1804cis_rule_5_2_10: false
+ubuntu1804cis_rule_5_2_11: false
+ubuntu1804cis_rule_5_2_12: false
+ubuntu1804cis_rule_5_2_13: false
+ubuntu1804cis_rule_5_2_14: false
+ubuntu1804cis_rule_5_2_15: false
+ubuntu1804cis_rule_5_2_16: false
+ubuntu1804cis_rule_5_2_17: false
+ubuntu1804cis_rule_5_2_18: false
+ubuntu1804cis_rule_5_2_19: false
+ubuntu1804cis_rule_5_2_20: false
+ubuntu1804cis_rule_5_2_21: false
+ubuntu1804cis_rule_5_2_22: false
+ubuntu1804cis_rule_5_2_23: false
+EOF
 fi
-
 
 cd /etc/ansible/
 
@@ -319,7 +319,7 @@ printf "However, to apply security patches you need to stop, and then start your
 printf "\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
 printf "\n"
-printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
+printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, "
 printf "at the command line, type: \n"
 printf "sudo ./auto_shutdown.sh \n"
-printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day."
+printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day. \n"
