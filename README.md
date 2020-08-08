@@ -22,7 +22,7 @@ Contributors are welcome.  There are lots of things that could be added or clean
 
 ## Next up
 
-- Ansible installs Python 2.7, should uninstall Ansible when done and related packages (but need to handle Chron job differently), as Ansible really doesn't need to be on it after it is configured.
+- Ansible installs Python 2.7, should uninstall Ansible when done and related packages (but need to handle Chron job differently), as Ansible really doesn't need to be on it after it is configured.  However, doing this seemed to break Let's Encrypt...
 - Update Install Instructions to move some of the AWS specific things into links, and focus more on this automated solution and less on cloud/domain name things.
 - Give option of generation of 4096 bit DH key (instead of 2048 bit) on command line of installs.
 
