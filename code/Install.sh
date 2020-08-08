@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# Need to add options to script - used https://www.shellscript.sh/tips/getopts/
+# One option to specify standalone -s
+# One option to specify a branch -b other than 'master'
+# add others as we go...
+
+unset BRANCH STANDALONE
+
+BRANCH="master"
+STANDALONE=false
+
+while getopts 'sb:' c
+do
+  case $c in
+    s) STANDALONE=true ;;
+    b) BRANCH=$OPTARG ;;
+  esac
+done
+
 # Need to run these after login...  UPDATE to MASTER SOON!
 #curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 #chmod +x Install.sh
@@ -22,11 +40,10 @@ iptables -A INPUT -s 127.0.0.0/8 -j DROP
 iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
-iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
-#Below ports not needed
-#iptables -A INPUT -p udp -m udp --dport 68 -m state --state NEW -j ACCEPT
-#iptables -A INPUT -p udp -m udp --dport 123 -m state --state NEW -j ACCEPT
-#iptables -A INPUT -p udp -m udp --dport 323 -m state --state NEW -j ACCEPT
+# For standalone, disable SSH port, login with a keyboard
+if [ "$STANDALONE" = false]; then
+  iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
+fi
 iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 4443 -j ACCEPT
@@ -72,12 +89,12 @@ netfilter-persistent reload
 
 # This works, but ppa is untrusted and only gets you to 1.16.1 nginx
 add-apt-repository ppa:nginx/stable
-apt-get update
+apt-get -y update
 
 #add prosody repository and key.
 echo 'deb https://packages.prosody.im/debian bionic main' >> /etc/apt/sources.list.d/prosody.list
 wget -qO - https://prosody.im/files/prosody-debian-packages.key | apt-key add -
-apt update
+apt-get -y update
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
@@ -95,15 +112,20 @@ apt-get -y install jitsi-meet
 apt install -y ansible
 cd /etc/ansible/
 # Get configurations of jitsi
-curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_req_config.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_config.yml
-curl -o /etc/ansible/Jitsi_SSH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_SSH_config.yml
-curl -o /etc/ansible/Jitsi_no_logging.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_no_logging.yml
+curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_login_req_config.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_TLS_DH_config.yml
+curl -o /etc/ansible/Jitsi_no_logging.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_no_logging.yml
+
+# For standalone, no SSH
+if [ "$STANDALONE" = false]; then
+  curl -o /etc/ansible/Jitsi_SSH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_SSH_config.yml
+  ansible-playbook -v Jitsi_SSH_config.yml
+fi
+
 
 # Run configuration for Jitsi
 ansible-playbook -v Jitsi_login_req_config.yml
 ansible-playbook -v Jitsi_TLS_DH_config.yml
-ansible-playbook -v Jitsi_SSH_config.yml
 
 # This is used to disable logging, comment out if you want logging.
 ansible-playbook -v Jitsi_no_logging.yml
@@ -114,7 +136,7 @@ ansible-playbook -v Jitsi_no_logging.yml
 sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
 
 ansible-galaxy install -p roles -r /etc/ansible/requirements.yml
-# Make role - don't like this method.  Update needed.
+# Make role - don't like this method.  Update needed, maybe move to an ansible file?
 cat > /etc/ansible/harden.yml <<EOF
 - name: Harden Server
   hosts: localhost
@@ -125,14 +147,14 @@ cat > /etc/ansible/harden.yml <<EOF
     - Ubuntu1804-CIS
 
 EOF
-# Change defaults needed for Jitsi Meet - don't like this method.  Update needed.
+
 # X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
 # but Ansible xwindows task removes x11 which Jitsi does need
 # Needs to have dummy telnet package installed and telnet removed - but Coturn
 # has a dependency of telnet (but it is only used for debugging).
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
-# a privacy goal.
+# a privacy goal of logrotate is not relevant.
 cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<EOF
 ---
 # vars file for Ubuntu1804-CIS
@@ -149,6 +171,39 @@ ubuntu1804cis_rule_4_3: false
 ubuntu1804cis_section4: false
 
 EOF
+
+# For standalone, no SSH
+if [ "$STANDALONE" = true]; then
+  cat >> /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<-EOF
+  # Below here, is SSH rules, which are not on the standalone server (requires physical
+  # access with keyboard, mouse and monitor, no remote administration.)
+  ubuntu1804cis_rule_5_2_1: false
+  ubuntu1804cis_rule_5_2_2: false
+  ubuntu1804cis_rule_5_2_3: false
+  ubuntu1804cis_rule_5_2_4: false
+  ubuntu1804cis_rule_5_2_5: false
+  ubuntu1804cis_rule_5_2_6: false
+  ubuntu1804cis_rule_5_2_7: false
+  ubuntu1804cis_rule_5_2_8: false
+  ubuntu1804cis_rule_5_2_9: false
+  ubuntu1804cis_rule_5_2_10: false
+  ubuntu1804cis_rule_5_2_11: false
+  ubuntu1804cis_rule_5_2_12: false
+  ubuntu1804cis_rule_5_2_13: false
+  ubuntu1804cis_rule_5_2_14: false
+  ubuntu1804cis_rule_5_2_15: false
+  ubuntu1804cis_rule_5_2_16: false
+  ubuntu1804cis_rule_5_2_17: false
+  ubuntu1804cis_rule_5_2_18: false
+  ubuntu1804cis_rule_5_2_19: false
+  ubuntu1804cis_rule_5_2_20: false
+  ubuntu1804cis_rule_5_2_21: false
+  ubuntu1804cis_rule_5_2_22: false
+  ubuntu1804cis_rule_5_2_23: false
+
+  EOF
+fi
+
 
 cd /etc/ansible/
 
@@ -234,7 +289,7 @@ printf "done \n"
 
 EOF
 
-chown ubuntu ./autoshutdown.sh
+chown $user ./autoshutdown.sh
 chmod +x ./autoshutdown.sh
 
 #Stop services and restart them, avoids a reboot.
@@ -259,6 +314,7 @@ systemctl disable rsyslog.service
 
 printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
 printf "However, to apply security patches you need to stop, and then start your instance.\n"
+printf "\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
 printf "\n"
 printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
