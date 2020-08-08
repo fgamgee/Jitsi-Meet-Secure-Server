@@ -310,7 +310,7 @@ Optional: Use your mouse to drag the sides of this window with ```ubuntu@ip-some
 
 
 ### 11. Run three commands on the command line.
-<!--- Use -b branchname if using a development branch -->
+
 Copy and paste the following commands one at a time (hit Enter and wait for each one to finish before running the next one)
 ```
 curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
@@ -321,6 +321,14 @@ sudo ./Install.sh
 _If you make a mistake anywhere, you will need to start over by setting up a new instance. See at the bottom, step 16, for how to set up a new instance._
 
 Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **<Yes\>** - press **Enter** – **Twice**.
+
+Some more text, then you will get the message:
+```
+**Development releases of Ubuntu are not officially supported by this PPA, and uploads for those will not be available until Beta releases for those versions**
+ More info: https://launchpad.net/~nginx/+archive/ubuntu/stable
+Press [ENTER] to continue or Ctrl-c to cancel adding it.
+```
+Press **Enter**
 
 More text will scroll – occasionally it will stop scrolling for a minute – be patient. If everything is going well you will get another bright pink or blue screen. **Type in your domainname and press enter.** (*eg.* example.com)
 

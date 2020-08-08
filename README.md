@@ -22,8 +22,8 @@ Contributors are welcome.  There are lots of things that could be added or clean
 
 ## Next up
 
-- Ansible installs Python 2.7, should uninstall Ansible when done and related packages (but need to handle Chron job differently), as Ansible really doesn't need to be on it after it is configured.  However, doing this seemed to break Let's Encrypt...
-- Update Install Instructions to move some of the AWS specific things into links, and focus more on this automated solution and less on cloud/domain name things.
+- Let's Encrypt solution provided with Jitsi Meet installs Python 2.7, which is unsupported EOL.  Need to have a solution that uses Python3 - it is possible according to Let's Encrypt website, but need to automate.
+- Combine the two installs into one install with command line options for easier maintenance.
 - Give option of generation of 4096 bit DH key (instead of 2048 bit) on command line of installs.
 
 License:
