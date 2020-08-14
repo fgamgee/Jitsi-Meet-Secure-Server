@@ -111,7 +111,7 @@ ansible-playbook -v Jitsi_no_logging.yml
 
 #Get Ansible playbook for CIS hardening -
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
-sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
+sh -c "echo '- src: https://github.com/fgamgee/CIS-florianutz_stable.git' >> /etc/ansible/requirements.yml"
 
 ansible-galaxy install -p roles -r /etc/ansible/requirements.yml
 # Make role - don't like this method.  Update needed.
