@@ -122,7 +122,7 @@ cat > /etc/ansible/harden.yml <<EOF
   become: yes
 
   roles:
-    - Ubuntu1804-CIS
+    - CIS-florianutz_stable
 
 EOF
 # Change defaults needed for Jitsi Meet - don't like this method.  Update needed.
@@ -133,7 +133,7 @@ EOF
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
 # a privacy goal.
-cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml  <<EOF
+cat > /etc/ansible/roles/CIS-florianutz_stable/vars/main.yml  <<EOF
 ---
 # vars file for Ubuntu1804-CIS
 ubuntu1804cis_xwindows_required: true
@@ -264,4 +264,4 @@ printf "\n"
 printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
 printf "at the command line, type: \n"
 printf "sudo ./auto_shutdown.sh \n"
-printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day."
+printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day. \n"
