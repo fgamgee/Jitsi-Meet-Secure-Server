@@ -248,11 +248,11 @@ cat > /etc/ansible/autoshutdown.yml <<EOF
 # Crontab configuration
   tasks:
 - name: Update crontab to auto shutdown
-    lineinfile:
-      path: /etc/crontab
-      regexp: "shutdown"
-      line: '{{ minute }} {{ hour }} * * *  root shutdown'
-      state: present
+  lineinfile:
+    path: /etc/crontab
+    regexp: "shutdown"
+    line: '{{ minute }} {{ hour }} * * *  root shutdown'
+    state: present
 EOF
 
 
