@@ -135,7 +135,7 @@ ansible-playbook -v Jitsi_no_logging.yml
 
 #Get Ansible playbook for CIS hardening -
 # From https://cloudsecuritylife.com/cis-ubuntu-script-to-automate-server-hardening/
-sh -c "echo '- src: https://github.com/florianutz/Ubuntu1804-CIS.git' >> /etc/ansible/requirements.yml"
+sh -c "echo '- src: https://github.com/fgamgee/CIS-florianutz_stable.git' >> /etc/ansible/requirements.yml"
 
 ansible-galaxy install -p roles -r /etc/ansible/requirements.yml
 # Make role - don't like this method.  Update needed, maybe move to an ansible file?
@@ -146,8 +146,8 @@ cat > /etc/ansible/harden.yml <<EOF
   become: yes
 
   roles:
-    - Ubuntu1804-CIS
-
+    - CIS-florianutz_stable
+	
 EOF
 
 # X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
@@ -157,7 +157,7 @@ EOF
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
 # a privacy goal of logrotate is not relevant.
-cat > /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml <<EOF
+cat > /etc/ansible/roles/CIS-florianutz_stable/vars/main.yml  <<EOF
 ---
 # vars file for Ubuntu1804-CIS
 ubuntu1804cis_xwindows_required: true
@@ -178,7 +178,7 @@ EOF
 # note, not as readable, as <<- did not seem to work for me, not sure why...
 # https://stackoverflow.com/questions/2500436/how-does-cat-eof-work-in-bash
 if [ "$STANDALONE" = true ]; then
-cat >> /etc/ansible/roles/Ubuntu1804-CIS/vars/main.yml << EOF
+cat >> /etc/ansible/roles/CIS-florianutz_stable/vars/main.yml << EOF
 # Below here, is SSH rules, which are not on the standalone server (requires physical
 # access with keyboard, mouse and monitor, no remote administration.)
 ubuntu1804cis_rule_5_2_1: false
@@ -319,7 +319,7 @@ printf "However, to apply security patches you need to stop, and then start your
 printf "\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
 printf "\n"
-printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, "
+printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
 printf "at the command line, type: \n"
 printf "sudo ./autoshutdown.sh \n"
 printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day. \n"

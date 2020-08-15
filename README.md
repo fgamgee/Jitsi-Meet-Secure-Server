@@ -1,5 +1,5 @@
 # Jitsi-Meet-Secure-Server
-Project for newbies (NOOBs) so they can have a private and secure Jitsi-Meet server.  It is specifically for those who do not know how to host a secure webserver, but need a private videoconferencing solution.  The Jitsi development team provides a quick install, but the user is responsible for securing the server.  This project automates that process.
+Project for newbies (NOOBs) so they can have a private and secure Jitsi-Meet server.  It is specifically for those who do not know how to host a secure webserver, but need a private videoconferencing solution.  The Jitsi development team provides a quick install, but the user is responsible for securing the server.  This project automates the process of securing the server including hardening using CIS benchmarks, CVE elimination or mitigations, secure defaults, and providing for meeting host authorization and controls.
 
 ## Introduction
 This project provides two complete, open source solutions based on Jitsi-Meet to meet the needs of individuals or small organizations. One is intended for cloud deployment and one intended as a dedicated server running in a SOHO (Small Office/Home Office) environment.
@@ -18,13 +18,16 @@ Contributors are welcome.  There are lots of things that could be added or clean
 
 ## Pen Testing
 
-- Pen testing is welcome!  See threat model before you begin. Use a set of the instructions (your choice, but the cloud solution is probably easiest).  I am sure there could be significant improvements - so please suggest in Issues or better yet, pull requests with mitigations!  I welcome community involvement.
+- Pen testing is welcome!  See the threat model before you begin. Use a set of the instructions (your choice, but the cloud solution is probably easiest) to set up your target to attack.  I am sure there could be significant improvements - so please suggest in Issues or better yet, pull requests with mitigations!  I welcome community involvement.
 
 ## Next up
 
-- Ansible installs Python 2.7, should uninstall Ansible when done and related packages (but need to handle Chron job differently), as Ansible really doesn't need to be on it after it is configured.  However, doing this seemed to break Let's Encrypt...
-- Update Install Instructions to move some of the AWS specific things into links, and focus more on this automated solution and less on cloud/domain name things.
+- Ansible installs Python 2.7, should uninstall Ansible when done and related packages (but need to handle Chron job differently), as Ansible really doesn't need to be on the server after it is configured.  However, doing this seemed to break Let's Encrypt...
+- Update Install Instructions to move some of the AWS specific things into links, and focus more on this automated solution and less on cloud/domain name issues.
 - Give option of generation of 4096 bit DH key (instead of 2048 bit) on command line of installs.
 
-License:
+## Acknowledgements
+I had a lot of help from the 8x8 Jitsi development team. I also use a version of [Florian Utz's](https://github.com/florianutz/Ubuntu1804-CIS) CIS Benchmarks under the MIT License, so I am very indebted to him.
+
+## License:
 Apache 2.0
