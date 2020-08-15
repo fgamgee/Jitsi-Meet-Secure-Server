@@ -147,7 +147,6 @@ cat > /etc/ansible/harden.yml <<EOF
 
   roles:
     - CIS-florianutz_stable
-	
 EOF
 
 # X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
@@ -208,7 +207,6 @@ EOF
 fi
 
 cd /etc/ansible/
-
 ansible-playbook /etc/ansible/harden.yml
 
 set +x
@@ -216,8 +214,6 @@ set +x
 #fix ownership and permission on localhost.key for prosody
 chown root:prosody /etc/prosody/certs/localhost.key
 chmod g+r /etc/prosody/certs/localhost.key
-
-
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
 cd ~
@@ -251,7 +247,7 @@ cat > /etc/ansible/autoshutdown.yml <<EOF
 
 # Crontab configuration
   tasks:
-  - name: Update crontab to auto shutdown
+- name: Update crontab to auto shutdown
     lineinfile:
       path: /etc/crontab
       regexp: "shutdown"
