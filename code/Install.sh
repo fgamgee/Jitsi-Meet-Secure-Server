@@ -123,7 +123,6 @@ cat > /etc/ansible/harden.yml <<EOF
 
   roles:
     - CIS-florianutz_stable
-
 EOF
 # Change defaults needed for Jitsi Meet - don't like this method.  Update needed.
 # X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
@@ -132,7 +131,7 @@ EOF
 # has a dependency of telnet (but it is only used for debugging).
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
-# a privacy goal.
+# a privacy goal of logrotate is not relevant.
 cat > /etc/ansible/roles/CIS-florianutz_stable/vars/main.yml  <<EOF
 ---
 # vars file for Ubuntu1804-CIS
@@ -150,8 +149,40 @@ ubuntu1804cis_section4: false
 
 EOF
 
-cd /etc/ansible/
+# For standalone, no SSH
+# note, not as readable, as <<- did not seem to work for me, not sure why...
+# https://stackoverflow.com/questions/2500436/how-does-cat-eof-work-in-bash
+if [ "$STANDALONE" = true ]; then
+cat >> /etc/ansible/roles/CIS-florianutz_stable/vars/main.yml << EOF
+# Below here, is SSH rules, which are not on the standalone server (requires physical
+# access with keyboard, mouse and monitor, no remote administration.)
+ubuntu1804cis_rule_5_2_1: false
+ubuntu1804cis_rule_5_2_2: false
+ubuntu1804cis_rule_5_2_3: false
+ubuntu1804cis_rule_5_2_4: false
+ubuntu1804cis_rule_5_2_5: false
+ubuntu1804cis_rule_5_2_6: false
+ubuntu1804cis_rule_5_2_7: false
+ubuntu1804cis_rule_5_2_8: false
+ubuntu1804cis_rule_5_2_9: false
+ubuntu1804cis_rule_5_2_10: false
+ubuntu1804cis_rule_5_2_11: false
+ubuntu1804cis_rule_5_2_12: false
+ubuntu1804cis_rule_5_2_13: false
+ubuntu1804cis_rule_5_2_14: false
+ubuntu1804cis_rule_5_2_15: false
+ubuntu1804cis_rule_5_2_16: false
+ubuntu1804cis_rule_5_2_17: false
+ubuntu1804cis_rule_5_2_18: false
+ubuntu1804cis_rule_5_2_19: false
+ubuntu1804cis_rule_5_2_20: false
+ubuntu1804cis_rule_5_2_21: false
+ubuntu1804cis_rule_5_2_22: false
+ubuntu1804cis_rule_5_2_23: false
+EOF
+fi
 
+cd /etc/ansible/
 ansible-playbook /etc/ansible/harden.yml
 
 set +x
@@ -159,8 +190,6 @@ set +x
 #fix ownership and permission on localhost.key for prosody
 chown root:prosody /etc/prosody/certs/localhost.key
 chmod g+r /etc/prosody/certs/localhost.key
-
-
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
 cd ~
@@ -201,6 +230,7 @@ cat > /etc/ansible/autoshutdown.yml <<EOF
       line: '{{ minute }} {{ hour }} * * *  root shutdown'
       state: present
 EOF
+
 
 
 # Make an autoshutdown script that can run daily, so you don't forget to turn
