@@ -1,5 +1,5 @@
 # Jitsi-Meet-Secure-Server
-Project for newbies (NOOBs) so they can have a private and secure Jitsi-Meet server.  It is specifically for those who do not know how to host a secure webserver, but need a private videoconferencing solution.  The Jitsi development team provides a quick install, but the user is responsible for securing the server.  This project automates the process of securing the server including hardening using CIS benchmarks, CVE elimination or mitigations, secure defaults, and providing for meeting host authorization and controls.
+Project for newbies (NOOBs) so they can have a private and secure [Jitsi-Meet](https://jitsi.org/jitsi-meet/) server.  It is specifically for those who do not know how to host a secure webserver, but need a private videoconferencing solution.  The Jitsi development team provides a [quick install](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart), but the user is responsible for securing the server.  This project automates the process of securing the server including hardening using [CIS benchmarks](https://www.cisecurity.org/cis-benchmarks/), [CVE](https://en.wikipedia.org/wiki/Common_Vulnerabilities_and_Exposures) elimination or mitigations, secure defaults, and providing for meeting host authorization and controls.
 
 ## Introduction
 This project provides two complete, open source solutions based on Jitsi-Meet to meet the needs of individuals or small organizations. One is intended for cloud deployment and one intended as a dedicated server running in a SOHO (Small Office/Home Office) environment.
@@ -9,8 +9,8 @@ For a complete description, see the documents folder, in particular, [Private_Se
 
 ## Invitation to use and help.
 
-- For a cloud solution, use Install_Instructions
-- To run a server in your SOHO environment, use Standalone_Instructions
+- For a cloud solution, use [Install_Instructions](/Install_Instructions.md)
+- To run a server in your SOHO environment, use [Standalone_Instructions](/Standalone_Instructions.md)
 
 Let me know by using "Issues" if you have trouble, and I will try to help.  If you use this guide successfully, please also put something in the Issues so I know other people can actually use it - and you are welcome to include suggestions for improvements.
 
