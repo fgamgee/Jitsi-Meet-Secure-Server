@@ -247,13 +247,14 @@ cat > /etc/ansible/autoshutdown.yml <<EOF
 
 # Crontab configuration
   tasks:
-- name: Update crontab to auto shutdown
-  lineinfile:
-    path: /etc/crontab
-    regexp: "shutdown"
-    line: '{{ minute }} {{ hour }} * * *  root shutdown'
-    state: present
+  - name: Update crontab to auto shutdown
+    lineinfile:
+      path: /etc/crontab
+      regexp: "shutdown"
+      line: '{{ minute }} {{ hour }} * * *  root shutdown'
+      state: present
 EOF
+
 
 
 # Make an autoshutdown script that can run daily, so you don't forget to turn
