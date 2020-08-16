@@ -295,3 +295,7 @@ printf "If you are concerned about forgetting to turn off your instance, and run
 printf "at the command line, type: \n"
 printf "sudo ./auto_shutdown.sh \n"
 printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day. \n"
+printf "\n"
+printf "After setting up the chron job, you can uninstall ansible and Python2.7, which will reduce the attack surface by\n"
+printf "sudo apt-get remove ansible \n"
+printf "sudo apt autoremove \n"
