@@ -71,18 +71,18 @@ netfilter-persistent reload
 
 
 # This works, but ppa is untrusted and only gets you to 1.16.1 nginx
-add-apt-repository ppa:nginx/stable
-apt-get update
+add-apt-repository -y ppa:nginx/stable
+apt-get -y update
 
 #add prosody repository and key.
 echo 'deb https://packages.prosody.im/debian bionic main' >> /etc/apt/sources.list.d/prosody.list
 wget -qO - https://prosody.im/files/prosody-debian-packages.key | apt-key add -
-apt update
+apt -y update
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
 wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
-apt-get update
+apt-get -y update
 apt-get -y install jitsi-meet
 
 #Let's Encrypt certificate - note, you will see this in the logs (at least nginx), because logging is
