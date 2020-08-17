@@ -1,5 +1,23 @@
 #!/bin/bash
 
+# Need to add options to script - used https://www.shellscript.sh/tips/getopts/
+# One option to specify standalone -s
+# One option to specify a branch -b other than 'master'
+# add others as we go...
+
+unset BRANCH STANDALONE
+
+BRANCH="master"
+STANDALONE=false
+
+while getopts 'sb:' c
+do
+  case $c in
+    s) STANDALONE=true ;;
+    b) BRANCH=$OPTARG ;;
+  esac
+done
+
 # Need to run these after login...  UPDATE to MASTER SOON!
 #curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 #chmod +x Install.sh
@@ -22,11 +40,10 @@ iptables -A INPUT -s 127.0.0.0/8 -j DROP
 iptables -A INPUT -p tcp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p udp -m state --state ESTABLISHED -j ACCEPT
 iptables -A INPUT -p icmp -m state --state ESTABLISHED -j ACCEPT
-iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
-#Below ports not needed
-#iptables -A INPUT -p udp -m udp --dport 68 -m state --state NEW -j ACCEPT
-#iptables -A INPUT -p udp -m udp --dport 123 -m state --state NEW -j ACCEPT
-#iptables -A INPUT -p udp -m udp --dport 323 -m state --state NEW -j ACCEPT
+# For standalone, disable SSH port, login with a keyboard
+if [ "$STANDALONE" = false ]; then
+  iptables -A INPUT -p tcp -m tcp --dport 22 -m state --state NEW -j ACCEPT
+fi
 iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
 iptables -A INPUT -p tcp -m tcp --dport 4443 -j ACCEPT
@@ -77,17 +94,19 @@ apt-get -y update
 #add prosody repository and key.
 echo 'deb https://packages.prosody.im/debian bionic main' >> /etc/apt/sources.list.d/prosody.list
 wget -qO - https://prosody.im/files/prosody-debian-packages.key | apt-key add -
-apt -y update
+apt-get -y update
 
 #Jitsi-Meet install https://aws.amazon.com/blogs/opensource/getting-started-with-jitsi-an-open-source-web-conferencing-solution/
 echo 'deb https://download.jitsi.org stable/' >> /etc/apt/sources.list.d/jitsi-stable.list
 wget -qO - https://download.jitsi.org/jitsi-key.gpg.key | apt-key add -
-apt-get -y update
+apt-get update
 apt-get -y install jitsi-meet
 
 #Let's Encrypt certificate - note, you will see this in the logs (at least nginx), because logging is
 # not yet disabled, but I think that is fine.
 # This method works fine, but installs Python 2.7, which is EOL.
+curl -o /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh https://raw.githubusercontent.com/jitsi/jitsi-meet/master/resources/install-letsencrypt-cert.sh
+chmod +x /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 
 
@@ -95,15 +114,20 @@ apt-get -y install jitsi-meet
 apt install -y ansible
 cd /etc/ansible/
 # Get configurations of jitsi
-curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_login_req_config.yml
-curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_TLS_DH_config.yml
-curl -o /etc/ansible/Jitsi_SSH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_SSH_config.yml
-curl -o /etc/ansible/Jitsi_no_logging.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Jitsi_no_logging.yml
+curl -o /etc/ansible/Jitsi_login_req_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_login_req_config.yml
+curl -o /etc/ansible/Jitsi_TLS_DH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_TLS_DH_config.yml
+curl -o /etc/ansible/Jitsi_no_logging.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_no_logging.yml
+
+# For standalone, no SSH
+if [ "$STANDALONE" = false ]; then
+  curl -o /etc/ansible/Jitsi_SSH_config.yml https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/"$BRANCH"/code/Jitsi_SSH_config.yml
+  ansible-playbook -v Jitsi_SSH_config.yml
+fi
+
 
 # Run configuration for Jitsi
 ansible-playbook -v Jitsi_login_req_config.yml
 ansible-playbook -v Jitsi_TLS_DH_config.yml
-ansible-playbook -v Jitsi_SSH_config.yml
 
 # This is used to disable logging, comment out if you want logging.
 ansible-playbook -v Jitsi_no_logging.yml
@@ -114,7 +138,7 @@ ansible-playbook -v Jitsi_no_logging.yml
 sh -c "echo '- src: https://github.com/fgamgee/CIS-florianutz_stable.git' >> /etc/ansible/requirements.yml"
 
 ansible-galaxy install -p roles -r /etc/ansible/requirements.yml
-# Make role - don't like this method.  Update needed.
+# Make role - don't like this method.  Update needed, maybe move to an ansible file?
 cat > /etc/ansible/harden.yml <<EOF
 - name: Harden Server
   hosts: localhost
@@ -124,7 +148,7 @@ cat > /etc/ansible/harden.yml <<EOF
   roles:
     - CIS-florianutz_stable
 EOF
-# Change defaults needed for Jitsi Meet - don't like this method.  Update needed.
+
 # X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
 # but Ansible xwindows task removes x11 which Jitsi does need
 # Needs to have dummy telnet package installed and telnet removed - but Coturn
@@ -264,7 +288,7 @@ printf "done \n"
 
 EOF
 
-chown ubuntu ./autoshutdown.sh
+chown $user ./autoshutdown.sh
 chmod +x ./autoshutdown.sh
 
 #Stop services and restart them, avoids a reboot.
@@ -289,13 +313,10 @@ systemctl disable rsyslog.service
 
 printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
 printf "However, to apply security patches you need to stop, and then start your instance.\n"
+printf "\n"
 printf "To add more meeting hosts, type 'sudo ./add_host'\n"
 printf "\n"
 printf "If you are concerned about forgetting to turn off your instance, and running up a big bill, \n"
 printf "at the command line, type: \n"
-printf "sudo ./auto_shutdown.sh \n"
+printf "sudo ./autoshutdown.sh \n"
 printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day. \n"
-printf "\n"
-printf "After setting up the chron job, you can uninstall ansible and Python2.7, which will reduce the attack surface by\n"
-printf "sudo apt-get remove ansible \n"
-printf "sudo apt autoremove \n"
