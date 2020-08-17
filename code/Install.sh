@@ -104,7 +104,7 @@ apt-get -y install jitsi-meet
 
 #Let's Encrypt certificate - note, you will see this in the logs (at least nginx), because logging is
 # not yet disabled, but I think that is fine.
-# This method works fine, but installs Python 2.7, which is EOL.
+# This method uses Let'sEncrypt from unstable, as that uses Python3
 curl -o /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh https://raw.githubusercontent.com/jitsi/jitsi-meet/master/resources/install-letsencrypt-cert.sh
 chmod +x /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
 /usr/share/jitsi-meet/scripts/install-letsencrypt-cert.sh
@@ -320,3 +320,7 @@ printf "If you are concerned about forgetting to turn off your instance, and run
 printf "at the command line, type: \n"
 printf "sudo ./autoshutdown.sh \n"
 printf "and it will set up a cron job that will automatically shut your instance off at the time you specify each day. \n"
+printf "\n"
+printf "After setting up the chron job, you can uninstall ansible and Python2.7, which will reduce the attack surface by\n"
+printf "sudo apt-get remove ansible \n"
+printf "sudo apt autoremove \n"
