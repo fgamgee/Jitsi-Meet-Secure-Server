@@ -86,10 +86,10 @@ netfilter-persistent reload
 #sudo apt-get install nginx
 
 
-
+# This repository updated to 1.18.0, which breaks Jitsi-Meet.  This installs 1.14.0, not great....but works.
 # This works, but ppa is untrusted and only gets you to 1.16.1 nginx
-add-apt-repository -y ppa:nginx/stable
-apt-get -y update
+#add-apt-repository -y ppa:nginx/stable
+#apt-get -y update
 
 #add prosody repository and key.
 echo 'deb https://packages.prosody.im/debian bionic main' >> /etc/apt/sources.list.d/prosody.list
