@@ -58,6 +58,8 @@ iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED -j ACCEPT
 
 #Now get repositories and packages I will need.
 apt -y update
+apt -y upgrade
+apt -y update
 apt -y install apt-transport-https
 apt-add-repository -y universe
 apt -y update
@@ -126,11 +128,13 @@ apt-get -y install telnet
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
 # a privacy goal of logrotate is not relevant.
 
-set +x
+
 
 #fix ownership and permission on localhost.key for prosody
 chown root:prosody /etc/prosody/certs/localhost.key
 chmod g+r /etc/prosody/certs/localhost.key
+
+set +x
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
 cd ~
@@ -146,6 +150,8 @@ prosodyctl register \$username \$thehost \$password
 
 EOF
 
+set -x
+
 user=$(stat -c %U ./Install.sh)
 chown $user ./add_host.sh
 chmod +x ./add_host.sh
@@ -155,6 +161,7 @@ printf "Let's set up a host and password for meetings.\n"
 printf "\n"
 ./add_host.sh
 
+set +x
 
 cat > /etc/ansible/autoshutdown.yml <<EOF
 - name: Automatically turn off at specified time.
@@ -204,6 +211,8 @@ echo
 printf "done \n"
 
 EOF
+
+set -x
 
 chown $user ./autoshutdown.sh
 chmod +x ./autoshutdown.sh
