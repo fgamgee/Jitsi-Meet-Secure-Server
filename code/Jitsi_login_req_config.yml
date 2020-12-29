@@ -21,6 +21,30 @@
       regexp: '        authentication = '
       line: '        authentication = "internal_hashed"'
 
+  - name: Remvove Conference room from Secure Domain, add later to guest
+    lineinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      regexp: '"muc_lobby_rooms"'
+      state: absent
+
+  - name: Remvove more Conference room from Secure Domain, add later to guest
+    lineinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      regexp: 'lobby_muc = "lobby.mrsunderhill.net"'
+      state: absent
+
+  - name: Remvove more more Conference room from Secure Domain, add later to guest
+    lineinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      regexp: 'main_muc = "conference.mrsunderhill.net"'
+      state: absent
+
+
+  - name: Replace conference room component except for guest
+    lineinfile:
+      path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
+      regexp: 'Component "lobby.'
+      line: 'Component "lobby.guest.mrsunderhill.net"  "muc"'
   - name: Enable anonymous login method for guests
     blockinfile:
       path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
@@ -31,8 +55,11 @@
             authentication = "anonymous"
             modules_enabled = {
               "turncredentials";
+              "muc_lobby_rooms"
             }
             c2s_require_encryption = false
+            lobby_muc = "lobby.guest.mrsunderhill.net"
+            main_muc = "confernce.mrsunderhill.net"
 
   - name: Make Host Login Jitsi-Meet - anonymousdomain
     lineinfile:
