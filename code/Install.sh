@@ -134,10 +134,12 @@ apt-get -y install telnet
 chown root:prosody /etc/prosody/certs/localhost.key
 chmod g+r /etc/prosody/certs/localhost.key
 
-set +x
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
 cd ~
+pwd
+set +x 
+
 cat > ./add_host.sh <<EOF
 #!/bin/bash
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
@@ -152,7 +154,9 @@ EOF
 
 set -x
 
-user=$(stat -c %U ./Install.sh)
+#This is not working, need different reference for ./Install, try ~/Install
+
+user=$(stat -c %U ~/Install.sh)
 chown $user ./add_host.sh
 chmod +x ./add_host.sh
 
