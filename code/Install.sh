@@ -20,6 +20,9 @@ do
   esac
 done
 
+#get user directory
+user=$(stat -c %U ~/Install.sh)
+
 # Need to run these after login...  use BRANCH name, instead of master.
 #curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
 #chmod +x Install.sh
@@ -28,7 +31,7 @@ done
 #Set up for debugging, from https://wiki.bash-hackers.org/scripting/debuggingtips
 set -x
 export PS4='+(${BASH_SOURCE}:${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
-echo "Welcome to installation of private and secure Jitsi Meet server for Ubuntu 18.04"
+echo "Welcome to installation of private and secure Jitsi Meet server for Ubuntu 20.04"
 
 
 
@@ -136,11 +139,11 @@ chmod g+r /etc/prosody/certs/localhost.key
 
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
-cd ~
+cd /home/$user
 pwd
-set +x 
+set +x
 
-cat > ./add_host.sh <<EOF
+cat > /home/$user/add_host.sh <<EOF
 #!/bin/bash
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 echo \$thehost
@@ -154,16 +157,13 @@ EOF
 
 set -x
 
-#This is not working, need different reference for ./Install, try ~/Install
-
-user=$(stat -c %U ~/Install.sh)
-chown $user ./add_host.sh
-chmod +x ./add_host.sh
+chown $user /home/$user/add_host.sh
+chmod +x /home/$user/add_host.sh
 
 printf "\n"
 printf "Let's set up a host and password for meetings.\n"
 printf "\n"
-./add_host.sh
+/home/$user/add_host.sh
 
 set +x
 
@@ -188,7 +188,7 @@ EOF
 # Make an autoshutdown script that can run daily, so you don't forget to turn
 #your AWS instance off.
 
-cat > ~/autoshutdown.sh << EOF
+cat > /home/$user/autoshutdown.sh << EOF
 #!/bin/bash
 
 printf "This shell set a job to automatically shutdown daily, so you don't forget and leave \n"
@@ -218,8 +218,8 @@ EOF
 
 set -x
 
-chown $user ./autoshutdown.sh
-chmod +x ./autoshutdown.sh
+chown $user /home/$user/autoshutdown.sh
+chmod +x /home/$user/autoshutdown.sh
 
 #Stop services and restart them, avoids a reboot.
 printf "Restarting Services\n"
