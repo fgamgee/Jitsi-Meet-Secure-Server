@@ -30,13 +30,13 @@
   - name: Remvove more Conference room from Secure Domain, add later to guest
     lineinfile:
       path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
-      regexp: 'lobby_muc \='
+      regexp: 'lobby_muc \= \"lobby\.{{ domain_name.stdout}}'
       state: absent
 
   - name: Remvove more more Conference room from Secure Domain, add later to guest
     lineinfile:
       path: /etc/prosody/conf.avail/{{ domain_name.stdout}}.cfg.lua
-      regexp: 'main_muc \= '
+      regexp: 'main_muc \= \"conference\.{{ domain_name.stdout}}'
       state: absent
 
 
@@ -55,7 +55,7 @@
             authentication = "anonymous"
             modules_enabled = {
               "turncredentials";
-              "muc_lobby_rooms"
+              "muc_lobby_rooms";
             }
             c2s_require_encryption = false
             lobby_muc = "lobby.guest.{{ domain_name.stdout}}"

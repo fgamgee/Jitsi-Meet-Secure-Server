@@ -21,7 +21,7 @@ do
 done
 
 #get user directory
-user=$(stat -c %U ~/Install.sh)
+user=$(stat -c %U ./Install.sh)
 
 # Need to run these after login...  use BRANCH name, instead of master.
 #curl -o Install.sh https://raw.githubusercontent.com/fgamgee/Jitsi-Meet-Secure-Server/master/code/Install.sh
@@ -123,9 +123,7 @@ ansible-playbook -v Jitsi_no_logging.yml
 # X Windows is not installed, as can be checked with  dpkg -l xserver-xorg*
 # but Ansible xwindows task removes x11 which Jitsi does need
 # Needs to have dummy telnet package installed and telnet removed - but Coturn
-# has a dependency of telnet (but it is only used for debugging).  Install for now.
-apt-get -y install telnet
-#
+# has a dependency of telnet (but it is only used for debugging).
 
 # I currently use iptables.
 # Rule 4.3 is logrotate, which prosody does not like...  get rid of logging is
@@ -139,11 +137,11 @@ chmod g+r /etc/prosody/certs/localhost.key
 
 
 # Make add_user.sh- don't like this method.  Update needed.  But it was quick...
-cd /home/$user
+cd /home/"$user"
 pwd
 set +x
 
-cat > /home/$user/add_host.sh <<EOF
+cat > /home/"$user"/add_host.sh <<EOF
 #!/bin/bash
 thehost=$(grep JVB_HOSTNAME= /etc/jitsi/videobridge/config | sed 's/^.*=//')
 echo \$thehost
@@ -157,15 +155,15 @@ EOF
 
 set -x
 
-chown $user /home/$user/add_host.sh
-chmod +x /home/$user/add_host.sh
+chown $user /home/"$user"/add_host.sh
+chmod +x /home/"$user"/add_host.sh
 
+set +x
 printf "\n"
 printf "Let's set up a host and password for meetings.\n"
 printf "\n"
-/home/$user/add_host.sh
+/home/"$user"/add_host.sh
 
-set +x
 
 cat > /etc/ansible/autoshutdown.yml <<EOF
 - name: Automatically turn off at specified time.
@@ -188,7 +186,7 @@ EOF
 # Make an autoshutdown script that can run daily, so you don't forget to turn
 #your AWS instance off.
 
-cat > /home/$user/autoshutdown.sh << EOF
+cat > /home/"$user"/autoshutdown.sh << EOF
 #!/bin/bash
 
 printf "This shell set a job to automatically shutdown daily, so you don't forget and leave \n"
@@ -218,8 +216,8 @@ EOF
 
 set -x
 
-chown $user /home/$user/autoshutdown.sh
-chmod +x /home/$user/autoshutdown.sh
+chown $user /home/"$user"/autoshutdown.sh
+chmod +x /home/"$user"/autoshutdown.sh
 
 #Stop services and restart them, avoids a reboot.
 printf "Restarting Services\n"
@@ -242,7 +240,7 @@ systemctl start jicofo.service
 #printf "Stopping and Disabling logging..."
 #systemctl stop rsyslog.service
 #systemctl disable rsyslog.service
-
+set +x
 
 printf "Installation is complete! You can test Jitsi now by starting a meeting.\n"
 printf "However, to apply security patches you need to stop, and then start your instance.\n"
