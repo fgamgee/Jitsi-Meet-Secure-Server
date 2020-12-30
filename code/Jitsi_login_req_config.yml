@@ -59,7 +59,7 @@
             }
             c2s_require_encryption = false
             lobby_muc = "lobby.guest.{{ domain_name.stdout}}"
-            main_muc = "confernce.{{ domain_name.stdout}}"
+            main_muc = "conference.{{ domain_name.stdout}}"
 
   - name: Make Host Login Jitsi-Meet - anonymousdomain
     lineinfile:

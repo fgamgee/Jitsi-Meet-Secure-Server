@@ -27,18 +27,6 @@
       line: dh2066
       state: present
 
-  - name: Secure SSL/TLS and ciphers for prosody - no DHE for prosody
-    blockinfile:
-      path: /etc/prosody/conf.avail/{{ domain_name.stdout }}.cfg.lua
-      marker: "-- {mark} Ansible managed SSL and ciphers"
-      insertafter: 'consider_bosh_secure = true;'
-      state: present
-      block: |
-        ssl = {
-          protocol = "tlsv1_2+";
-          ciphers = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305"
-        }
-
   - name: Allow only TLS 1.2 and 1.3 in nginx (based on Mozilla recommendations)
     lineinfile:
       path: /etc/nginx/sites-available/{{ domain_name.stdout }}.conf
