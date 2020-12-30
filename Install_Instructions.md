@@ -110,9 +110,9 @@ After clicking on the big blue "Launch Instance", you will see:
 ![LaunchSearch](./diagrams/LaunchSearch.png)
 
 
-In the search box (see red arrow) type **Ubuntu Server** and hit return. Scroll down until you see the Ubuntu Server 18.04 instance (see red ellipse).  Click **Select** on the Ubuntu 18.04 LTS row and make sure the radio button is selected for 64-bit (x86), as Jitsi does not work with Arm (see below for example).
+In the search box (see red arrow) type **CIS Ubuntu** and hit return. Choose results in AWS Marketplace and click on those. Scroll down until you see the CIS Ubuntu Linux 20.04 LTS Benchmark - Level 1 instance (see red ellipse).  Click **Select** on the CIS Ubuntu Linux 20.04 LTS Benchmark - Level 1 row.
 
-![ChooseInstance](./diagrams/Ubuntu18.png)
+![ChooseInstance](./diagrams/CISUbuntu20.png)
 
 On the next screen, shown below:
 
@@ -320,17 +320,7 @@ sudo ./Install.sh
 ### 12. ***Carefully*** Answer a few prompts.
 _If you make a mistake anywhere, you will need to start over by setting up a new instance. See at the bottom, step 16, for how to set up a new instance._
 
-Once you start running the last command, a lot of text will start scrolling past on the screen. You will get a blue or pink screen – with a red **<Yes\>** - press **Enter** – **Twice**.
-
-Some more text, then you will get the message:
-```
-**Development releases of Ubuntu are not officially supported by this PPA, and uploads for those will not be available until Beta releases for those versions**
- More info: https://launchpad.net/~nginx/+archive/ubuntu/stable
-Press [ENTER] to continue or Ctrl-c to cancel adding it.
-```
-Press **Enter**
-
-More text will scroll – occasionally it will stop scrolling for a minute – be patient. If everything is going well you will get another bright pink or blue screen. **Type in your domainname and press enter.** (*eg.* example.com)
+ If everything is going well you will get a bright pink or blue screen. **Type in your domainname and press enter.** (*eg.* example.com)
 
 Almost immediately, another pink or blue screen will say **"Generate a new self-signed certificate …."** Press **Enter**. We will change this to a real certificate very soon.
 
@@ -340,7 +330,8 @@ Enter your email and press [ENTER]:
 ```
 Enter the email address associated with your domain name (*eg.* user@gmail.com) and press **Enter**. This is sent to Let's Encrypt to obtain a security certificate.
 
-Then lots more text. You may see a couple of  ```[WARNING]``` messages but that is normal. The Init AIDE task will also take several minutes, so be patient if it appears to hang.
+Then lots more text.
+
 Eventually you will see the message:
 ```
 Username for host of meeting:
